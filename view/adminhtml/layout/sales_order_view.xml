@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="GlobalPayments_PaymentGateway::css/styles.css"/>
+    </head>
+    <body>
+        <referenceBlock name="content">
+            <block class="GlobalPayments\PaymentGateway\Block\Adminhtml\Order\View\AsyncPaymentOrderTransactionDetails" name="globalpayments_order_view_async_payment_order_transaction_details" template="GlobalPayments_PaymentGateway::order/view/async_payment_order_transaction_details.phtml" />
+            <block class="GlobalPayments\PaymentGateway\Block\Adminhtml\Order\View\FraudFilterRemoveButtons" name="globalpayments_order_view_fraud_filter_remove_buttons" />
+            <block class="GlobalPayments\PaymentGateway\Block\Adminhtml\Order\View\FraudFilterAddButtons" name="globalpayments_order_view_fraud_filter_add_buttons" />
+        </referenceBlock>
+        <referenceBlock name="order_additional_info">
+            <block class="GlobalPayments\PaymentGateway\Block\Adminhtml\Order\View\DigitalWalletsAddress" name="globalpayments_digital_wallets_address" template="GlobalPayments_PaymentGateway::order/view/digital_wallets_address.phtml" />
+            <block class="GlobalPayments\PaymentGateway\Block\Adminhtml\Order\View\FraudFilterResult" name="globalpayments_order_view_fraud_filter_result" template="GlobalPayments_PaymentGateway::order/view/fraud_filter_result.phtml" />
+        </referenceBlock>
+        <referenceContainer name="payment_additional_info">
+            <block class="GlobalPayments\PaymentGateway\Block\Adminhtml\Order\View\PaymentAdditionalInformation" name="globalpayments_order_view_payment_additional_information" template="GlobalPayments_PaymentGateway::order/view/payment_additional_information.phtml" />
+        </referenceContainer>
+    </body>
+</page>

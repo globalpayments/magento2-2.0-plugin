@@ -1,0 +1,24 @@
+<?php
+
+use GlobalPayments\PaymentGateway\Block\Adminhtml\Order\View\BnplOrderTransactionDetails;
+
+/**
+ * @var BnplOrderTransactionDetails $block
+ */
+
+$transactionDetails['transactionDetailsUrl'] = $block->escapeHtml($block->getGlobalPaymentsTransactionDetailsUrl());
+$transactionDetails['transactionId'] = $block->escapeHtml($block->getTransactionId());
+?>
+<div
+    data-mage-init='{
+        "GlobalPayments_PaymentGateway/js/order/view/get-transaction-details":
+            <?= $block->escapeHtml(json_encode($transactionDetails)) ?>
+    }'
+    id="transaction-details-modal">
+    <table class="admin__table-secondary order-information-table bnpl-information-table">
+        <tbody></tbody>
+    </table>
+    <p class="bnpl-error globalpayments-error">
+        <?= $block->escapeHtml(__('There was something wrong, please try again later.')); ?>
+    </p>
+</div>

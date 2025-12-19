@@ -1,0 +1,18 @@
+{
+  "name": "magento2-2.0-plugin",
+  "version": "1.0.0",
+  "description": "An extension to add integration with Payment Gateway. This payment method can be restricted to work only with specific Shipping method.",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.heartlandapps.net:devportal/magento2-2.0-plugin"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^6.3.0"
+  }
+}

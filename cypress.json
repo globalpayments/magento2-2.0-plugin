@@ -1,0 +1,12 @@
+{
+  "pageLoadTimeout": 60000,
+  "defaultCommandTimeout": 30000,
+  "fixturesFolder": "Test/ui/fixtures",
+  "integrationFolder": "Test/ui/integration",
+  "pluginsFile": "Test/ui/plugins",
+  "screenshotsFolder": "Test/ui/screenshots",
+  "supportFile": "Test/ui/support",
+  "video": false,
+  "videosFolder": "Test/ui/videos",
+  "chromeWebSecurity": false
+}

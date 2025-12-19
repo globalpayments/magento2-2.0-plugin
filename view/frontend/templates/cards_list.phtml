@@ -1,0 +1,85 @@
+<?php
+
+use Magento\Framework\View\Element\Template;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Block\CardRendererInterface;
+
+/** @var CardRendererInterface|Template $block */
+
+/** @var \Magento\Vault\Block\Customer\CreditCards $block */
+$tokens = $block->getPaymentTokens();
+$code = $block->escapeHtml($block->getMethodCode());
+?>
+<?php if (count($tokens) !== 0): ?>
+    <div class="table-wrapper my-credit-cards">
+        <table class="data table table-credit-cards" id="my-orders-table">
+            <caption class="table-caption"><?= $block->escapeHtml(__('My Payment Methods')) ?></caption>
+            <thead>
+            <tr>
+                <th scope="col" class="col card-number"><?= $block->escapeHtml(__('Card Number')) ?></th>
+                <th scope="col" class="col expire"><?= $block->escapeHtml(__('Expiration Date')) ?></th>
+                <th scope="col" class="col card-type"><?= $block->escapeHtml(__('Type')) ?></th>
+                <th scope="col" class="col actions">&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($tokens as $token) {
+                $tokenDetails = json_decode($token->getTokenDetails(), true);
+                $imageSrc = $block->getViewFileUrl(
+                    'GlobalPayments_PaymentGateway::images/' . $tokenDetails['type'] . '.svg'
+                )
+                ?>
+                <tr>
+                    <td scope="col" class="col card-number">
+                        <?= $block->escapeHtml(__($tokenDetails['maskedCC'])) ?>
+                    </td>
+                    <td scope="col" class="col expire">
+                        <?= $block->escapeHtml(__($tokenDetails['expirationDate'])) ?>
+                    </td>
+                    <td scope="col" class="col card-type">
+                        <img src="<?= $block->escapeHtml($imageSrc) ?>"
+                            class="<?= $block->escapeHtml(__($tokenDetails['type'])) ?>" />
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Actions')) ?>" class="col actions">
+                        <form class="form"
+                            action="<?= $block->escapeUrl($block->getUrl('vault/cards/deleteaction')) ?>"
+                            method="post" >
+                            <?= $block->getBlockHtml('formkey') ?>
+                            <input
+                                name="<?= /* @noEscape */ PaymentTokenInterface::PUBLIC_HASH ?>"
+                                value="<?= /* @noEscape */ $token->getPublicHash() ?>"
+                                type="hidden" />
+                            <button type="submit"
+                                    class="action delete"
+                                    data-mage-init='{
+                                        "GlobalPayments_PaymentGateway/js/customer_account/deleteWidget":{
+                                            "type": "popup",
+                                            "modalClass": "my-credit-cards-popup",
+                                            "toggleEvent": "click",
+                                            "title": "<?= $block->escapeHtml(__('Delete')) ?>",
+                                            "content": "Are you sure you want to delete the card ending with: <?=
+                                                $block->escapeHtml(__($tokenDetails['maskedCC']))
+                                            ?>?"
+                                        }
+                                    }'>
+                                <span><?= $block->escapeHtml(__('Delete')) ?></span>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+<?php elseif (!$block->isExistsCustomerTokens()): ?>
+    <div class="message info empty">
+        <span><?= $block->escapeHtml(__('You have no stored payment methods.')) ?></span>
+    </div>
+<?php endif ?>
+<div class="buttons">
+    <a
+        href="<?= $block->escapeHtml($block->getUrl('globalpayments/customer/addcard')) ?>"
+        class="action primary add">
+        <?= $block->escapeHtml(__('Add New Card')) ?>
+    </a>
+</div>

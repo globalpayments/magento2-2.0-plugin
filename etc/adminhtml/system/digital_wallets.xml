@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="googlePay" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label><![CDATA[GlobalPayments - Google Pay<i>Connect to Google Pay via Unified Payments Gateway</i>]]></label>
+        <fieldset_css>complex googlepay-other-section with-button</fieldset_css>
+        <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+        <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/active</config_path>
+        </field>
+        <field id="title" translate="label tooltip" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Title</label>
+            <tooltip>This controls the title which the user sees during checkout.</tooltip>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/title</config_path>
+        </field>
+        <field id="payment_action" translate="label tooltip" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Payment Action</label>
+            <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentAction</source_model>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/payment_action</config_path>
+        </field>
+        <field id="globalpayments_merchant_id"  translate="label comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Global Payments Client ID</label>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/globalpayments_merchant_id</config_path>
+            <validate>required-entry</validate>
+            <comment>
+                <![CDATA[Your Client ID, provided by Global Payments.]]>
+            </comment>
+        </field>
+        <field id="merchant_id" translate="label comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Google Merchant ID</label>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/merchant_id</config_path>
+            <comment>
+                <![CDATA[Your Merchant ID, provided by Google.]]>
+            </comment>
+        </field>
+        <field id="merchant_name" translate="label comment" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Google Merchant Display Name</label>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/merchant_name</config_path>
+            <comment>
+                <![CDATA[Displayed to the customer in the Google Pay dialog.]]>
+            </comment>
+        </field>
+        <field id="cctypes" translate="label" type="GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\Checkboxes" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Accepted Cards</label>
+            <backend_model>GlobalPayments\PaymentGateway\Model\Adminhtml\System\Config\Checkboxes</backend_model>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\GooglePayCcType</source_model>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/cctypes</config_path>
+            <validate>required-checkboxes</validate>
+        </field>
+        <field id="allowed_card_auth_methods" translate="label tooltip" type="GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\Checkboxes" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Allowed Card Auth Methods</label>
+            <tooltip>
+                <![CDATA[<strong>PAN_ONLY:</strong> This authentication method is associated with payment cards stored on file with the user's Google Account. <br/><br/>
+                 <strong>CRYPTOGRAM_3DS:</strong> This authentication method is associated with cards stored as Android device tokens. <br/><br/>
+                 PAN_ONLY can expose the FPAN, which requires an additional SCA step up to a 3DS check. Currently, Global Payments does not support the Google Pay SCA challenge with an FPAN. For the best acceptance, we recommend that you provide only the CRYPTOGRAM_3DS option.]]>
+            </tooltip>
+            <backend_model>GlobalPayments\PaymentGateway\Model\Adminhtml\System\Config\Checkboxes</backend_model>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\GooglePayCardAuthMethod</source_model>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/allowed_card_auth_methods</config_path>
+            <validate>required-checkboxes</validate>
+        </field>
+        <field id="button_color" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Button Color</label>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\GooglePayButtonColor</source_model>
+            <validate>required-entry validate-select</validate>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/button_color</config_path>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/globalpayments_paymentgateway_googlePay/sort_order</config_path>
+        </field>
+    </group>
+
+    <group id="applePay" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label><![CDATA[GlobalPayments - Apple Pay<i>Connect to Apple Pay via Unified Payments Gateway</i>]]></label>
+        <fieldset_css>complex applepay-other-section with-button</fieldset_css>
+        <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+        <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/globalpayments_paymentgateway_applePay/active</config_path>
+        </field>
+        <field id="title" translate="label tooltip" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Title</label>
+            <tooltip>This controls the title which the user sees during checkout.</tooltip>
+            <config_path>payment/globalpayments_paymentgateway_applePay/title</config_path>
+        </field>
+        <field id="payment_action" translate="label tooltip" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Payment Action</label>
+            <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentAction</source_model>
+            <config_path>payment/globalpayments_paymentgateway_applePay/payment_action</config_path>
+        </field>
+        <field id="merchant_id" translate="label comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Apple Merchant ID</label>
+            <config_path>payment/globalpayments_paymentgateway_applePay/merchant_id</config_path>
+            <validate>required-entry</validate>
+            <comment>
+                <![CDATA[Your Merchant ID, provided by Apple.]]>
+            </comment>
+        </field>
+        <field id="merchant_cert" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Apple Merchant Cert Path</label>
+            <config_path>payment/globalpayments_paymentgateway_applePay/merchant_cert</config_path>
+            <validate>required-entry</validate>
+        </field>
+        <field id="merchant_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Apple Merchant Key Path</label>
+            <config_path>payment/globalpayments_paymentgateway_applePay/merchant_key</config_path>
+            <validate>required-entry</validate>
+        </field>
+        <field id="merchant_key_passphrase" translate="label" type="obscure" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Apple Merchant Key Passphrase</label>
+            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+            <config_path>payment/globalpayments_paymentgateway_applePay/merchant_key_passphrase</config_path>
+        </field>
+        <field id="merchant_domain" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Apple Merchant Domain</label>
+            <config_path>payment/globalpayments_paymentgateway_applePay/merchant_domain</config_path>
+            <validate>required-entry</validate>
+        </field>
+        <field id="merchant_display_name" translate="label comment" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Apple Merchant Display Name</label>
+            <config_path>payment/globalpayments_paymentgateway_applePay/merchant_display_name</config_path>
+            <validate>required-entry</validate>
+            <comment>
+                <![CDATA[Displayed to the customer in the Apple Pay dialog.]]>
+            </comment>
+        </field>
+        <field id="cctypes" translate="label" type="GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\Checkboxes" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Accepted Cards</label>
+            <backend_model>GlobalPayments\PaymentGateway\Model\Adminhtml\System\Config\Checkboxes</backend_model>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\ApplePayCcType</source_model>
+            <config_path>payment/globalpayments_paymentgateway_applePay/cctypes</config_path>
+            <validate>required-checkboxes</validate>
+        </field>
+        <field id="button_color" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Button Color</label>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\ApplePayButtonColor</source_model>
+            <config_path>payment/globalpayments_paymentgateway_applePay/button_color</config_path>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/globalpayments_paymentgateway_applePay/sort_order</config_path>
+        </field>
+    </group>
+
+    <group id="clickToPay" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label><![CDATA[GlobalPayments - Click To Pay<i>Connect to Click To Pay via Unified Payments Gateway</i>]]></label>
+        <fieldset_css>complex clicktopay-other-section with-button</fieldset_css>
+        <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+        <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/globalpayments_paymentgateway_clickToPay/active</config_path>
+        </field>
+        <field id="title" translate="label tooltip" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Title</label>
+            <tooltip>This controls the title which the user sees during checkout.</tooltip>
+            <config_path>payment/globalpayments_paymentgateway_clickToPay/title</config_path>
+        </field>
+        <field id="payment_action" translate="label tooltip" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Payment Action</label>
+            <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+            <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\DisabledField</frontend_model>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentActionCharge</source_model>
+            <config_path>payment/globalpayments_paymentgateway_clickToPay/payment_action</config_path>
+        </field>
+        <field id="ctp_client_id" translate="label comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Click To Pay Client ID</label>
+            <config_path>payment/globalpayments_paymentgateway_clickToPay/ctp_client_id</config_path>
+            <validate>required-entry</validate>
+            <comment>
+                <![CDATA[Your Merchant ID provided by Click To Pay.]]>
+            </comment>
+        </field>
+        <field id="buttonless" translate="label comment" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Click To Pay will render natively within the payment form</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/globalpayments_paymentgateway_clickToPay/buttonless</config_path>
+            <comment>
+                <![CDATA[Click To Pay will render natively within the payment form.]]>
+            </comment>
+        </field>
+        <field id="canadian_debit" translate="label comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Accept Canadian Visa debit cards</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/globalpayments_paymentgateway_clickToPay/canadian_debit</config_path>
+            <comment>
+                <![CDATA[Accept Canadian Visa debit cards.]]>
+            </comment>
+        </field>
+        <field id="wrapper" translate="label comment" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Display Global Payments footer within the payment form</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/globalpayments_paymentgateway_clickToPay/wrapper</config_path>
+            <comment>
+                <![CDATA[Display Global Payments footer within the payment form.]]>
+            </comment>
+        </field>
+        <field id="cctypes" translate="label" type="GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\Checkboxes" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Accepted Cards</label>
+            <backend_model>GlobalPayments\PaymentGateway\Model\Adminhtml\System\Config\Checkboxes</backend_model>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\ClickToPayCcType</source_model>
+            <config_path>payment/globalpayments_paymentgateway_clickToPay/cctypes</config_path>
+            <validate>required-checkboxes</validate>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/globalpayments_paymentgateway_clickToPay/sort_order</config_path>
+        </field>
+    </group>
+</include>

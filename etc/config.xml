@@ -1,0 +1,442 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <globalpayments_paymentgateway_heartland>
+                <code>globalpayments_paymentgateway_heartland</code>
+                <model>GlobalPaymentsPaymentGatewayHeartlandFacade</model>
+                <order_status>processing</order_status>
+                <title>Credit Card</title>
+                <active>0</active>
+                <payment_action>authorize</payment_action>
+                <public_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_public_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <secret_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_secret_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <is_gateway>1</is_gateway>
+                <debug>1</debug>
+                <currency>USD</currency>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <sandbox_mode>1</sandbox_mode>
+                <allow_card_saving>1</allow_card_saving>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+            </globalpayments_paymentgateway_heartland>
+            <globalpayments_paymentgateway_genius>
+                <code>globalpayments_paymentgateway_genius</code>
+                <model>GlobalPaymentsPaymentGatewayGeniusFacade</model>
+                <order_status>processing</order_status>
+                <title>Credit Card</title>
+                <active>0</active>
+                <payment_action>authorize</payment_action>
+                <name />
+                <site_id />
+                <key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <web_api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_web_api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <is_gateway>1</is_gateway>
+                <!-- <enable_gift_card>1</enable_gift_card>
+                <enable_gift_card_bin>1</enable_gift_card_bin> -->
+                <debug>1</debug>
+                <currency>USD</currency>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <sandbox_mode>1</sandbox_mode>
+                <allow_card_saving>1</allow_card_saving>
+            </globalpayments_paymentgateway_genius>
+            <globalpayments_paymentgateway_gpApi>
+                <code>globalpayments_paymentgateway_gpApi</code>
+                <model>GlobalPaymentsPaymentGatewayGpApiFacade</model>
+                <app_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_app_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_mode>1</sandbox_mode>
+                <allow_card_saving>1</allow_card_saving>
+                <order_status>processing</order_status>
+                <payment_action>order</payment_action>
+                <title>Credit Card</title>
+                <merchant_contact_url>https://www.example.com</merchant_contact_url>
+                <debug>0</debug>
+                <fraud_mode>off</fraud_mode>
+                <enable_three_d_secure>1</enable_three_d_secure>
+                <enable_blik_payments>0</enable_blik_payments>
+                <enable_bank_select_payments>0</enable_bank_select_payments>
+                <sort_order>0</sort_order>
+                <txn_descriptor />
+                <active>0</active>
+                <is_gateway>1</is_gateway>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <can_initialize>1</can_initialize>
+                <payment_method>embedded</payment_method>
+                <redirect_text>You Will Be Redirected To Complete Payment.</redirect_text>
+                <hpp_wallets>google_pay,apple_pay,blik,payu,bank_payment</hpp_wallets>
+            </globalpayments_paymentgateway_gpApi>
+            <globalpayments_paymentgateway_googlePay>
+                <code>globalpayments_paymentgateway_googlePay</code>
+                <model>GlobalPaymentsPaymentGatewayGooglePayFacade</model>
+                <title>Pay with Google Pay</title>
+                <payment_action>authorize</payment_action>
+                <button_color>black</button_color>
+                <globalpayments_merchant_id>Merchant Id</globalpayments_merchant_id>
+                <merchant_id />
+                <merchant_name />
+                <cctypes>VISA,MASTERCARD,AMEX,DISCOVER,JCB</cctypes>
+                <allowed_card_auth_methods>PAN_ONLY,CRYPTOGRAM_3DS</allowed_card_auth_methods>
+                <sort_order>0</sort_order>
+                <active>0</active>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+            </globalpayments_paymentgateway_googlePay>
+            <globalpayments_paymentgateway_applePay>
+                <code>globalpayments_paymentgateway_applePay</code>
+                <model>GlobalPaymentsPaymentGatewayApplePayFacade</model>
+                <title>Pay with Apple Pay</title>
+                <payment_action>authorize</payment_action>
+                <button_color>black</button_color>
+                <merchant_id>Merchant Id</merchant_id>
+                <merchant_cert>Apple Pay Merchant Cert Path</merchant_cert>
+                <merchant_key>Apple Pay Merchant Key Path</merchant_key>
+                <merchant_key_passphrase backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <merchant_domain>Merchant Domain</merchant_domain>
+                <merchant_display_name>Merchant Display Name</merchant_display_name>
+                <cctypes>VISA,MASTERCARD,AMEX,DISCOVER</cctypes>
+                <sort_order>0</sort_order>
+                <active>0</active>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+            </globalpayments_paymentgateway_applePay>
+            <globalpayments_paymentgateway_clickToPay>
+                <code>globalpayments_paymentgateway_clickToPay</code>
+                <model>GlobalPaymentsPaymentGatewayClickToPayFacade</model>
+                <title>Pay with Click To Pay</title>
+                <payment_action>authorize_capture</payment_action>
+                <ctp_client_id>Client Id</ctp_client_id>
+                <cctypes>VISA,MASTERCARD,AMEX,DISCOVER</cctypes>
+                <buttonless>0</buttonless>
+                <canadian_debit>0</canadian_debit>
+                <wrapper>0</wrapper>
+                <sort_order>0</sort_order>
+                <active>0</active>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+            </globalpayments_paymentgateway_clickToPay>
+            <globalpayments_paymentgateway_paypal>
+                <code>globalpayments_paymentgateway_paypal</code>
+                <model>GlobalPaymentsPaymentGatewayPayPalFacade</model>
+                <title>Pay with PayPal</title>
+                <payment_action>authorize</payment_action>
+                <sort_order>0</sort_order>
+                <active>0</active>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <can_initialize>1</can_initialize>
+            </globalpayments_paymentgateway_paypal>
+            <globalpayments_paymentgateway_blik>
+                <code>globalpayments_paymentgateway_blik</code>
+                <model>GlobalPaymentsPaymentGatewayBlikFacade</model>
+                <payment_action>authorize</payment_action>
+                <sort_order>0</sort_order>
+                <active>1</active>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <can_initialize>1</can_initialize>
+            </globalpayments_paymentgateway_blik>
+            <globalpayments_paymentgateway_bank_select>
+                <code>globalpayments_paymentgateway_bank_select</code>
+                <model>GlobalPaymentsPaymentGatewayBankSelectFacade</model>
+                <payment_action>authorize</payment_action>
+                <sort_order>0</sort_order>
+                <active>1</active>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <can_initialize>1</can_initialize>
+            </globalpayments_paymentgateway_bank_select>
+            <globalpayments_paymentgateway_affirm>
+                <code>globalpayments_paymentgateway_affirm</code>
+                <model>GlobalPaymentsPaymentGatewayAffirmFacade</model>
+                <title>Pay with Affirm</title>
+                <sort_order>0</sort_order>
+                <payment_action>authorize</payment_action>
+                <active>0</active>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <can_initialize>1</can_initialize>
+            </globalpayments_paymentgateway_affirm>
+            <globalpayments_paymentgateway_clearpay>
+                <code>globalpayments_paymentgateway_clearpay</code>
+                <model>GlobalPaymentsPaymentGatewayClearpayFacade</model>
+                <title>Pay with Clearpay</title>
+                <sort_order>0</sort_order>
+                <payment_action>authorize</payment_action>
+                <active>0</active>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <can_initialize>1</can_initialize>
+            </globalpayments_paymentgateway_clearpay>
+            <globalpayments_paymentgateway_klarna>
+                <code>globalpayments_paymentgateway_klarna</code>
+                <model>GlobalPaymentsPaymentGatewayKlarnaFacade</model>
+                <title>Pay with Klarna</title>
+                <sort_order>0</sort_order>
+                <payment_action>authorize</payment_action>
+                <active>0</active>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <can_initialize>1</can_initialize>
+            </globalpayments_paymentgateway_klarna>
+            <globalpayments_paymentgateway_bankPayment>
+                <code>globalpayments_paymentgateway_bankPayment</code>
+                <model>GlobalPaymentsPaymentGatewayBankPaymentFacade</model>
+                <title>Bank Payment</title>
+                <payment_action>authorize_capture</payment_action>
+                <account_number />
+                <sort_code />
+                <account_name />
+                <iban />
+                <countries />
+                <currencies>EUR,GBP</currencies>
+                <sort_order>0</sort_order>
+                <active>0</active>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <can_initialize>1</can_initialize>
+            </globalpayments_paymentgateway_bankPayment>
+            <globalpayments_paymentgateway_heartland_vault>
+                <code>globalpayments_paymentgateway_heartland_vault</code>
+                <model>GlobalPaymentsPaymentGatewayHeartlandVaultFacade</model>
+                <title>Stored Cards (Heartland)</title>
+                <active>1</active>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+            </globalpayments_paymentgateway_heartland_vault>
+            <globalpayments_paymentgateway_genius_vault>
+                <code>globalpayments_paymentgateway_genius_vault</code>
+                <model>GlobalPaymentsPaymentGatewayGeniusVaultFacade</model>
+                <title>Stored Cards (Genius)</title>
+                <active>1</active>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+            </globalpayments_paymentgateway_genius_vault>
+            <globalpayments_paymentgateway_gpApi_vault>
+                <code>globalpayments_paymentgateway_gpApi_vault</code>
+                <model>GlobalPaymentsPaymentGatewayGpApiVaultFacade</model>
+                <title>Stored Cards (Unified Payments)</title>
+                <active>1</active>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+            </globalpayments_paymentgateway_gpApi_vault>
+            <globalpayments_paymentgateway_transit>
+                <code>globalpayments_paymentgateway_transit</code>
+                <model>GlobalPaymentsPaymentGatewayTransitFacade</model>
+                <order_status>processing</order_status>
+                <title>Credit Card</title>
+                <active>0</active>
+                <payment_action>authorize</payment_action>
+                <merchant_id />
+                <username />
+                <device_id />
+                <tsep_device_id />
+                <developer_id>003226G005</developer_id>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <transaction_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_transaction_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <is_gateway>1</is_gateway>
+                <debug>1</debug>
+                <currency>USD</currency>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <sandbox_mode>1</sandbox_mode>
+                <allow_card_saving>1</allow_card_saving>
+            </globalpayments_paymentgateway_transit>
+            <globalpayments_paymentgateway_transit_vault>
+                <code>globalpayments_paymentgateway_transit_vault</code>
+                <model>GlobalPaymentsPaymentGatewayTransitVaultFacade</model>
+                <title>Stored Cards (TransIT)</title>
+                <active>1</active>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+            </globalpayments_paymentgateway_transit_vault>
+            <globalpayments_paymentgateway_txnapi>
+                <code>globalpayments_paymentgateway_txnapi</code>
+                <model>GlobalPaymentsPaymentGatewayTxnApiFacade</model>
+                <is_gateway>1</is_gateway>
+                <active>0</active>
+                <title>Credit Card</title>
+                <sandbox_mode>1</sandbox_mode>
+                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <account_credential backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sandbox_account_credential backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <region>US</region>
+                <allow_card_saving>1</allow_card_saving>
+                <order_status>processing</order_status>
+                <payment_action>authorize_capture</payment_action>
+                <debug>1</debug>
+                <can_authorize>0</can_authorize>
+                <can_capture>1</can_capture>
+                <can_authorize_vault>0</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>1</can_edit>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+            </globalpayments_paymentgateway_txnapi>
+            <globalpayments_paymentgateway_txnapi_vault>
+                <code>globalpayments_paymentgateway_txnapi_vault</code>
+                <model>GlobalPaymentsPaymentGatewayTxnApiVaultFacade</model>
+                <title>Stored Cards (Transaction API)</title>
+                <active>1</active>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+            </globalpayments_paymentgateway_txnapi_vault>
+        </payment>
+        <globalpayments>
+        	<fraudmanagement>
+            	<fraud_velocity_attempts>3</fraud_velocity_attempts>
+                <fraud_velocity_timeout>10</fraud_velocity_timeout>
+            </fraudmanagement>
+            <avs_cvv_conditions>
+                <check_avs_cvv>1</check_avs_cvv>
+                <avs_decline_codes>N,S,U,P,R,G,C,I</avs_decline_codes>
+                <cvv_decline_codes>P,?,N</cvv_decline_codes>
+            </avs_cvv_conditions>
+        </globalpayments>
+    </default>
+</config>

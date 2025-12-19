@@ -1,0 +1,115 @@
+<?php
+
+use GlobalPayments\PaymentGateway\Block\Adminhtml\Order\View\PaymentAdditionalInformation;
+
+/**
+ * @var PaymentAdditionalInformation $block
+ */
+
+$authorizationCode = $block->getAuthorizationCode();
+$cardIssuerResponseData = $block->getCardIssuerResponseData();
+$globalPaymentsOrderId = $block->getGlobalPaymentsOrderId();
+$resultCode = $block->getResultCode();
+$threeDSecureStatus = $block->getThreeDSecureStatus();
+$tokenResponseDetails = $block->getTokenResponseDetails();
+?>
+<?php if ($block->canDisplayInfo()): ?>
+    <table class="data-table admin__table-secondary order-information-table">
+        <tbody>
+            <?php if ($globalPaymentsOrderId): ?>
+                <tr>
+                    <th>
+                        <?= $block->escapeHtml(__('Order ID')); ?>
+                    </th>
+                    <td>
+                        <?= $block->escapeHtml($globalPaymentsOrderId); ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <?php if ($resultCode): ?>
+                <tr>
+                    <th>
+                        <?= $block->escapeHtml(__('Result Code')); ?>
+                    </th>
+                    <td>
+                        <?= $block->escapeHtml($resultCode); ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <?php if ($authorizationCode): ?>
+                <tr>
+                    <th>
+                        <?= $block->escapeHtml(__('Auth Code')); ?>
+                    </th>
+                    <td>
+                        <?= $block->escapeHtml($authorizationCode); ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <?php if ($tokenResponseDetails): ?>
+                <?php if ($tokenResponseDetails['cardType']): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('Card Type')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml(strtoupper($tokenResponseDetails['cardType'])); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($tokenResponseDetails['cardLast4']): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('Card Number')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml('xxxx-' . $tokenResponseDetails['cardLast4']); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($cardIssuerResponseData): ?>
+                <?php if ($cardIssuerResponseData->cvvResult): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('CVN Result')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml($cardIssuerResponseData->cvvResult); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($cardIssuerResponseData->avsAddressResult): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('AVS Address Result')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml($cardIssuerResponseData->avsAddressResult); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($cardIssuerResponseData->avsPostalCodeResult): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('AVS Postcode Result')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml($cardIssuerResponseData->avsPostalCodeResult); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($threeDSecureStatus): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('3D Secure Status')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml($threeDSecureStatus); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+<?php endif; ?>

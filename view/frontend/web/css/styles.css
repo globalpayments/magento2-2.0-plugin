@@ -1,0 +1,82 @@
+.validation-error, .globalpayments-sandbox-warning, .globalpayments-error {
+    margin: 0 0 10px;
+    padding: 12px 0 12px 5px;
+    display: block;
+    font-size: 1.3rem;
+    background: #fae5e5;
+    color: #e02b27;
+    position: relative;
+    border-radius: 2px;
+    width: 295px;
+}
+
+.globalpayments_paymentgateway.payment-method-content iframe {
+    min-height: 3.6em;
+}
+
+div[id^="GlobalPayments-overlay-"] {
+    z-index: 10001 !important;
+}
+
+#globalpayments_paymentgateway_clickToPay_target {
+    max-width: 350px;
+}
+
+@supports (-webkit-appearance: -apple-pay-button) {
+    .apple-pay-button {
+        display: inline-block;
+        -webkit-appearance: -apple-pay-button;
+    }
+    .apple-pay-button-black {
+        -apple-pay-button-style: black;
+    }
+    .apple-pay-button-white {
+        -apple-pay-button-style: white;
+    }
+    .apple-pay-button-white-with-line {
+        -apple-pay-button-style: white-outline;
+    }
+}
+
+@supports not (-webkit-appearance: -apple-pay-button) {
+    .apple-pay-button {
+        display: inline-block;
+        background-size: 100% 60%;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        border-radius: 5px;
+        padding: 0px;
+        box-sizing: border-box;
+        min-width: 200px;
+        min-height: 32px;
+        max-height: 64px;
+    }
+    .apple-pay-button-black {
+        background-image: -webkit-named-image(apple-pay-logo-white);
+        background-color: black;
+    }
+    .apple-pay-button-white {
+        background-image: -webkit-named-image(apple-pay-logo-black);
+        background-color: white;
+    }
+    .apple-pay-button-white-with-line {
+        background-image: -webkit-named-image(apple-pay-logo-black);
+        background-color: white;
+        border: .5px solid black;
+    }
+}
+
+/* Card List Page */
+
+.card-type > .discover, .card-type > .visa, .card-type > .mastercard, .card-type > .jcb, .card-type > .amex .card-type > .diners {
+    max-width: 60px;
+}
+
+.table-credit-cards td {
+    vertical-align: middle;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+}

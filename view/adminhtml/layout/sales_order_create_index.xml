@@ -1,0 +1,68 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="GlobalPayments_PaymentGateway::css/styles.css"/>
+    </head>
+    <body>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_heartland/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_heartland_vault</argument>
+                <argument name="template" xsi:type="string">GlobalPayments_PaymentGateway::form/vault.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_heartland/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_heartland</argument>
+                <argument name="template" xsi:type="string">GlobalPayments_PaymentGateway::form/cc.phtml</argument>
+                <argument name="styles" xsi:type="string">GlobalPayments_PaymentGateway::css/styles.css</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_genius/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_genius_vault</argument>
+                <argument name="template" xsi:type="string">GlobalPayments_PaymentGateway::form/vault.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_genius/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_genius</argument>
+                <argument name="template" xsi:type="string">GlobalPayments_PaymentGateway::form/cc.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_gpApi/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_gpApi_vault</argument>
+                <argument name="template" xsi:type="string">Magento_Vault::form/vault.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_gpApi/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_gpApi</argument>
+                <argument name="template" xsi:type="string">GlobalPayments_PaymentGateway::form/cc.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_transit/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_transit_vault</argument>
+                <argument name="template" xsi:type="string">GlobalPayments_PaymentGateway::form/vault.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_transit/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_transit</argument>
+                <argument name="template" xsi:type="string">GlobalPayments_PaymentGateway::form/cc.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_txnapi/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_txnapi_vault</argument>
+                <argument name="template" xsi:type="string">GlobalPayments_PaymentGateway::form/vault.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate" ifconfig="payment/globalpayments_paymentgateway_txnapi/active">
+                <argument name="method" xsi:type="string">globalpayments_paymentgateway_txnapi</argument>
+                <argument name="template" xsi:type="string">GlobalPayments_PaymentGateway::form/cc.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

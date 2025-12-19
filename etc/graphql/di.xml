@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\QuoteGraphQl\Model\Cart\Payment\AdditionalDataProviderPool">
+        <arguments>
+            <argument name="dataProviders" xsi:type="array">
+                <item name="globalpayments_paymentgateway_gpApi" xsi:type="object">GlobalPayments\PaymentGateway\Model\GraphQL\GlobalPaymentsDataProvider</item>
+                <item name="globalpayments_paymentgateway_gpApi_vault" xsi:type="object">GlobalPayments\PaymentGateway\Model\GraphQL\GlobalPaymentsVaultDataProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
+        <arguments>
+            <argument name="extendedConfigData" xsi:type="array">
+                <item name="globalpayments_paymentgateway_gpApi_vault_active" xsi:type="string">payment/globalpayments_paymentgateway_gpApi/allow_card_saving</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

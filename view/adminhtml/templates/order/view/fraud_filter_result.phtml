@@ -1,0 +1,69 @@
+<?php
+
+use GlobalPayments\PaymentGateway\Block\Adminhtml\Order\View\FraudFilterResult;
+
+/**
+ * @var FraudFilterResult $block
+ */
+
+$fraudResponseMode = $block->getFraudResponseMode();
+$fraudResponseResult = $block->getFraudResponseResult();
+$fraudResponseRules = $block->getFraudResponseRules();
+?>
+<?php if ($fraudResponseResult): ?>
+    <section class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title">
+                <?= $block->escapeHtml(__('Global Payments Fraud Filter Result')); ?>
+            </span>
+        </div>
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item order-information">
+                <div class="admin__page-section-item-content">
+                    <table class="admin__table-secondary order-information-table">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <?= $block->escapeHtml(__('Fraud Filter Mode')); ?>
+                                </th>
+                                <td>
+                                    <?= $block->escapeHtml($fraudResponseMode); ?>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <?= $block->escapeHtml(__('Fraud Filter Result')); ?>
+                                </th>
+                                <td>
+                                    <?= $block->escapeHtml($fraudResponseResult); ?>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <?php if (count($fraudResponseRules) > 0): ?>
+                                <tr>
+                                    <th colspan="3">
+                                        <?= $block->escapeHtml(__('Fraud Filter Rules:')); ?>
+                                    </th>
+                                </tr>
+                                <?php foreach ($fraudResponseRules as $rule): ?>
+                                    <tr>
+                                        <th>
+                                            <?= $block->escapeHtml($rule->description); ?>
+                                        </th>
+                                        <td>
+                                            <?= $block->escapeHtml($rule->result); ?>
+                                        </td>
+                                        <th>
+                                            <?= $block->escapeHtml($rule->key); ?>
+                                        </th>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>

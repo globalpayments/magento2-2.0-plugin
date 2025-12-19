@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="bankPayment" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label><![CDATA[GlobalPayments - Bank Payment<i>Connect to Bank Payment via Unified Payments Gateway</i>]]></label>
+        <fieldset_css>complex bankpayment-other-section with-button</fieldset_css>
+        <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+        <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/active</config_path>
+        </field>
+        <field id="title" translate="label tooltip" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Title</label>
+            <tooltip>This controls the title which the user sees during checkout.</tooltip>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/title</config_path>
+        </field>
+        <field id="payment_action" translate="label tooltip" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Payment Action</label>
+            <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+            <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\DisabledField</frontend_model>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentActionCharge</source_model>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/payment_action</config_path>
+        </field>
+        <field id="account_number" translate="label comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Account Number</label>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/account_number</config_path>
+            <comment>
+                <![CDATA[Account number, for bank transfers within the UK (UK to UK bank). Only required if no bank details are stored on account.]]>
+            </comment>
+        </field>
+        <field id="account_name" translate="label comment" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Account Name</label>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/account_name</config_path>
+            <comment>
+                <![CDATA[The name of the individual or business on the bank account. Only required if no bank details are stored on account.]]>
+            </comment>
+        </field>
+        <field id="sort_code" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sort Code</label>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/sort_code</config_path>
+            <comment>
+                <![CDATA[Six digits which identify the bank and branch of an account. Included with the Account Number for UK to UK bank transfers. Only required if no bank details are stored on account.]]>
+            </comment>
+        </field>
+        <field id="iban" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>IBAN</label>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/iban</config_path>
+            <comment>
+                <![CDATA[Key field for bank transfers for Europe-to-Europe transfers. Only required if no bank details are stored on account. <br/><br/>
+                 Only required for EUR transacting merchants.]]>
+            </comment>
+        </field>
+        <field id="countries" translate="label comment" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Countries</label>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/countries</config_path>
+            <comment>
+                <![CDATA[Allows you to input a COUNTRY or string of COUNTRIES to limit what is shown to the customer. Including a country overrides your default account configuration. <br/><br/>
+                 Format: List of ISO 3166-2 (two characters) codes separated by a | <br/><br/>
+                 Example: FR|GB|IE]]>
+            </comment>
+        </field>
+        <field id="currencies" translate="label comment" type="GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\Checkboxes" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Currencies</label>
+            <backend_model>GlobalPayments\PaymentGateway\Model\Adminhtml\System\Config\Checkboxes</backend_model>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\BankPaymentCurrency</source_model>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/currencies</config_path>
+            <validate>required-checkboxes</validate>
+            <comment>
+                <![CDATA[Note: The payment method will be displayed at checkout only for the selected currencies.]]>
+            </comment>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/globalpayments_paymentgateway_bankPayment/sort_order</config_path>
+        </field>
+    </group>
+</include>

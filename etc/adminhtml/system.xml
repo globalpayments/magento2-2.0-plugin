@@ -1,0 +1,710 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="globalpayments_paymentgateway" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Global Payments (Heartland, Unified Payments &amp; TSYS)</label>
+                <comment><![CDATA[Accept credit/debit cards in your Magento store. Your customers never leave your store to complete the purchase. Begin configuration and choose with which you were onboarded to access the correct gateway. ]]></comment>
+                <field id="card_brand_logos" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[<div class="card-brands"></div>]]></label>
+                </field>
+                <fieldset_css>complex globalpayments_paymentgateway-section</fieldset_css>
+                <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+
+                <group id="heartland" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[Heartland<i>Connect to Heartland's Online Payments gateway</i>]]></label>
+                    <fieldset_css>complex heartland-other-section with-button</fieldset_css>
+                    <comment><![CDATA[<a href="https://developer.heartlandpaymentsystems.com/Account/Register" target="_blank">Click here to sign up for SecureSubmit account]]></comment>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+                    <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/active</config_path>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\EnforceSingleGateway</frontend_model>
+                    </field>
+                    <field id="title" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <tooltip>This controls the title which the user sees during checkout.</tooltip>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/title</config_path>
+                    </field>
+                    <field id="sandbox_mode" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Mode</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/sandbox_mode</config_path>
+                    </field>
+                    <field id="public_key" translate="label" sortOrder="30" type="obscure" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Public API Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/public_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="secret_key" translate="label" type="obscure" showInDefault="1" sortOrder="31" showInWebsite="1" showInStore="1">
+                        <label>Production Secret API Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/secret_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_public_key" translate="label" sortOrder="30" type="obscure" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Public API Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/sandbox_public_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_secret_key" translate="label" type="obscure" showInDefault="1" sortOrder="31" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Secret API Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/sandbox_secret_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="payment_action" translate="label tooltip" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Action</label>
+                        <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentAction</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/payment_action</config_path>
+                    </field>
+                    <field id="allow_card_saving" translate="label" sortOrder="80" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Allow Card Saving</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/allow_card_saving</config_path>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:onlinepayments@heartland.us?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                    </field>
+                    <field id="order_status" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>New Order Status</label>
+                        <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/order_status</config_path>
+                    </field>
+                    <!-- <field id="cctypes" translate="label" type="multiselect" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Credit Card Types</label>
+                        <source_model>HPS\Heartland\Model\Source\CcType</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/cctypes</config_path
+                    </field> -->
+                    <field id="debug" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Debug</label>
+                        <tooltip>Log all request to and from gateway. This can also log private data and should only be enabled in a development or stage environment.</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_heartland/debug</config_path>
+                    </field>
+                </group>
+
+                <group id="gpApi" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[Unified Payments<i>Connect to the Global Payments Unified Payments Gateway</i>]]></label>
+                    <fieldset_css>complex gpApi-other-section with-button</fieldset_css>
+                    <comment><![CDATA[<a href="https://developer.globalpay.com/user/register" target="_blank">Register For a Global Payments Developer Account]]></comment>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+                    <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/active</config_path>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\EnforceSingleGateway</frontend_model>
+                    </field>
+                    <field id="title" translate="label tooltip" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <tooltip>This controls the title which the user sees during checkout.</tooltip>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/title</config_path>
+                    </field>
+                    <field id="sandbox_mode" translate="label comment" sortOrder="2" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Mode</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_mode</config_path>
+                        <comment><![CDATA[Get your App Id and App Key from your <a href="https://developer.globalpay.com/user/register" target="_blank">Global Payments Developer Account</a>. When you are ready for Live, please contact support to get you live credentials.]]></comment>
+                    </field>
+                    <field id="app_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production App Id*</label>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/app_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                        <validate>required-entry</validate>
+                    </field>
+                    <field id="app_key" translate="label" type="obscure" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production App Key*</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/app_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                        <validate>required-entry</validate>
+                    </field>
+                    <field id="app_name" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production App Name*</label>
+                        <tooltip>For a list of available options, click the ‘Credentials Check’ button below.</tooltip>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/app_name</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                        <validate>required-entry</validate>
+                    </field>
+                    <field id="sandbox_app_id" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox App Id*</label>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_app_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                        <validate>required-entry</validate>
+                    </field>
+                    <field id="sandbox_app_key" translate="label" type="obscure" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox App Key*</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_app_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                        <validate>required-entry</validate>
+                    </field>
+                    <field id="sandbox_app_name" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox App Name*</label>
+                        <tooltip>For a list of available options, click the ‘Credentials Check’ button below.</tooltip>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_app_name</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                        <validate>required-entry</validate>
+                    </field>
+                    <field id="credentials_check" translate="label comment" type="obscure" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Credentials Check</label>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\CredentialsCheck</frontend_model>
+                        <comment>Note: The Payment Methods will not be displayed at checkout if the credentials are not correct.</comment>
+                    </field>
+                    <field id="merchant_contact_url" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Contact Url</label>
+                        <tooltip>A link to an About or Contact page on your website with customer care information (maxLength: 256).</tooltip>
+                        <validate>required-entry validate-url validate-length maximum-length-256</validate>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/merchant_contact_url</config_path>
+                    </field>
+                    <field id="payment_method" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Method</label>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentMethod</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/payment_method</config_path>
+                        <tooltip>Choose how you would like customers to pay. "Embedded" keeps the user on your site, "Hosted" redirects customers to our secure server for payment</tooltip>
+                    </field>
+                    <field id="redirect_text" translate="label tooltip" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Redirect Text</label>
+                        <tooltip>Text displayed to customers during checkout before redirecting to the hosted payment page</tooltip>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/redirect_text</config_path>
+                        <depends>
+                            <field id="payment_method">hosted</field>
+                        </depends>
+                    </field>
+                    <field id="hpp_wallets" translate="label tooltip" type="GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\Checkboxes" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Accepted Wallets and APMs</label>
+                        <backend_model>GlobalPayments\PaymentGateway\Model\Adminhtml\System\Config\Checkboxes</backend_model>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\HppWallets</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/hpp_wallets</config_path>
+                        <comment><![CDATA[Select the wallets and alternative payment methods you want to accept via Hosted payment page]]></comment>
+                        <depends>
+                            <field id="payment_method">hosted</field>
+                        </depends>
+                    </field>
+                    <field id="payment_action" translate="label tooltip" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Action</label>
+                        <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentAction</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/payment_action</config_path>
+                    </field>
+                    <field id="allow_card_saving" translate="label comment" sortOrder="13" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Allow Card Saving</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/allow_card_saving</config_path>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:api.integrations@globalpay.com?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                    </field>
+                    <field id="order_status" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>New Order Status</label>
+                        <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/order_status</config_path>
+                    </field>
+                    <field id="debug" translate="label tooltip" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Debug</label>
+                        <tooltip>Log all request to and from gateway. This can also log private data and should only be enabled in a development or stage environment.</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/debug</config_path>
+                    </field>
+                    <field id="txn_descriptor" translate="label comment" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Order Transaction Descriptor</label>
+                        <validate>validate-length maximum-length-25</validate>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/txn_descriptor</config_path>
+                        <comment><![CDATA[During a Capture or Authorize payment action, this value will be passed along as the transaction-specific descriptor listed on the customer's bank account. Please contact <a href="mailto:api.integrations@globalpay.com?Subject=Magento%20Transaction%20Descriptor%20Option">support</a> with any questions regarding this option (maxLength: 25).]]></comment>
+                    </field>
+                    <field id="fraud_mode" translate="label tooltip" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Fraud Mode</label>
+                        <tooltip>If Fraud is set to Off in Real Control, you can’t override the setting with the setting from Admin Dashboard</tooltip>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\FraudMode</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/fraud_mode</config_path>
+                    </field>
+                    <field id="enable_three_d_secure" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable 3D Secure</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/enable_three_d_secure</config_path>
+                    </field>
+                    <field id="enable_blik_payments" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable Blik Payments</label>
+                        <tooltip>Only available for Poland merchants</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/enable_blik_payments</config_path>
+                        <depends>
+                            <field id="payment_method">embedded</field>
+                        </depends>
+                    </field>
+                    <field id="enable_bank_select_payments" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable Bank Select Payments</label>
+                        <tooltip>Only available for Poland merchants</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/enable_bank_select_payments</config_path>
+                        <depends>
+                            <field id="payment_method">embedded</field>
+                        </depends>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <frontend_class>validate-number</frontend_class>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/sort_order</config_path>
+                    </field>
+                </group>
+
+                <include path="GlobalPayments_PaymentGateway::system/digital_wallets.xml"/>
+                <include path="GlobalPayments_PaymentGateway::system/paypal.xml"/>
+                <include path="GlobalPayments_PaymentGateway::system/bnpl.xml"/>
+                <include path="GlobalPayments_PaymentGateway::system/open_banking.xml"/>
+
+                <group id="genius" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[TSYS Genius<i>Connect to TSYS Genius Gateway. Accept credit/debit/gift cards</i>]]></label>
+                    <fieldset_css>complex genius-other-section with-button</fieldset_css>
+                    <attribute type="expanded">0</attribute>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+                    <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/active</config_path>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\EnforceSingleGateway</frontend_model>
+                    </field>
+                    <field id="title" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <tooltip>This controls the title which the user sees during checkout.</tooltip>
+                        <config_path>payment/globalpayments_paymentgateway_genius/title</config_path>
+                    </field>
+                    <field id="sandbox_mode" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Mode</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/sandbox_mode</config_path>
+                    </field>
+                    <field id="name" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Name</label>
+                        <config_path>payment/globalpayments_paymentgateway_genius/name</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="site_id" translate="label" sortOrder="31" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Site ID</label>
+                        <config_path>payment/globalpayments_paymentgateway_genius/site_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="key" translate="label" type="obscure" showInDefault="1" sortOrder="32" showInWebsite="1" showInStore="1">
+                        <label>Production Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="web_api_key" translate="label" sortOrder="33" type="obscure" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Web API Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/web_api_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_name" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Name</label>
+                        <config_path>payment/globalpayments_paymentgateway_genius/sandbox_name</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_site_id" translate="label" sortOrder="31" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Site ID</label>
+                        <config_path>payment/globalpayments_paymentgateway_genius/sandbox_site_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_key" translate="label" type="obscure" showInDefault="1" sortOrder="32" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/sandbox_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_web_api_key" translate="label" sortOrder="33" type="obscure" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Web API Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/sandbox_web_api_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <!-- <field id="enable_gift_card" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable Gift Card</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/enable_gift_card</config_path>
+                    </field> -->
+                    <field id="enable_gift_card_bin" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Gift Card PIN</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <depends><field id="enable_gift_card">1</field></depends>
+                        <config_path>payment/globalpayments_paymentgateway_genius/enable_gift_card_bin</config_path>
+                    </field>
+                    <field id="payment_action" translate="label tooltip" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Action</label>
+                        <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentAction</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/payment_action</config_path>
+                    </field>
+                    <field id="allow_card_saving" translate="label" sortOrder="80" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Allow Card Saving</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/allow_card_saving</config_path>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:securesubmitcert@e-hps.com?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                    </field>
+                    <field id="order_status" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>New Order Status</label>
+                        <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/order_status</config_path>
+                    </field>
+                    <!-- <field id="cctypes" translate="label" type="multiselect" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Credit Card Types</label>
+                        <source_model>HPS\Heartland\Model\Source\CcType</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/cctypes</config_path
+                    </field> -->
+                    <field id="debug" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Debug</label>
+                        <tooltip>Log all request to and from gateway. This can also log private data and should only be enabled in a development or stage environment.</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_genius/debug</config_path>
+                    </field>
+                </group>
+
+                <group id="transit" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[TSYS TransIT<i>Connect to TSYS TransIT Gateway</i>]]></label>
+                    <fieldset_css>complex transit-other-section with-button</fieldset_css>
+                    <attribute type="expanded">0</attribute>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+                    <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_transit/active</config_path>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\EnforceSingleGateway</frontend_model>
+                    </field>
+                    <field id="title" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <tooltip>This controls the title which the user sees during checkout.</tooltip>
+                        <config_path>payment/globalpayments_paymentgateway_transit/title</config_path>
+                    </field>
+                    <field id="sandbox_mode" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Mode</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_transit/sandbox_mode</config_path>
+                    </field>
+                    <field id="merchant_id" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Merchant ID</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/merchant_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="username" translate="label" sortOrder="31" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Username</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/username</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="password" translate="label" type="obscure" showInDefault="1" sortOrder="32" showInWebsite="1" showInStore="1">
+                        <label>Production Password</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_transit/password</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="device_id" translate="label" sortOrder="33" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Device Id</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/device_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="tsep_device_id" translate="label" sortOrder="34" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production TSEP Device Id</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/tsep_device_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="transaction_key" translate="label" sortOrder="35" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Transaction Key</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/transaction_key</config_path>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_merchant_id" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Merchant ID</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/sandbox_merchant_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_username" translate="label" sortOrder="31" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Username</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/sandbox_username</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_password" translate="label" type="obscure" showInDefault="1" sortOrder="32" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Password</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_transit/sandbox_password</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_device_id" translate="label" sortOrder="33" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Device Id</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/sandbox_device_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_tsep_device_id" translate="label" sortOrder="34" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox TSEP Device Id</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/sandbox_tsep_device_id</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_transaction_key" translate="label" sortOrder="35" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Transaction Key</label>
+                        <config_path>payment/globalpayments_paymentgateway_transit/sandbox_transaction_key</config_path>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="payment_action" translate="label tooltip" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Action</label>
+                        <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentAction</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_transit/payment_action</config_path>
+                    </field>
+                    <field id="allow_card_saving" translate="label" sortOrder="80" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Allow Card Saving</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_transit/allow_card_saving</config_path>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:securesubmitcert@e-hps.com?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                    </field>
+                    <field id="debug" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Debug</label>
+                        <tooltip>Log all request to and from gateway. This can also log private data and should only be enabled in a development or stage environment.</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_transit/debug</config_path>
+                    </field>
+                </group>
+                 <group id="txnapi" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[Transaction API<i>Connect to the Global Payments Transaction API</i>]]></label>
+                    <fieldset_css>complex txnapi-other-section with-button</fieldset_css>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+                    <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/active</config_path>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\EnforceSingleGateway</frontend_model>
+                    </field>
+                    <field id="title" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <tooltip>This controls the title which the user sees during checkout.</tooltip>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/title</config_path>
+                    </field>
+                    <field id="sandbox_mode" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Mode</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/sandbox_mode</config_path>
+                    </field>
+                    <field id="public_x_gp_api_key" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Public Key</label>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/public_x_gp_api_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_public_x_gp_api_key" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Public Key</label>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/sandbox_public_x_gp_api_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="api_key" translate="label" type="obscure" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production API Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/api_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_api_key" translate="label" type="obscure" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox API Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/sandbox_api_key</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="api_secret" translate="label" type="obscure" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production API Secret</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/api_secret</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_api_secret" translate="label" type="obscure" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox API Secret</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/sandbox_api_secret</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="account_credential" translate="label" type="obscure" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Production Account Credential</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/account_credential</config_path>
+                        <depends>
+                            <field id="sandbox_mode">0</field>
+                        </depends>
+                    </field>
+                    <field id="sandbox_account_credential" translate="label" type="obscure" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Account Credential</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/sandbox_account_credential</config_path>
+                        <depends>
+                            <field id="sandbox_mode">1</field>
+                        </depends>
+                    </field>
+                    <field id="region" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Region</label>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\Region</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/region</config_path>
+                    </field>
+                    <field id="payment_action" translate="label tooltip" type="select" sortOrder="60" showInDefault="0" showInWebsite="0" showInStore="0">
+                        <label>Payment Action</label>
+                        <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentAction</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/payment_action</config_path>
+                    </field>
+                    <field id="allow_card_saving" translate="label" sortOrder="80" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Allow Card Saving</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/allow_card_saving</config_path>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:api.integrations@globalpay.com?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                    </field>
+                    <field id="order_status" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>New Order Status</label>
+                        <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/order_status</config_path>
+                    </field>
+                    <field id="debug" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Debug</label>
+                        <tooltip>Log all request to and from gateway. This can also log private data and should only be enabled in a development or stage environment.</tooltip>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_txnapi/debug</config_path>
+                    </field>
+                </group>
+                <group id="FraudManagement" translate="label comment" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[Fraud Management<i>General Fraud Management Settings </i>]]></label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+                    <fieldset_css>complex fraudmanagement-other-section with-button</fieldset_css>
+                    <field id="enable_anti_fraud" translate="label" type="select" sortOrder="131" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable Anti-Fraud Controls</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>globalpayments/fraudmanagement/enable_anti_fraud</config_path>
+                    </field>
+                    <field id="allow_fraud" translate="label" type="select" sortOrder="132" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Allow Suspicious</label>
+                        <depends><field id="enable_anti_fraud">1</field></depends>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>globalpayments/fraudmanagement/allow_fraud</config_path>
+                        <comment><![CDATA[Note: You will have 72 hours from the original authorization date to manually review suspicious orders in the virtual terminal and make a final decision (either to accept the gateway fraud decision or to manually override).]]></comment>
+                    </field>
+                    <field id="email_fraud" translate="label" type="select" sortOrder="133" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Email Store Owner on Suspicious Orders</label>
+                        <depends><field id="enable_anti_fraud">1</field></depends>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>globalpayments/fraudmanagement/email_fraud</config_path>
+                    </field>
+                    <field id="fraud_address" translate="label" type="text" sortOrder="134" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Notification Email Address</label>
+                        <depends><field id="enable_anti_fraud">1</field></depends>
+                        <config_path>globalpayments/fraudmanagement/fraud_address</config_path>
+                        <comment><![CDATA[This email address will be notified of suspicious orders.]]></comment>
+                    </field>
+                    <field id="fraud_text" translate="label" type="textarea" sortOrder="135" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Fraud Text</label>
+                        <depends><field id="enable_anti_fraud">1</field></depends>
+                        <config_path>globalpayments/fraudmanagement/fraud_text</config_path>
+                        <comment><![CDATA[This is the text that will display to the customer when fraud is detected and the transaction fails.]]></comment>
+                    </field>
+                    <field id="fraud_velocity_attempts" translate="label" type="text" sortOrder="136" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Max Velocity Attempts</label>
+                        <depends><field id="enable_anti_fraud">1</field></depends>
+                        <config_path>globalpayments/fraudmanagement/fraud_velocity_attempts</config_path>
+                        <comment><![CDATA[The maximum number of attempts allowed before additional attempts are blocked.]]></comment>
+                    </field>
+                    <field id="fraud_velocity_timeout" translate="label" type="text" sortOrder="137" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Velocity Attempts Timeout</label>
+                        <depends><field id="enable_anti_fraud">1</field></depends>
+                        <config_path>globalpayments/fraudmanagement/fraud_velocity_timeout</config_path>
+                        <comment><![CDATA[The amount of time (in minutes) before recent failures are ignored.]]></comment>
+                    </field>
+                </group>
+                <group id="AvsCvvManagement" translate="label comment" type="text" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[AVS CVV Result Management<i> Settings </i>]]></label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+                    <fieldset_css>complex fraudmanagement-other-section with-button</fieldset_css>
+                    <field id="check_avs_cvv" translate="label" type="select" sortOrder="185" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Check AVS/CVV Result</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>globalpayments/avs_cvv_conditions/check_avs_cvv</config_path>
+                    </field>
+                    <field id="avs_decline_codes" translate="label" type="multiselect" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>AVS Decline Codes</label>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\AvsDeclineCode</source_model>
+                        <depends><field id="check_avs_cvv">1</field></depends>
+                        <config_path>globalpayments/avs_cvv_conditions/avs_decline_codes</config_path>
+                    </field>
+                    <field id="cvv_decline_codes" translate="label" type="multiselect" sortOrder="195" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>CVV Decline Codes</label>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\CvvDeclineCode</source_model>
+                        <depends><field id="check_avs_cvv">1</field></depends>
+                        <config_path>globalpayments/avs_cvv_conditions/cvv_decline_codes</config_path>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

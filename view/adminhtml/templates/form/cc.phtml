@@ -1,0 +1,134 @@
+<?php
+use GlobalPayments\Api\Entities\Enums\ManualEntryMethod;
+use GlobalPayments\PaymentGateway\Gateway\Config;
+
+/**
+ *
+ * @var \Magento\Payment\Block\Adminhtml\Transparent\Form $block
+ */
+
+$code = $block->escapeHtml($block->getMethodCode());
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$config = $objectManager->get('GlobalPayments\PaymentGateway\Model\Ui\ConfigProvider')->getConfig();
+$gatewayConfig = $config['payment']['globalpayments_paymentgateway'];
+$gatewayConfig['fieldset'] = 'payment_form_'.$code;
+$gatewayConfig['code'] = $code;
+$sandboxMode = $gatewayConfig['sandboxMode'];
+$entryMode = '';
+
+if ($code === Config::CODE_GPAPI) {
+    $entryMode = ManualEntryMethod::MOTO;
+}
+?>
+<fieldset
+    data-mage-init='{
+        "GlobalPayments_PaymentGateway/js/token": <?=$block->escapeHtml(json_encode($gatewayConfig));?>
+    }'
+    class="admin__fieldset gp-admin-fields payment-method <?= $block->escapeHtml($code) ?>"
+    id="payment_form_<?= $block->escapeHtml($code) ?>"
+    style="display: none; margin-left: 24px;">
+    <div class="globalpayments-error"></div>
+    <?php if ($sandboxMode): ?>
+        <div class="globalpayments-sandbox-warning">
+            <?= $block->escapeHtml(
+                __('This page is currently in sandbox/test mode. Do not use real/active card numbers.')
+            ) ?>
+        </div>
+    <?php endif ?>
+    <div class="field credit-card-number required">
+        <label
+            for="<?= $block->escapeHtml($code) . '_credit_card_number' ?>"
+            class="label">
+            <span>
+                <?= $block->escapeHtml(__('Credit Card Number')) ?>
+            </span>
+        </label>
+        <div class="control">
+            <div
+                id="<?= $block->escapeHtml($code) . '_credit_card_number' ?>"
+                class="credit-card-number-target"></div>
+            <div class="validation-error" style="display: none;">
+                <?= $block->escapeHtml(
+                    __('Please enter a valid Credit Card Number')
+                ) ?>
+            </div>
+        </div>
+    </div>
+    <div class="field credit-card-expiration required">
+        <label
+            for="<?= $block->escapeHtml($code) . '_credit_card_expiration' ?>"
+            class="label">
+                <span>
+                    <?= $block->escapeHtml(__('Credit Card Expiration Date')) ?>
+                </span>
+        </label>
+        <div class="control">
+            <div
+                id="<?= $block->escapeHtml($code) . '_credit_card_expiration' ?>"
+                class="credit-card-expiration-target"></div>
+            <div class="validation-error" style="display: none;">
+                <?= $block->escapeHtml(
+                    __('Please enter a valid Credit Card Expiration Date')
+                ) ?>
+            </div>
+        </div>
+    </div>
+    <div class="field credit-card-cvv required">
+        <label
+            for="<?= $block->escapeHtml($code) . '_credit_card_cvv' ?>"
+            class="label">
+                <span>
+                    <?= $block->escapeHtml(__('Credit Card Security Code')) ?>
+                </span>
+        </label>
+        <div class="control">
+            <div
+                id="<?= $block->escapeHtml($code) . '_credit_card_cvv' ?>"
+                class="credit-card-cvv-target"></div>
+            <div class="validation-error" style="display: none;">
+                <?= $block->escapeHtml(
+                    __('Please enter a Credit Card Security Code')
+                ) ?>
+            </div>
+        </div>
+    </div>
+    <?php if ($gatewayConfig['showCardHolderName']): ?>
+        <div class="field card-holder-name required">
+            <label
+                for="<?= $block->escapeHtml($code) . '_card_holder_name' ?>"
+                class="label">
+                <span>
+                    <?= $block->escapeHtml(__('Card Holder Name')) ?>
+                </span>
+            </label>
+            <div class="control">
+                <div
+                    id="<?= $block->escapeHtml($code) . '_card_holder_name' ?>"
+                    class="card-holder-name-target"></div>
+                <div class="validation-error" style="display: none;">
+                    <?= $block->escapeHtml(
+                        __('Please enter a valid Card Holder Name')
+                    ) ?>
+                </div>
+            </div>
+        </div>
+    <?php endif ?>
+    <div class="field credit-card-submit required">
+        <div class="control">
+            <div
+                id="<?= $block->escapeHtml($code) . '_credit_card_submit' ?>"
+                class="credit-card-submit-target"></div>
+        </div>
+    </div>
+    <div class="field-tooltip-content" style="margin: 8px 0">
+        <input type="checkbox" id="<?= /* @noEscape */ $code ?>_vault"
+            name="payment[is_active_payment_token_enabler]"
+            class="admin__control-checkbox" /> <label
+            class="label admin__field-label"
+            for="<?= /* @noEscape */ $code ?>_vault"> <span><?= $block->escapeHtml(__('Save for later use')) ?></span>
+        </label>
+    </div>
+    <input type="hidden" id="gp_token_response"
+        name="payment[tokenResponse]" />
+    <input type="hidden" name="payment[entryMode]" value="<?= $block->escapeHtml($entryMode); ?>" />
+</fieldset>

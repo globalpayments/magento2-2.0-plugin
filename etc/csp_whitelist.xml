@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="connect-src">
+            <values>
+                <value id="pay.google.com" type="host">https://google.com/pay</value>
+                <value id="globalpay.com" type="host">*.globalpay.com</value>
+                <value id="js.globalpay.com" type="host">https://js.globalpay.com</value>
+                <value id="js-cert.globalpay.com" type="host">https://js-cert.globalpay.com</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="globalpay.com" type="host">*.globalpay.com</value>
+                <value id="fonts.gstatic.com" type="host">https://fonts.gstatic.com</value>
+            </values>
+        </policy>
+        <policy id="frame-src">
+            <values>
+                <value id="americanexpress.com" type="host">*.americanexpress.com</value>
+                <value id="globalpay.com" type="host">*.globalpay.com</value>
+                <value id="mastercard.com" type="host">*.mastercard.com</value>
+                <value id="visa.com" type="host">*.visa.com</value>
+                <value id="gpwebpay.com" type="host">*.gpwebpay.com</value>
+                <value id="gpe.cz" type="host">*.gpe.cz</value>
+                <value id="globalpay-ecommerce.com" type="host">*.globalpay-ecommerce.com</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="globalpay.com" type="host">*.globalpay.com</value>
+            </values>
+        </policy>
+        <policy id="script-src">
+            <values>
+                <value id="aexp-static.com" type="host">*.aexp-static.com</value>
+                <value id="ajax.aspnetcdn.com" type="host">https://ajax.aspnetcdn.com</value>
+                <value id="globalpay.com" type="host">*.globalpay.com</value>
+                <value id="gpapiservices.com" type="host">*.gpapiservices.com</value>
+                <value id="pay.google.com" type="host">https://pay.google.com</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="fonts.googleapis.com" type="host">https://fonts.googleapis.com</value>
+            </values>
+        </policy>
+        <policy id="form-action">
+            <values>
+                <value id="gpwebpay.com" type="host">*.gpwebpay.com</value>
+                <value id="gpe.cz" type="host">*.gpe.cz</value>
+                <value id="globalpay-ecommerce.com" type="host">*.globalpay-ecommerce.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

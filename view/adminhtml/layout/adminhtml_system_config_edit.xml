@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="GlobalPayments_PaymentGateway::css/styles.css"/>
+        <script src="GlobalPayments_PaymentGateway::js/system/config/edit/enforce-single-gateway.js"/>
+        <script src="GlobalPayments_PaymentGateway::js/system/config/edit/required-checkboxes.js"/>
+        <script src="GlobalPayments_PaymentGateway::js/system/config/edit/system.js"/>
+    </head>
+</page>

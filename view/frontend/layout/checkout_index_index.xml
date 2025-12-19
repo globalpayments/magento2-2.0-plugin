@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="component" xsi:type="string">uiComponent</item>
+                                            <item name="children" xsi:type="array">
+                                                <item name="payment" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="renders" xsi:type="array">
+                                                            <!-- merge payment method renders here -->
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="globalpayments_paymentgateway" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">GlobalPayments_PaymentGateway/js/view/payment/globalpayments_paymentgateway</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="globalpayments_paymentgateway_heartland" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="globalpayments_paymentgateway_genius" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="globalpayments_paymentgateway_gpApi" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="globalpayments_paymentgateway_txnapi" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="globalpayments_paymentgateway_digital_wallets" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">GlobalPayments_PaymentGateway/js/digital-wallets/digital-wallets</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="globalpayments_paymentgateway_applePay" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="globalpayments_paymentgateway_clickToPay" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="globalpayments_paymentgateway_googlePay" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <!-- apm -->
+                                                                <item name="globalpayments_paymentgateway_apm" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">GlobalPayments_PaymentGateway/js/view/payment/globalpayments_paymentgateway_apm</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="globalpayments_paymentgateway_paypal" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <!-- bnpl -->
+                                                                <item name="globalpayments_paymentgateway_bnpl" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">GlobalPayments_PaymentGateway/js/view/payment/globalpayments_paymentgateway_bnpl</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="globalpayments_paymentgateway_affirm" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="globalpayments_paymentgateway_clearpay" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="globalpayments_paymentgateway_klarna" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <!-- bank payment -->
+                                                                <item name="globalpayments_paymentgateway_open_banking" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">GlobalPayments_PaymentGateway/js/view/payment/globalpayments_paymentgateway_openbanking</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="globalpayments_paymentgateway_bankPayment" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

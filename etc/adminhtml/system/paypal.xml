@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="paypal" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label><![CDATA[GlobalPayments - PayPal<i>Connect to PayPal via Unified Payments Gateway</i>]]></label>
+        <fieldset_css>complex paypal-other-section with-button</fieldset_css>
+        <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+        <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/globalpayments_paymentgateway_paypal/active</config_path>
+        </field>
+        <field id="title" translate="label tooltip" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Title</label>
+            <tooltip>This controls the title which the user sees during checkout.</tooltip>
+            <config_path>payment/globalpayments_paymentgateway_paypal/title</config_path>
+        </field>
+        <field id="payment_action" translate="label tooltip" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Payment Action</label>
+            <tooltip>Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture.</tooltip>
+            <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\PaymentAction</source_model>
+            <config_path>payment/globalpayments_paymentgateway_paypal/payment_action</config_path>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/globalpayments_paymentgateway_paypal/sort_order</config_path>
+        </field>
+    </group>
+</include>

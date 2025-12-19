@@ -1,0 +1,918 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Payment Method Facades configuration -->
+    <virtualType name="GlobalPaymentsPaymentGatewayHeartlandFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_HEARTLAND</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayGeniusFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_GENIUS</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayGpApiFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_GPAPI</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayGooglePayFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\DigitalWallets\GooglePay\Config::CODE_GOOGLE_PAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayGooglePayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayDigitalWalletsCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayApplePayFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\DigitalWallets\ApplePay\Config::CODE_APPLE_PAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayApplePayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayDigitalWalletsCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayClickToPayFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\DigitalWallets\ClickToPay\Config::CODE_CLICK_TO_PAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayClickToPayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayDigitalWalletsCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayPayPalFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\Apm\PayPal\Config::CODE_PAYPAL</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayPayPalValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayAPMCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayBlikFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\Apm\Blik\Config::CODE_BLIK</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayBlikValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayBlikCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayBankSelectFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\Apm\BankSelect\Config::CODE_BANK_SELECT</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayBankSelectValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayBankSelectCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayAffirmFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\BuyNowPayLater\Affirm\Config::CODE_AFFIRM</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayAffirmValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayBNPLCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayClearpayFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\BuyNowPayLater\Clearpay\Config::CODE_CLEAR_PAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayClearpayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayBNPLCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayKlarnaFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\BuyNowPayLater\Klarna\Config::CODE_KLARNA</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayKlarnaValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayBNPLCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayBankPaymentFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Model\OpenBanking\Config::CODE_BANK_PAYMENT</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayBankPaymentValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayOpenBankingCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayTransitFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_TRANSIT</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayTxnApiFacade" type="Magento\Payment\Model\Method\Adapter">
+    <arguments>
+        <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_TXNAPI</argument>
+        <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+        <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+        <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+        <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+    </arguments>
+</virtualType>
+    <!-- HPP Payment Method Facade -->
+    <virtualType name="GlobalPaymentsPaymentGatewayHPPFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">globalpayments_paymentgateway_hpp</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">GlobalPayments\PaymentGateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayHPPCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayHeartlandVaultFacade" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_HEARTLAND_VAULT</argument>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">GlobalPaymentsPaymentGatewayHeartlandFacade</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayGeniusVaultFacade" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_GENIUS_VAULT</argument>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">GlobalPaymentsPaymentGatewayGeniusFacade</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayTransitVaultFacade" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_TRANSIT_VAULT</argument>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">GlobalPaymentsPaymentGatewayTransitFacade</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayGpApiVaultFacade" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_GPAPI_VAULT</argument>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">GlobalPaymentsPaymentGatewayGpApiFacade</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayTxnApiVaultFacade" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_TXNAPI_VAULT</argument>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+            <argument name="valueHandlerPool" xsi:type="object">GlobalPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">GlobalPaymentsPaymentGatewayTxnApiFacade</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- Configuration reader -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Config">
+        <arguments>
+            <argument name="availableGateways" xsi:type="array">
+                <item name="heartland" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_HEARTLAND</item>
+                <item name="genius" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_GENIUS</item>
+                <item name="gpApi" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_GPAPI</item>
+                <item name="transit" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_TRANSIT</item>
+                <item name="txnapi" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_TXNAPI</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- The Unified Payments Config instance -->
+    <virtualType name="GlobalPaymentsUnifiedPaymentsGatewayConfig" type="GlobalPayments\PaymentGateway\Gateway\Config">
+        <arguments>
+            <argument name="gatewayCode" xsi:type="const">\GlobalPayments\PaymentGateway\Gateway\Config::CODE_GPAPI</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Abstract Payment Method configuration reader -->
+    <type name="GlobalPayments\PaymentGateway\Model\AbstractPaymentMethod">
+        <arguments>
+            <argument name="config" xsi:type="object">\GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
+    <preference for="GlobalPayments\PaymentGateway\Api\ValidateMerchantInterface" type="GlobalPayments\PaymentGateway\Model\DigitalWallets\ApplePay\ValidateMerchant" />
+    <preference for="GlobalPayments\PaymentGateway\Configuration\CorsConfigurationInterface" type="GlobalPayments\PaymentGateway\Configuration\CorsConfiguration" />
+
+    <!-- Async Payment AbstractUrl configuration reader -->
+    <type name="GlobalPayments\PaymentGateway\Controller\AsyncPayment\AbstractUrl">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPaymentsUnifiedPaymentsGatewayConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Transaction info reader -->
+    <type name="GlobalPayments\PaymentGateway\Model\TransactionInfo">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPaymentsUnifiedPaymentsGatewayConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Logger, initialized with GlobalPayments\PaymentGateway\Gateway\Config -->
+    <virtualType name="GlobalPaymentsPaymentGatewayLogger" type="Magento\Payment\Model\Method\Logger">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock">
+        <arguments>
+            <argument name="logger" xsi:type="object">GlobalPaymentsPaymentGatewayLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Commands infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Command\ConditionalInitializeCommand</item>
+                <item name="authorize" xsi:type="string">GlobalPaymentsPaymentGatewayAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">GlobalPaymentsPaymentGatewayCaptureCommand</item>
+                <item name="charge" xsi:type="string">GlobalPaymentsPaymentGatewayChargeCommand</item>
+                <item name="settlement" xsi:type="string">GlobalPaymentsCaptureCommand</item>
+                <item name="vault_authorize" xsi:type="string">GlobalPaymentsVaultAuthorizeCommand</item>
+                <item name="vault_sale" xsi:type="string">GlobalPaymentsVaultChargeCommand</item>
+                <item name="vault_capture" xsi:type="string">GlobalPaymentsCaptureCommand</item>
+                <item name="void" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="refund" xsi:type="string">GlobalPaymentsPaymentGatewayRefundCommand</item>
+                <item name="cancel" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="deny_payment" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Digital Wallets Commands infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayDigitalWalletsCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">GlobalPaymentsPaymentGatewayDigitalWalletsAuthorizeCommand</item>
+                <item name="sale" xsi:type="string">GlobalPaymentsPaymentGatewayDigitalWalletsChargeCommand</item>
+                <item name="capture" xsi:type="string">GlobalPaymentsDigitalWalletsCaptureStrategyCommand</item>
+                <item name="settlement" xsi:type="string">GlobalPaymentsCaptureCommand</item>
+                <item name="void" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="refund" xsi:type="string">GlobalPaymentsPaymentGatewayRefundCommand</item>
+                <item name="cancel" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="deny_payment" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GlobalPaymentsDigitalWalletsCaptureStrategyCommand" type="GlobalPayments\PaymentGateway\Gateway\Command\CaptureStrategyCommand">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayDigitalWalletsCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Buy Now Pay Later Commands infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayBNPLCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">GlobalPaymentsPaymentGatewayBNPLAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">GlobalPaymentsPaymentGatewayCaptureCommand</item>
+                <item name="sale" xsi:type="string">GlobalPaymentsPaymentGatewayBNPLAuthorizeCommand</item>
+                <item name="void" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="refund" xsi:type="string">GlobalPaymentsPaymentGatewayRefundCommand</item>
+                <item name="cancel" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="deny_payment" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- APM Commands infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayAPMCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">GlobalPaymentsPaymentGatewayAPMAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">GlobalPaymentsPaymentGatewayCaptureCommand</item>
+                <item name="sale" xsi:type="string">GlobalPaymentsPaymentGatewayAPMAuthorizeCommand</item>
+                <item name="void" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="refund" xsi:type="string">GlobalPaymentsPaymentGatewayRefundCommand</item>
+                <item name="cancel" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="deny_payment" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Blik Commands infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayBlikCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">GlobalPaymentsPaymentGatewayBlikAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">GlobalPaymentsPaymentGatewayCaptureCommand</item>
+                <item name="sale" xsi:type="string">GlobalPaymentsPaymentGatewayBlikAuthorizeCommand</item>
+                <item name="void" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="refund" xsi:type="string">GlobalPaymentsPaymentGatewayRefundCommand</item>
+                <item name="cancel" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="deny_payment" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Bank Select Commands infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayBankSelectCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">GlobalPaymentsPaymentGatewayBlikAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">GlobalPaymentsPaymentGatewayCaptureCommand</item>
+                <item name="sale" xsi:type="string">GlobalPaymentsPaymentGatewayBlikAuthorizeCommand</item>
+                <item name="void" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="refund" xsi:type="string">GlobalPaymentsPaymentGatewayRefundCommand</item>
+                <item name="cancel" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="deny_payment" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Open Banking Commands infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayOpenBankingCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Command\InitializeCommand</item> // here
+                <item name="authorize" xsi:type="string">GlobalPaymentsPaymentGatewayBlikAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">GlobalPaymentsPaymentGatewayCaptureCommand</item>
+                <item name="sale" xsi:type="string">GlobalPaymentsPaymentGatewayBlikAuthorizeCommand</item>
+                <item name="void" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="refund" xsi:type="string">GlobalPaymentsPaymentGatewayRefundCommand</item>
+                <item name="cancel" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="deny_payment" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorize command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\AuthorizationRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <!-- <argument name="validator" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Validator\ResponseCodeValidator</argument> -->
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Digital Wallets Authorize command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayDigitalWalletsAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\DigitalWallets\AuthorizationRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayDigitalWalletsResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <!-- <argument name="validator" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Validator\ResponseCodeValidator</argument> -->
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\DigitalWallets\AuthorizationClient</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Buy Now Pay Later Authorize command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayBNPLAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\BuyNowPayLater\InitiatePaymentRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayAsyncResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\BuyNowPayLater\InitiatePaymentClient</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Alternative Payment Methods Authorize command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayAPMAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\Apm\InitiatePaymentRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayAsyncResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\Apm\InitiatePaymentClient</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Open Banking Authorize command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayOpenBankingAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\OpenBanking\InitiatePaymentRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayAsyncResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\OpenBanking\InitiatePaymentClient</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Open Banking Authorize command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayBlikAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\Blik\InitiatePaymentRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayAsyncResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\Blik\InitiatePaymentClient</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- HPP Commands infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayHPPCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">GlobalPaymentsPaymentGatewayHPPAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">GlobalPaymentsPaymentGatewayCaptureCommand</item>
+                <item name="sale" xsi:type="string">GlobalPaymentsPaymentGatewayHPPAuthorizeCommand</item>
+                <item name="void" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="refund" xsi:type="string">GlobalPaymentsPaymentGatewayRefundCommand</item>
+                <item name="cancel" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+                <item name="deny_payment" xsi:type="string">GlobalPaymentsPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- HPP Authorize command - Uses completion client instead of normal payment processing -->
+    <virtualType name="GlobalPaymentsPaymentGatewayHPPAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\HostedPaymentPages\CompletionRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\HostedPaymentPages\CompletionClient</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorization Request -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Request\AuthorizationRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
+    <!-- Vault Authorize command -->
+    <virtualType name="GlobalPaymentsVaultAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\AuthorizationRequest</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
+            <argument name="handler" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler</argument>
+            <!-- <argument name="validator" xsi:type="object">Magento\Braintree\Gateway\Validator\ResponseValidator</argument> -->
+            <!-- <argument name="errorMessageMapper" xsi:type="object">Magento\Braintree\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument> -->
+        </arguments>
+    </virtualType>
+
+    <!-- Vault Authorization Request -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Request\VaultAuthorizationRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
+    <!-- Vault Capture command -->
+    <virtualType name="GlobalPaymentsCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\CaptureRequest</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
+            <argument name="handler" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Vault Capture Request -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Request\VaultCaptureRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
+    <!-- Vault Charge command -->
+    <virtualType name="GlobalPaymentsVaultChargeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\ChargeRequest</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
+            <argument name="handler" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Vault Charge Request -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Request\VaultChargeRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
+    <!-- Vault Stuff -->
+    <virtualType name="GlobalPaymentsCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Payment\Gateway\Command\CommandManagerPool">
+        <arguments>
+            <argument name="executors" xsi:type="array">
+                <item name="globalpayments_paymentgateway_heartland" xsi:type="string">GlobalPaymentsCommandManager</item>
+                <item name="globalpayments_paymentgateway_gpApi" xsi:type="string">GlobalPaymentsCommandManager</item>
+                <item name="globalpayments_paymentgateway_genius" xsi:type="string">GlobalPaymentsCommandManager</item>
+                <item name="globalpayments_paymentgateway_transit" xsi:type="string">GlobalPaymentsCommandManager</item>
+                <item name="globalpayments_paymentgateway_txnapi" xsi:type="string">GlobalPaymentsCommandManager</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Capture command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\CaptureRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <!-- <argument name="validator" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Validator\ResponseCodeValidator</argument> -->
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Charge command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayChargeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\ChargeRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <!-- <argument name="validator" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Validator\ResponseCodeValidator</argument> -->
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Charge Request -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Request\ChargeRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
+    <!-- Digital Wallets Charge command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayDigitalWalletsChargeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\DigitalWallets\ChargeRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayDigitalWalletsResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <!-- <argument name="validator" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Validator\ResponseCodeValidator</argument> -->
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\DigitalWallets\AuthorizationClient</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Verify Request -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Request\VerifyRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
+    <!-- Void command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\VoidRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <!-- <argument name="validator" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Validator\ResponseCodeValidator</argument> -->
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Refund command -->
+    <virtualType name="GlobalPaymentsPaymentGatewayRefundCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\RefundRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <!-- <argument name="validator" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Validator\ResponseCodeValidator</argument> -->
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Response handlers -->
+    <virtualType name="GlobalPaymentsPaymentGatewayResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="txnid" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler</item>
+                <item name="vault_details" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\VaultDetailsHandler</item>
+                <item name="fraud" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\FraudHandler</item>
+                <item name="fraud_filter_result" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\FraudFilterResultHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Digital Wallets response handlers  -->
+    <virtualType name="GlobalPaymentsPaymentGatewayDigitalWalletsResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="txnid" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler</item>
+                <item name="customer_data" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\DigitalWallets\CustomerDataHandler</item>
+                <item name="payment_method" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\PaymentMethodHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Async payment methods authorize handlers -->
+    <virtualType name="GlobalPaymentsPaymentGatewayAsyncResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="txnid" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler</item>
+                <item name="payment_method" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\PaymentMethodHandler</item>
+                <item name="async_payment_method" xsi:type="string">GlobalPayments\PaymentGateway\Gateway\Response\AsyncPaymentMethodHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Google Pay Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayGooglePayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayGooglePayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayGooglePayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\DigitalWallets\GooglePay\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Apple Pay Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayApplePayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayApplePayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayApplePayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\DigitalWallets\ApplePay\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Click To Pay Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayClickToPayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayClickToPayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayClickToPayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\DigitalWallets\ClickToPay\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- PayPal Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayPayPalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayPayPalConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayPayPalConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\Apm\PayPal\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Blik Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayBlikValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayBlikConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayBlikConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\Apm\Blik\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Bank Select Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayBankSelectValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayBankSelectConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayBankSelectConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\Apm\BankSelect\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Affirm Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayAffirmValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayAffirmConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayAffirmConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\BuyNowPayLater\Affirm\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Clearpay Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayClearpayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayClearpayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayClearpayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\BuyNowPayLater\Clearpay\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Klarna Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayKlarnaValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayKlarnaConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayKlarnaConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\BuyNowPayLater\Klarna\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Bank Payment Value handlers infrastructure -->
+    <virtualType name="GlobalPaymentsPaymentGatewayBankPaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GlobalPaymentsPaymentGatewayBankPaymentConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GlobalPaymentsPaymentGatewayBankPaymentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">GlobalPayments\PaymentGateway\Model\OpenBanking\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="GlobalPayments\PaymentGateway\Block\Info">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
+    <type name="GlobalPayments\Controller\Customer\ProcessCardData">
+        <arguments>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+            <argument name="vaultDetailsHandler" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Response\VaultDetailsHandler</argument>
+            <argument name="verifyRequest" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\VerifyRequest</argument>
+        </arguments>
+    </type>
+
+    <!-- Initiate Payment -->
+    <!-- Abstract Initiate Payment -->
+    <type name="GlobalPayments\PaymentGateway\Controller\AsyncPayment\AbstractInitiatePayment">
+        <arguments>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayAsyncResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
+        </arguments>
+    </type>
+    <!-- BNPL -->
+    <type name="GlobalPayments\PaymentGateway\Controller\BuyNowPayLater\InitiatePayment">
+        <arguments>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\BuyNowPayLater\InitiatePaymentClient</argument>
+            <argument name="request" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\BuyNowPayLater\InitiatePaymentRequest</argument>
+        </arguments>
+    </type>
+    <!-- Open Banking -->
+    <type name="GlobalPayments\PaymentGateway\Controller\OpenBanking\InitiatePayment">
+        <arguments>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\OpenBanking\InitiatePaymentClient</argument>
+            <argument name="request" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\OpenBanking\InitiatePaymentRequest</argument>
+        </arguments>
+    </type>
+    <!-- APM -->
+    <type name="GlobalPayments\PaymentGateway\Controller\Apm\InitiatePayment">
+        <arguments>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\Apm\InitiatePaymentClient</argument>
+            <argument name="request" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\Apm\InitiatePaymentRequest</argument>
+        </arguments>
+    </type>
+    <type name="GlobalPayments\PaymentGateway\Controller\Blik\InitiatePayment">
+        <arguments>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\Blik\InitiatePaymentClient</argument>
+            <argument name="request" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\Blik\InitiatePaymentRequest</argument>
+        </arguments>
+    </type>
+    <type name="GlobalPayments\PaymentGateway\Controller\HostedPaymentPages\InitiatePayment">
+        <arguments>
+            <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\HostedPaymentPages\InitiatePaymentClient</argument>
+            <argument name="request" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\HostedPaymentPages\InitiatePaymentRequest</argument>
+            <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayAsyncResponseHandlerComposite</argument>
+        </arguments>
+    </type>
+
+    <!-- HPP ReturnUrl Controller DI Configuration -->
+    <type name="GlobalPayments\PaymentGateway\Controller\HostedPaymentPages\ReturnUrl">
+        <arguments>
+            <argument name="configFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\ConfigFactory</argument>
+            <argument name="checkoutHelper" xsi:type="object">GlobalPayments\PaymentGateway\Helper\Checkout</argument>
+            <argument name="orderRepository" xsi:type="object">Magento\Sales\Api\OrderRepositoryInterface</argument>
+            <argument name="hppTransactionHelper" xsi:type="object">GlobalPayments\PaymentGateway\Helper\HppTransaction</argument>
+            <argument name="hppSecurity" xsi:type="object">GlobalPayments\PaymentGateway\Helper\HppSecurity</argument>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Model\HostedPaymentPages\Config</argument>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+            <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface</argument>
+            <argument name="scopeConfig" xsi:type="object">Magento\Framework\App\Config\ScopeConfigInterface</argument>
+            <argument name="assetRepository" xsi:type="object">Magento\Framework\View\Asset\Repository</argument>
+            <argument name="transactionInfo" xsi:type="object">GlobalPayments\PaymentGateway\Model\TransactionInfo</argument>
+        </arguments>
+    </type>
+
+    <!-- HPP InitiatePaymentClient DI configuration -->
+    <!-- <type name="GlobalPayments\PaymentGateway\Gateway\Http\Client\HostedPaymentPages\InitiatePaymentClient">
+        <arguments>
+            <argument name="configHelper" xsi:type="object">GlobalPayments\PaymentGateway\Model\Helper\GatewayConfigHelper</argument>
+            <argument name="logger" xsi:type="object">GlobalPaymentsPaymentGatewayLogger</argument>
+            <argument name="utils" xsi:type="object">GlobalPayments\PaymentGateway\Helper\Utils</argument>
+        </arguments>
+    </type> -->
+
+    <!-- HPP InitiatePaymentRequest DI configuration -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Request\HostedPaymentPages\InitiatePaymentRequest">
+        <arguments>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+            <argument name="configFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\ConfigFactory</argument>
+            <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface</argument>
+        </arguments>
+    </type>
+
+
+
+    <!-- HPP CompletionClient DI configuration -->
+    <!-- <type name="GlobalPayments\PaymentGateway\Gateway\Http\Client\HostedPaymentPages\CompletionClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">GlobalPaymentsPaymentGatewayLogger</argument>
+        </arguments>
+    </type> -->
+
+    <!-- HPP CompletionRequest DI configuration -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Request\HostedPaymentPages\CompletionRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Quote\Model\Quote\Payment">
+        <plugin disabled="false" name="GlobalPayments_PaymentGateway_Plugin_Model_Quote_Payment" sortOrder="10" type="GlobalPayments\PaymentGateway\Plugin\Model\Quote\Payment"/>
+    </type>
+
+    <!-- ConditionalInitializeCommand DI configuration -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Command\ConditionalInitializeCommand">
+        <arguments>
+            <argument name="configFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\ConfigFactory</argument>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+        </arguments>
+    </type>
+</config>
