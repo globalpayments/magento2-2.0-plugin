@@ -71,12 +71,10 @@ class HppTransaction
                 $this->createHppAuthorizationTransaction($order, $payment, $transactionId);
             }
             
-            // Override with HPP-specific configured order status if different from processing
-            $configuredStatus = $config->getOrderStatus();
-
-            if ($configuredStatus && $configuredStatus !== 'processing') {
-                $this->setOrderStatus($order, $config);
-            }
+             $methodInstance = $payment->getMethodInstance();
+             $configuredStatus = $methodInstance->getConfigData('order_status');
+             
+             $this->setOrderStatus($order,$configuredStatus);
             
             // Re-enable email notifications (disabled by InitializeCommand)
             $order->setCanSendNewEmailFlag(true);
@@ -105,9 +103,9 @@ class HppTransaction
      * @param mixed $config
      * @return void
      */
-    private function setOrderStatus(OrderInterface $order, $config)
+    private function setOrderStatus(OrderInterface $order, $configuredStatus)
     {
-        $configuredStatus = $config->getOrderStatus();
+        
         
         // Map status to appropriate state
         switch ($configuredStatus) {
@@ -127,17 +125,22 @@ class HppTransaction
                 $order->setState(Order::STATE_PAYMENT_REVIEW);
                 $order->setStatus('payment_review');
                 break;
+            case 'pending':
+                $order->setState(Order::STATE_NEW);
+                $order->setStatus('pending');
+                break;    
             default:
                 // For custom statuses, try to set directly
                 $order->setStatus($configuredStatus);
-
                 // Determine appropriate state based on status
-                if (strpos($configuredStatus, 'pending') !== false) {
+                if (strpos($configuredStatus, 'pending_payment') !== false) {
                     $order->setState(Order::STATE_PENDING_PAYMENT);
                 } elseif (strpos($configuredStatus, 'processing') !== false) {
                     $order->setState(Order::STATE_PROCESSING);
                 } elseif (strpos($configuredStatus, 'complete') !== false) {
                     $order->setState(Order::STATE_COMPLETE);
+                } elseif (strpos($configuredStatus, 'pending') !== false) {
+                    $order->setState(Order::STATE_NEW);
                 } else {
                     $order->setState(Order::STATE_PROCESSING); // Default to processing
                 }
@@ -185,10 +188,6 @@ class HppTransaction
         $payment->setTransactionId($transactionId);
         $payment->setLastTransId($transactionId);
         $payment->setIsTransactionClosed(false);
-        
-        // Set order status to processing
-        $order->setState(Order::STATE_PROCESSING);
-        $order->setStatus(Order::STATE_PROCESSING);
 
         // Add authorization comment
         $order->addCommentToStatusHistory(
@@ -235,7 +234,6 @@ class HppTransaction
         // Create invoice for the order
         if ($order->canInvoice()) {
             $invoice = $order->prepareInvoice();
-            $invoice->getOrder()->setIsInProcess(true);
             $invoice->setTransactionId($transactionId);
             $invoice->register()->pay();
             

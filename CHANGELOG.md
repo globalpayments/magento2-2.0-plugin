@@ -4,6 +4,11 @@
 
 # Changelog
 
+## v2.3.4 (1/8/26)
+### Enhancements:
+ - Updated Composer requirements to latest version of globalpayments/php-sdk
+ - GpApi gateway: Improved order status handling for HPP card payments
+
 ## v2.3.3 (12/11/25)
 ### Bug Fixes:
  - Removed global payments logo from HPP success/decline modal
