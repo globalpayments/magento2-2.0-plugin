@@ -4,6 +4,10 @@
 
 # Changelog
 
+## v2.3.5 (1/15/26)
+### Enhancements:
+ - Global payments rebranding
+
 ## v2.3.4 (1/8/26)
 ### Enhancements:
  - Updated Composer requirements to latest version of globalpayments/php-sdk

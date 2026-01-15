@@ -4,7 +4,7 @@
     <system>
         <section id="payment">
             <group id="globalpayments_paymentgateway" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Global Payments (Heartland, Unified Payments &amp; TSYS)</label>
+                <label>Global Payments (Portico, Unified Payments &amp; TSYS)</label>
                 <comment><![CDATA[Accept credit/debit cards in your Magento store. Your customers never leave your store to complete the purchase. Begin configuration and choose with which you were onboarded to access the correct gateway. ]]></comment>
                 <field id="card_brand_logos" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label><![CDATA[<div class="card-brands"></div>]]></label>
@@ -13,7 +13,7 @@
                 <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
 
                 <group id="heartland" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label><![CDATA[Heartland<i>Connect to Heartland's Online Payments gateway</i>]]></label>
+                    <label><![CDATA[Portico<i>Connect to the Global Payments Portico Gateway</i>]]></label>
                     <fieldset_css>complex heartland-other-section with-button</fieldset_css>
                     <comment><![CDATA[<a href="https://developer.heartlandpaymentsystems.com/Account/Register" target="_blank">Click here to sign up for SecureSubmit account]]></comment>
                     <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
