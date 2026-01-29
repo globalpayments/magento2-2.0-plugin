@@ -4,6 +4,12 @@
 
 # Changelog
 
+## v2.3.6 (1/29/26)
+### Enhancements:
+- Updated Shopping Cart Plugin Admin Settings URL to Regional Support Page
+### Bug Fxies:
+- GpApi gateway: Drop-in UI now authorises payments correctly
+
 ## v2.3.5 (1/15/26)
 ### Enhancements:
  - Global payments rebranding

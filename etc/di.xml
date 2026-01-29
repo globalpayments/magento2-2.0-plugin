@@ -377,7 +377,7 @@
             <argument name="requestBuilder" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\AuthorizationRequest</argument>
             <argument name="handler" xsi:type="object">GlobalPaymentsPaymentGatewayResponseHandlerComposite</argument>
             <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
-            <!-- <argument name="validator" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Validator\ResponseCodeValidator</argument> -->
+             <argument name="validator" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Validator\ResponseCodeValidator</argument>
             <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>
         </arguments>
     </virtualType>
@@ -912,7 +912,7 @@
     <type name="GlobalPayments\PaymentGateway\Gateway\Command\ConditionalInitializeCommand">
         <arguments>
             <argument name="configFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\ConfigFactory</argument>
-            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+            <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
         </arguments>
     </type>
 </config>
