@@ -75,7 +75,7 @@
                         <label>Allow Card Saving</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/globalpayments_paymentgateway_heartland/allow_card_saving</config_path>
-                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:onlinepayments@heartland.us?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="https://developer.globalpay.com/support/integration-support" target="_blank">support</a> with any questions regarding this option.]]></comment>
                     </field>
                     <field id="order_status" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>New Order Status</label>
@@ -115,7 +115,7 @@
                         <label>Sandbox Mode</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_mode</config_path>
-                        <comment><![CDATA[Get your App Id and App Key from your <a href="https://developer.globalpay.com/user/register" target="_blank">Global Payments Developer Account</a>. When you are ready for Live, please contact support to get you live credentials.]]></comment>
+                        <comment><![CDATA[Get your App Id and App Key from your <a href="https://developer.globalpay.com/user/register" target="_blank">Global Payments Developer Account</a>. When you are ready for Live, please contact <a href="https://developer.globalpay.com/support/integration-support" target="_blank">support</a> to get you live credentials.]]></comment>
                     </field>
                     <field id="app_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Production App Id*</label>
@@ -214,7 +214,7 @@
                         <label>Allow Card Saving</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/allow_card_saving</config_path>
-                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:api.integrations@globalpay.com?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="https://developer.globalpay.com/support/integration-support" target="_blank">support</a> with any questions regarding this option.]]></comment>
                     </field>
                     <field id="order_status" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>New Order Status</label>
@@ -231,7 +231,7 @@
                         <label>Order Transaction Descriptor</label>
                         <validate>validate-length maximum-length-25</validate>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/txn_descriptor</config_path>
-                        <comment><![CDATA[During a Capture or Authorize payment action, this value will be passed along as the transaction-specific descriptor listed on the customer's bank account. Please contact <a href="mailto:api.integrations@globalpay.com?Subject=Magento%20Transaction%20Descriptor%20Option">support</a> with any questions regarding this option (maxLength: 25).]]></comment>
+                        <comment><![CDATA[During a Capture or Authorize payment action, this value will be passed along as the transaction-specific descriptor listed on the customer's bank account. Please contact <a href="https://developer.globalpay.com/support/integration-support" target="_blank">support</a> with any questions regarding this option (maxLength: 25).]]></comment>
                     </field>
                     <field id="fraud_mode" translate="label tooltip" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Fraud Mode</label>
@@ -376,7 +376,7 @@
                         <label>Allow Card Saving</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/globalpayments_paymentgateway_genius/allow_card_saving</config_path>
-                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:securesubmitcert@e-hps.com?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="https://developer.globalpay.com/support/integration-support" target="_blank">support</a> with any questions regarding this option.]]></comment>
                     </field>
                     <field id="order_status" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>New Order Status</label>
@@ -515,7 +515,7 @@
                         <label>Allow Card Saving</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/globalpayments_paymentgateway_transit/allow_card_saving</config_path>
-                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:securesubmitcert@e-hps.com?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="https://developer.globalpay.com/support/integration-support" target="_blank">support</a> with any questions regarding this option.]]></comment>
                     </field>
                     <field id="debug" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Debug</label>
@@ -621,7 +621,7 @@
                         <label>Allow Card Saving</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/globalpayments_paymentgateway_txnapi/allow_card_saving</config_path>
-                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="mailto:api.integrations@globalpay.com?Subject=Magento%20Card%20Saving%20Option">support</a> with any questions regarding this option.]]></comment>
+                        <comment><![CDATA[Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href="https://developer.globalpay.com/support/integration-support" target="_blank">support</a> with any questions regarding this option.]]></comment>
                     </field>
                     <field id="order_status" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>New Order Status</label>
