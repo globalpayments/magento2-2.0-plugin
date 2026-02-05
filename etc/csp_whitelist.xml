@@ -4,9 +4,11 @@
         <policy id="connect-src">
             <values>
                 <value id="pay.google.com" type="host">https://google.com/pay</value>
+                <value id="pay_google" type="host">https://pay.google.com</value>
                 <value id="globalpay.com" type="host">*.globalpay.com</value>
                 <value id="js.globalpay.com" type="host">https://js.globalpay.com</value>
                 <value id="js-cert.globalpay.com" type="host">https://js-cert.globalpay.com</value>
+                <value id="payments_google" type="host">https://payments.google.com</value>
             </values>
         </policy>
         <policy id="font-src">
@@ -24,11 +26,18 @@
                 <value id="gpwebpay.com" type="host">*.gpwebpay.com</value>
                 <value id="gpe.cz" type="host">*.gpe.cz</value>
                 <value id="globalpay-ecommerce.com" type="host">*.globalpay-ecommerce.com</value>
+                <value id="pay_google" type="host">https://pay.google.com</value>
+                <value id="payments_google" type="host">https://payments.google.com</value>
+
             </values>
         </policy>
         <policy id="img-src">
             <values>
                 <value id="globalpay.com" type="host">*.globalpay.com</value>
+                <value id="pay_google_dark" type="host">https://www.gstatic.com/instantbuy/svg/dark/pay/en.svg</value>
+                <value id="pay_google_light" type="host">https://www.gstatic.com/instantbuy/svg/light/pay/en.svg</value>
+                <value id="pay_google_dark2" type="host">https://www.gstatic.com/instantbuy/svg/dark/en.svg</value>
+                <value id="pay_google_light2" type="host">https://www.gstatic.com/instantbuy/svg/light/en.svg</value>
             </values>
         </policy>
         <policy id="script-src">
@@ -38,6 +47,7 @@
                 <value id="globalpay.com" type="host">*.globalpay.com</value>
                 <value id="gpapiservices.com" type="host">*.gpapiservices.com</value>
                 <value id="pay.google.com" type="host">https://pay.google.com</value>
+                <value id="payments_google" type="host">https://payments.google.com</value>
             </values>
         </policy>
         <policy id="style-src">

@@ -67,12 +67,16 @@ define(
              */
             addGooglePayButton: function(elementId) {
                 var self = this;
+
                 var button = self.paymentsClient.createButton(
                     {
                         buttonColor: self.context.getButtonColor(),
-                        onClick: function () { self.onGooglePaymentButtonClicked() }
+                        buttonType: 'pay',
+                        buttonRadius: 3, // matches the standard Magento button radius
+                        onClick: function () { self.onGooglePaymentButtonClicked() },
                     }
                 );
+
                 document.getElementById(elementId).appendChild(button);
             },
 

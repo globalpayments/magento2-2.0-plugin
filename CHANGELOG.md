@@ -3,6 +3,10 @@
 </a>
 
 # Changelog
+## v2.3.7 (02/05/26)
+### Bug fixes:
+- Removal of UK county validator for 3DS
+- Improved/fixed Googlepay button integration on checkout page
 
 ## v2.3.6 (1/29/26)
 ### Enhancements:

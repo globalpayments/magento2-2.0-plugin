@@ -244,14 +244,6 @@ define(
                     effectiveShippingAddress = billingAddress;
                 }
 
-                // Enforce UK county requirement for UK addresses
-                if (billingAddress.countryId === 'GB' && (billingAddress.region === '' || effectiveShippingAddress.region === '')) {
-                    console.error('County is required for UK addresses.');
-                    self.showPaymentError('Please provide a county/region');
-
-                    return false;
-                }
-
                 if (self.isThreeDSecureEnabled() && (billingAddress.telephone === "" || effectiveShippingAddress.telephone === "")) {
                     console.error('Phone number is required for 3D Secure enabled transactions.');
                     self.showPaymentError('Please provide a phone number for 3D Secure verification.');

@@ -28,11 +28,6 @@ use GlobalPayments\Api\Utils\CountryUtils;
 class InitiatePaymentClient extends AbstractClient
 {
     /**
-     * @var \GlobalPayments\PaymentGateway\Helper\UkCountyValidator
-     */
-    private $ukCountyValidator;
-
-    /**
      * @var \Magento\Framework\Locale\Resolver
      */
     private $localeResolver;
@@ -41,19 +36,15 @@ class InitiatePaymentClient extends AbstractClient
      * @param \GlobalPayments\PaymentGateway\Model\Helper\GatewayConfigHelper $configHelper
      * @param \Magento\Payment\Model\Method\Logger $logger  
      * @param \GlobalPayments\PaymentGateway\Helper\Utils $utils
-     * @param \GlobalPayments\PaymentGateway\Model\HostedPaymentPages\Config $hppConfig
-     * @param \GlobalPayments\PaymentGateway\Helper\UkCountyValidator $ukCountyValidator
      * @param \Magento\Framework\Locale\Resolver $localeResolver
      */
     public function __construct(
         \GlobalPayments\PaymentGateway\Model\Helper\GatewayConfigHelper $configHelper,
         \Magento\Payment\Model\Method\Logger $logger,
         \GlobalPayments\PaymentGateway\Helper\Utils $utils,
-        \GlobalPayments\PaymentGateway\Helper\UkCountyValidator $ukCountyValidator,
         \Magento\Framework\Locale\Resolver $localeResolver
     ) {
         parent::__construct($configHelper, $logger, $utils);
-        $this->ukCountyValidator = $ukCountyValidator;
         $this->localeResolver = $localeResolver;
     }
     /**
@@ -155,26 +146,13 @@ class InitiatePaymentClient extends AbstractClient
             $billingCountry = $transactionData['BILLING_COUNTRY'] ?? 'US';
             $shippingCountry = $transactionData['SHIPPING_COUNTRY'] ?? $billingCountry;
 
-            // Set up billing address with UK county validation if needed
+            // Set up billing address
             $billingAddress = new Address();
             $billingAddress->streetAddress1 = $transactionData['BILLING_ADDRESS_1'] ?? '';
             $billingAddress->streetAddress2 = $transactionData['BILLING_ADDRESS_2'] ?? '';
             $billingAddress->city = $transactionData['BILLING_CITY'] ?? '';
 
-            // Handle UK county/province validation
             $billingState = $transactionData['BILLING_STATE'] ?? '';
-
-            if ($billingCountry === 'GB' && !empty($billingState)) {
-                $billingStateCode = $this->ukCountyValidator::get_county_code($billingState);
-
-                if ($billingStateCode === null) {
-                    $this->debugLog($config, 'HPP Creation Failed - Invalid UK county/province name for billing address: ' . $billingState);
-
-                    throw new ClientException(__('Invalid UK county/province name for billing address: %1', $billingState));
-                }
-
-                $billingState = $billingStateCode;
-            }
 
             // Handle state formatting - extract the last part after hyphen for universal compatibility
             if (preg_match('/[-]/', $billingState)) {
@@ -193,26 +171,13 @@ class InitiatePaymentClient extends AbstractClient
             $billingAddress->type = AddressType::BILLING;
             $payer->billingAddress = $billingAddress;
 
-            // Set up shipping address with UK county validation if needed
+            // Set up shipping address
             $shippingAddress = new Address();
             $shippingAddress->streetAddress1 = $transactionData['SHIPPING_ADDRESS_1'] ?? $billingAddress->streetAddress1;
             $shippingAddress->streetAddress2 = $transactionData['SHIPPING_ADDRESS_2'] ?? $billingAddress->streetAddress2;
             $shippingAddress->city = $transactionData['SHIPPING_CITY'] ?? $billingAddress->city;
 
-            // Handle UK county/province validation for shipping
             $shippingState = $transactionData['SHIPPING_STATE'] ?? '';
-
-            if ($shippingCountry === 'GB' && !empty($shippingState)) {
-                $shippingStateCode = $this->ukCountyValidator::get_county_code($shippingState);
-
-                if ($shippingStateCode === null) {
-                    $this->debugLog($config, 'HPP Creation Failed - Invalid UK county/province name for shipping address: ' . $shippingState);
-
-                    throw new ClientException(__('Invalid UK county/province name for shipping address: %1', $shippingState));
-                }
-
-                $shippingState = $shippingStateCode;
-            }
 
             // Handle state formatting for shipping - extract the last part after hyphen for universal compatibility
             if (preg_match('/[-]/', $shippingState)) {
