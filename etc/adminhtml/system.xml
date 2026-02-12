@@ -4,7 +4,7 @@
     <system>
         <section id="payment">
             <group id="globalpayments_paymentgateway" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Global Payments (Portico, Unified Payments &amp; TSYS)</label>
+                <label>Global Payments (Portico, Unified Payments &amp; Global Payments)</label>
                 <comment><![CDATA[Accept credit/debit cards in your Magento store. Your customers never leave your store to complete the purchase. Begin configuration and choose with which you were onboarded to access the correct gateway. ]]></comment>
                 <field id="card_brand_logos" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label><![CDATA[<div class="card-brands"></div>]]></label>
@@ -275,7 +275,7 @@
                 <include path="GlobalPayments_PaymentGateway::system/open_banking.xml"/>
 
                 <group id="genius" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label><![CDATA[TSYS Genius<i>Connect to TSYS Genius Gateway. Accept credit/debit/gift cards</i>]]></label>
+                    <label><![CDATA[Global Payments Genius<i>Connect to Global Payments Genius Gateway. Accept credit/debit/gift cards</i>]]></label>
                     <fieldset_css>complex genius-other-section with-button</fieldset_css>
                     <attribute type="expanded">0</attribute>
                     <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
@@ -397,7 +397,7 @@
                 </group>
 
                 <group id="transit" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label><![CDATA[TSYS TransIT<i>Connect to TSYS TransIT Gateway</i>]]></label>
+                    <label><![CDATA[Global Payments TransIT<i>Connect to Global Payments TransIT Gateway</i>]]></label>
                     <fieldset_css>complex transit-other-section with-button</fieldset_css>
                     <attribute type="expanded">0</attribute>
                     <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>

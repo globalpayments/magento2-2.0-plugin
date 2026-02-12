@@ -48,7 +48,7 @@ define([
                 case paymentMethodCode.txnapi:
                     return 'https://js.paygateway.com/secure_payment/v1/globalpayments.js';
                 default:
-                    return 'https://js.globalpay.com/4.1.11/globalpayments.js';
+                    return 'https://js.globalpay.com/4.1.17/globalpayments.js';
             }
         },
 

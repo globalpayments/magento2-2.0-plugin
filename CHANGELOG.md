@@ -3,6 +3,12 @@
 </a>
 
 # Changelog
+## v2.3.8 (02/12/26)
+### Enhancements:
+- TSYS to Global payments rebranding
+- Upgraded GlobalPayments.js library to v4.1.17
+- Amended CSP to improve security
+
 ## v2.3.7 (02/05/26)
 ### Bug fixes:
 - Removal of UK county validator for 3DS
@@ -52,7 +58,7 @@
 - Added support for Polish APMs (Blik & Bank Select)
 
 ## v2.1.13 (05/29/25)
-- Fix TSYS-Genius gateway issue concerning incorrect handling of partial authorization responses
+- Fix Global Payments Genius gateway issue concerning incorrect handling of partial authorization responses
 
 ## v2.1.12 (04/03/25)
 - Added Spanish (MX) translations
