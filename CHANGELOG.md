@@ -3,6 +3,11 @@
 </a>
 
 # Changelog
+
+## v2.3.9 (02/19/26)
+### Bug fixes:
+- Successful order screen now shows Order number
+
 ## v2.3.8 (02/12/26)
 ### Enhancements:
 - TSYS to Global payments rebranding

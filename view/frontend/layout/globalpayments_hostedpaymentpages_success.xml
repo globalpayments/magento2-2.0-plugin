@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © GlobalPayments. All rights reserved.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Thank you for your purchase!</title>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Checkout\Block\Onepage\Success" name="checkout.success" template="Magento_Checkout::success.phtml" cacheable="false">
+                <container name="order.success.additional.info" label="Order Success Additional Info"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -19,6 +19,7 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order as OrderModel;
@@ -92,6 +93,11 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
     private $transactionInfo;
 
     /**
+     * @var EncryptorInterface
+     */
+    private $encryptor;
+
+    /**
      * HPP Return Controller Constructor
      * 
      * @param Context $context Magento action context
@@ -106,6 +112,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
      * @param ScopeConfigInterface $scopeConfig Configuration access
      * @param Repository $assetRepository Asset repository for logos
      * @param TransactionInfo $transactionInfo Transaction details service
+     * @param EncryptorInterface $encryptor Encryptor for generating secure URL tokens
      */
     public function __construct(
         Context $context,
@@ -119,7 +126,8 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
         StoreManagerInterface $storeManager,
         ScopeConfigInterface $scopeConfig,
         Repository $assetRepository,
-        TransactionInfo $transactionInfo
+        TransactionInfo $transactionInfo,
+        EncryptorInterface $encryptor
     ) {
         parent::__construct($context);
         $this->configFactory = $configFactory;
@@ -133,11 +141,11 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
         $this->scopeConfig = $scopeConfig;
         $this->assetRepository = $assetRepository;
         $this->transactionInfo = $transactionInfo;
+        $this->encryptor = $encryptor;
     }
 
     /**
      * Execute HPP return processing
-     * 
      *
      * @return \Magento\Framework\Controller\Result\Redirect
      */
@@ -198,8 +206,6 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
             // Process payment based on transaction status
             $status = strtoupper($paymentData['status'] ?? 'UNKNOWN');
             $paymentMethodResult = $paymentData['payment_method']['result'] ?? null;
-            
-
 
             // Process payment based on transaction status with custom HPP branded pages
             switch ($gatewayResponse['TRANSACTION_STATUS']) {
@@ -401,11 +407,12 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
      * Create success response
      * 
      * Generates a branded success page that automatically redirects to the
-     * checkout success page
+     * checkout success page with order information
      *
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
      * @return \Magento\Framework\Controller\Result\Raw
      */
-    private function createSuccessResponse()
+    private function createSuccessResponse($order)
     {
         $result = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $result->setHeader('Content-Type', 'text/html');
@@ -414,8 +421,15 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
         $storeName = $this->getStoreName();
         $storeLogo = $this->getStoreLogo();
         
-        // Create order-specific success URL with fully qualified domain
-        $successUrl = $this->getFullyQualifiedUrl($this->checkoutHelper->getSuccessPageUrl());
+        // Create custom success URL with order ID parameter
+        // This goes to our custom controller that will recreate the session
+        $baseSuccessUrl = 'globalpayments/hostedpaymentpages/success';
+
+        $token = $this->encryptor->hash('hpp_success_' . $order->getId());
+
+        $successUrl = $this->getFullyQualifiedUrl($baseSuccessUrl)
+            . '?order_id=' . $order->getId()
+            . '&token=' . urlencode($token);
 
         $result->setContents('<!DOCTYPE html>
 <html lang="en">
@@ -525,7 +539,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
         ($storeLogo ? '<img src="' . htmlspecialchars($storeLogo) . '" alt="' . htmlspecialchars($storeName) . '" class="logo">' : 
          (!empty($storeName) ? '<h1 class="store-name">' . htmlspecialchars($storeName) . '</h1>' : '')) .'
         </div>
-        
+
         <div class="content">
             <div class="status-icon success">&#x2714;</div>
             <h2>Payment Successful</h2>
@@ -533,7 +547,6 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
             
             <p class="redirect-message">Redirecting to order confirmation in <span id="countdown">2</span> seconds...</p>
         </div>
-        
     </div>
     
     <script>
@@ -553,7 +566,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
         // Redirect after countdown
         setTimeout(function() {
             console.log("HPP: Redirecting to success page:", "' . htmlspecialchars($successUrl, ENT_QUOTES) . '");
-            window.location.href = "' . htmlspecialchars($successUrl, ENT_QUOTES) . '";
+            window.location.href = "' . $successUrl . '";
         }, 2000);
     </script>
 </body>
