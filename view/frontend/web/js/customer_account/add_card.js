@@ -72,10 +72,10 @@ define(
                 GlobalPayments.configure(this.configData);
                 var self = this;
 
-                this.cardForm = GlobalPayments.ui.form({
-                    fields: this.getFieldConfiguration(),
-                    styles: this.getStyleConfiguration()
-                });
+                this.cardForm = GlobalPayments.creditCard.form(
+                    "#"+this.getCode() + "_diui_target",
+                    { style: "gp-default" }
+                );
 
                 this.cardForm.on('submit', 'click', this.blockOnSubmit.bind(this));
                 this.cardForm.on('token-success', this.handleResponse.bind(this));

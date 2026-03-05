@@ -72,7 +72,7 @@
                 <sandbox_mode>1</sandbox_mode>
                 <allow_card_saving>1</allow_card_saving>
                 <order_status>processing</order_status>
-                <payment_action>order</payment_action>
+                <payment_action>authorize</payment_action>
                 <title>Credit Card</title>
                 <merchant_contact_url>https://www.example.com</merchant_contact_url>
                 <debug>0</debug>

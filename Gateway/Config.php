@@ -50,7 +50,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
 
-    public const PLUGIN_VERSION = '2.3.9';
+    public const PLUGIN_VERSION = '2.4.0';
 
     /**
      * @var string[]
@@ -506,8 +506,10 @@ class Config extends ConfigBase implements ConfigInterface
                     'language' => $this->getLanguage(),
                     'error' => $this->getError(),
                     'hide' => $this->getError() && $this->getValue('code') === self::CODE_GPAPI,
-                    'blikPaymentsEnabled' => $this->getCountry() === 'PL' ? $this->getValue('enable_blik_payments') : '0',
-                    'bankSelectEnabled' => $this->getCountry() === 'PL' ? $this->getValue('enable_bank_select_payments') : '0',
+                    'blikPaymentsEnabled' =>
+                        $this->getCountry() === 'PL' ? $this->getValue('enable_blik_payments') : '0',
+                    'bankSelectEnabled' =>
+                        $this->getCountry() === 'PL' ? $this->getValue('enable_bank_select_payments') : '0',
                     'paymentMethod' => $this->getValue('payment_method'),
                     'redirectText' => $this->getValue('redirect_text'),
                     'initiatePaymentUrl' => $this->urlBuilder->getUrl(

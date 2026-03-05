@@ -100,13 +100,17 @@ class Transaction
     /**
      * Create an invoice for a specific order.
      *
-     * @param OrderInterface $order
+     * @param Order $order
      * @param string $transactionId
      * @return void
      * @throws LocalizedException
      */
     private function createInvoice($order, $transactionId)
     {
+        if (!$order->canInvoice()) {
+            return;
+        }
+
         $invoice = $order->prepareInvoice();
         $invoice->getOrder()->setIsInProcess(true);
         $invoice->setTransactionId($transactionId);

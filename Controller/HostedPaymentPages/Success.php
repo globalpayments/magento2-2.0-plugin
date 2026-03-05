@@ -127,14 +127,14 @@ class Success extends Action
 
             $this->checkoutSession->setLastOrderId($order->getId());
             $this->checkoutSession->setLastRealOrderId($order->getIncrementId());
-            $this->checkoutSession->setLastSuccessQuoteId($order->getQuoteId());
-            $this->checkoutSession->setLastQuoteId($order->getQuoteId());
+            $this->checkoutSession->clearQuote();
 
             if ($this->config->isDebugEnabled()) {
                 $this->logger->info('HPP Success: Session recreated', [
                     'order_id' => $order->getId(),
                     'order_increment_id' => $order->getIncrementId(),
-                    'quote_id' => $order->getQuoteId(),
+                    'order_quote_id' => $order->getQuoteId(),
+                    'session_quote_id' => $this->checkoutSession->getQuoteId(),
                     'session_last_order_id' => $this->checkoutSession->getLastOrderId(),
                     'session_last_real_order_id' => $this->checkoutSession->getLastRealOrderId(),
                 ]);

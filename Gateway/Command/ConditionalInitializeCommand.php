@@ -9,6 +9,7 @@ use Magento\Payment\Gateway\Command\CommandPoolInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Invoice;
 
 class ConditionalInitializeCommand implements CommandInterface
 {
@@ -89,26 +90,69 @@ class ConditionalInitializeCommand implements CommandInterface
 
         if ($isHppMode) {
             // HPP mode - async payment processing
-            $payment->setAdditionalInformation(\GlobalPayments\PaymentGateway\Gateway\Command\InitializeCommand::IS_ASYNC_PAYMENT_METHOD, true);
+            $payment->setAdditionalInformation(
+                \GlobalPayments\PaymentGateway\Gateway\Command\InitializeCommand::IS_ASYNC_PAYMENT_METHOD,
+                true
+            );
 
             /** @var Order $order */
             $order = $payment->getOrder();
             $order->setCanSendNewEmailFlag(false);
+            $this->createInvoiceForOrder($order, $payment);
 
             /** @var DataObject $stateObject */
             $stateObject = $commandSubject['stateObject'];
             $stateObject->setState($orderState);
             $stateObject->setStatus($orderStatus);
             $stateObject->setIsNotified(false);
-
         } else {
-            $payment_action = ($config->getValue("payment_action") === MethodInterface::ACTION_AUTHORIZE_CAPTURE) ? "charge" : "authorize";
-            $this->commandPool->get($payment_action)->execute($commandSubject);
-
+            // For embedded/drop-in UI payments
             $stateObject = $commandSubject['stateObject'];
-            $stateObject->setState($orderState);
-            $stateObject->setStatus($orderStatus);
-            $stateObject->setIsNotified(false);
+            if ($config->getValue("payment_action") === MethodInterface::ACTION_AUTHORIZE) {
+                // Authorize mode: execute authorize command during initialize
+                $this->commandPool->get("authorize")->execute($commandSubject);
+                $stateObject->setState($orderState);
+                $stateObject->setStatus($orderStatus);
+                $stateObject->setIsNotified(false);
+            } else {
+                // Authorize+Capture mode: execute capture command
+                $this->commandPool->get("capture")->execute($commandSubject);
+                
+                // Create invoice for the captured payment
+                // The order exists in memory but isn't saved yet, so we add the invoice
+                // as a related object to be saved when the order is saved
+                /** @var Order $order */
+                $order = $payment->getOrder();
+                $this->createInvoiceForOrder($order, $payment);
+
+                $stateObject->setState($orderState);
+                $stateObject->setStatus($orderState);
+                $stateObject->setIsNotified(false);
+            }
         }
+    }
+
+    /**
+     * Create invoice for order during Drop-in UI capture
+     *
+     * @param Order $order
+     * @param InfoInterface $payment
+     * @return void
+     */
+    private function createInvoiceForOrder($order, $payment)
+    {
+        if (!$order->canInvoice()) {
+            return;
+        }
+
+        /** @var Invoice $invoice */
+        $invoice = $order->prepareInvoice();
+        $invoice->setTransactionId($payment->getTransactionId());
+        $invoice->register();
+        $invoice->pay();
+
+        // Add invoice as related object so it gets saved when order is saved
+        $order->addRelatedObject($invoice);
+        $order->setIsInProcess(true);
     }
 }

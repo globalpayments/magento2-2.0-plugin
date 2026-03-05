@@ -43,12 +43,18 @@ class StatusUrl extends AbstractUrl
 
             switch ($request->getParam('status')) {
                 case TransactionStatus::PREAUTHORIZED:
-                    $this->transactionHelper->createAuthorizationTransaction($order, $payment, $transactionId);
-
-                    /** Capture the transaction if the payment action is 'Charge' */
+                    /** 
+                     * For async payment methods, the payment is already authorized at the gateway.
+                     * Check if payment action is 'Charge' to create a sale transaction (auth + capture + invoice),
+                     * otherwise just create an authorization transaction.
+                     */
                     $providerConfig = $this->configFactory->create($payment->getMethod());
                     if ($providerConfig->getPaymentAction() === MethodInterface::ACTION_AUTHORIZE_CAPTURE) {
-                        $payment->capture();
+                        // Create sale transaction which includes auth, capture, and invoice creation
+                        // without making another gateway API call
+                        $this->transactionHelper->createSaleTransaction($order, $payment, $transactionId);
+                    } else {
+                        $this->transactionHelper->createAuthorizationTransaction($order, $payment, $transactionId);
                     }
 
                     $this->orderRepository->save($order);

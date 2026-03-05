@@ -5,6 +5,7 @@ namespace GlobalPayments\PaymentGateway\Gateway\Request\HostedPaymentPages;
 use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Payment\Gateway\Helper\SubjectReader;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -26,6 +27,11 @@ class InitiatePaymentRequest implements BuilderInterface
     private $storeManager;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
      * Constructor
      * 
      * @param LoggerInterface $logger
@@ -35,11 +41,13 @@ class InitiatePaymentRequest implements BuilderInterface
     public function __construct(
         LoggerInterface $logger,
         ConfigFactory $configFactory,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->logger = $logger;
         $this->configFactory = $configFactory;
         $this->storeManager = $storeManager;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -50,26 +58,26 @@ class InitiatePaymentRequest implements BuilderInterface
         try {
             $paymentDO = SubjectReader::readPayment($buildSubject);
             $payment = $paymentDO->getPayment();
-            $order = $paymentDO->getOrder();
+            $order = $this->orderRepository->get($payment->getOrder()->getId());
             
             // HPP is now part of unified payment methods - use the actual payment method config
             $config = $this->configFactory->create($payment->getMethod());
             
             // Get amount directly from order like other async payment methods
-            $amount = $order->getGrandTotalAmount();
+            $amount = $order->getGrandTotal();
 
             // Get the actual order entity ID from payment object for database lookup
             $orderEntityId = $payment->getOrder()->getId();
 
             $requestData = [
                 'TXN_TYPE' => 'sale',
-                'ORDER_ID' => $order->getOrderIncrementId(),
+                'ORDER_ID' => $order->getId(),
                 'ORDER_ENTITY_ID' => $orderEntityId,
                 'AMOUNT' => $amount,
-                'CURRENCY' => $order->getCurrencyCode(),
+                'CURRENCY' => $order->getOrderCurrencyCode(),
                 'CONFIG' => $config,
                 'SERVICES_CONFIG' => $config->getBackendGatewayOptions(),
-                'STORE_NAME' => $this->getStoreName($order),
+                'STORE_NAME' => $this->getStoreName(),
             ];
 
             // Add customer information
@@ -112,7 +120,7 @@ class InitiatePaymentRequest implements BuilderInterface
 
             // For HPP flow, we use the order increment ID as reference since order should exist before redirect
             // This aligns with other async payment methods where order is created before payment
-            $requestData['REFERENCE'] = 'Order-' . $order->getOrderIncrementId();
+            $requestData['REFERENCE'] = 'Order-' . $order->getId();
 
             return $requestData;
 
@@ -129,14 +137,13 @@ class InitiatePaymentRequest implements BuilderInterface
     /**
      * Get store base URL
      * 
-     * @param \Magento\Payment\Gateway\Data\OrderAdapterInterface $order
+     * @param Magento\Sales\Model\Order\Interceptor $order
      * @return string
      */
-    private function getStoreBaseUrl(\Magento\Payment\Gateway\Data\OrderAdapterInterface $order): string
+    private function getStoreBaseUrl(\Magento\Sales\Model\Order\Interceptor $order): string
     {
         try {
-            $storeId = $order->getStoreId();
-            $store = $this->storeManager->getStore($storeId);
+            $store = $this->storeManager->getStore();
 
             return $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
         } catch (\Exception $e) {
@@ -195,14 +202,13 @@ class InitiatePaymentRequest implements BuilderInterface
     /**
      * Get store name
      *
-     * @param \Magento\Payment\Gateway\Data\OrderAdapterInterface $order
+     * @param \Magento\Sales\Model\Order\Interceptor $order
      * @return string
      */
-    private function getStoreName(\Magento\Payment\Gateway\Data\OrderAdapterInterface $order): string
+    private function getStoreName(): string
     {
         try {
-            $storeId = $order->getStoreId();
-            $store = $this->storeManager->getStore($storeId);
+            $store = $this->storeManager->getStore();
 
             return $store->getName();
         } catch (\Exception $e) {

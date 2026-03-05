@@ -6,6 +6,7 @@ use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
 class CaptureRequest implements BuilderInterface
 {
@@ -15,14 +16,22 @@ class CaptureRequest implements BuilderInterface
     private $configFactory;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+
+    /**
      * CaptureRequest constructor.
      *
      * @param ConfigFactory $configFactory
      */
     public function __construct(
-        ConfigFactory $configFactory
+        ConfigFactory $configFactory,
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->configFactory = $configFactory;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -42,7 +51,7 @@ class CaptureRequest implements BuilderInterface
         return [
             'TXN_TYPE' => 'capture',
             'INVOICE' => $order->getOrderIncrementId(),
-            'AMOUNT' => $order->getGrandTotalAmount(),
+            'AMOUNT' => $this->orderRepository->get($payment->getOrder()->getId())->getGrandTotal(),
             'CURRENCY' => $order->getCurrencyCode(),
             'BILLING_ADDRESS' => $order->getBillingAddress(),
             'TXN_ID' => $paymentData->getParentTransactionId() ?? $paymentData->getLastTransId(),

@@ -3,6 +3,13 @@
 </a>
 
 # Changelog
+## v2.4.0 (03/05/26)
+### Enhancements:
+- Add payment method now uses drop-in UI
+
+### Bug fixes:
+- GpApi gateway: fixed bug where invoices aren't consistently generated for new orders
+- GpApi gateway: fixed shopping cart not emptying after successful payment using HPP
 
 ## v2.3.9 (02/19/26)
 ### Bug fixes:

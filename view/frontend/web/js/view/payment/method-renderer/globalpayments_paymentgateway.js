@@ -490,6 +490,14 @@ define(
              * @returns
              */
             handleResponse: function (response) {
+                var self = this;
+
+                if (!self.isAddressComplete(Quote.billingAddress())) {
+                    self.showPaymentError('Please complete your billing address.');
+
+                    return false;
+                }
+
                 helper.handleResponse(this, response, this.isThreeDSecureEnabled());
             },
 
@@ -831,6 +839,23 @@ define(
             blockOnSubmit: function () {
                 var screenLoader = fullScreenLoader;
                 screenLoader.startLoader();
+            },
+
+            /**
+             * Vlidates address object
+             *
+             * @param address 
+             * @returns 
+             */
+            isAddressComplete: function(address) {
+                if (!address) return false;
+
+                var required = ['firstname', 'lastname', 'street', 'city', 'countryId', 'telephone'];
+
+                return required.every(function(field) {
+                    var val = address[field];
+                    return val && (Array.isArray(val) ? val[0] : val).toString().trim() !== '';
+                });
             },
 
             /**

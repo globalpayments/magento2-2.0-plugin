@@ -222,7 +222,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
                     $this->checkoutHelper->clearQuoteAndFireEvents($order);
                     
                     // Return custom branded success page
-                    return $this->createSuccessResponse();
+                    return $this->createSuccessResponse($order);
                     
                 case TransactionStatus::DECLINED:
                 case 'FAILED':
