@@ -112,4 +112,25 @@ class PaymentAdditionalInformation extends OrderView
 
         return $tokenResponse ? $tokenResponse['details'] : null;
     }
+
+    /**
+     * Get the installment data.
+     *
+     * @return \stdClass|null
+     */
+    public function getInstallmentData(): ?\stdClass
+    {
+        $installmentData = $this->globalPaymentsAdditionalInfo[TxnIdHandler::INSTALLMENT_DATA] ?? null;
+        return $installmentData ? json_decode($installmentData) : null;
+    }
+
+    /**
+     * Get the Magento order increment ID.
+     *
+     * @return string|null
+     */
+    public function getMagentoOrderId(): ?string
+    {
+        return $this->getOrder()->getIncrementId();
+    }
 }

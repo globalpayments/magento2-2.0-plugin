@@ -66,6 +66,18 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
         $config = [];
         $name = '';
 
+        // Hide stored cards on frontend checkout when allowCardSaving is disabled
+        $isAdminArea = $this->state->getAreaCode() == Area::AREA_ADMINHTML;
+        $allowCardSaving = $this->config->getValue('allow_card_saving');
+        
+        if (!$isAdminArea && !$allowCardSaving) {
+            // Return empty component to hide stored cards on frontend
+            return $this->componentFactory->create([
+                'config' => [],
+                'name' => '',
+            ]);
+        }
+
         if ($paymentToken->getPaymentMethodCode() == $this->config->getValue('code')) {
             $jsonDetails = json_decode($paymentToken->getTokenDetails() ?: '{}', true);
             $config = [
@@ -75,7 +87,7 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
             ];
             $name = $this->getComponentName();
         }
-        if ($this->state->getAreaCode() == Area::AREA_ADMINHTML) {
+        if ($isAdminArea) {
             $config['template'] = 'GlobalPayments_PaymentGateway::form/vault.phtml';
         }
         $component = $this->componentFactory->create(

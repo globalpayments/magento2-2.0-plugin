@@ -19,6 +19,7 @@ class TxnIdHandler implements HandlerInterface
     public const RESULT_CODE = 'resultCode';
     public const THREE_D_SECURE_STATUS = 'threeDSecureStatus';
     public const SERVER_TRANS_ID = 'serverTransId';
+    public const INSTALLMENT_DATA = 'installmentData';
 
     /**
      * Handles transaction id
@@ -94,6 +95,14 @@ class TxnIdHandler implements HandlerInterface
             if (!empty($tokenDetailsArray['cardType'])) {
                 $payment->setCcType($tokenDetailsArray['cardType']);
             }
+        }
+
+        // Save installment data if available
+        if (!empty($response['INSTALLMENT_DATA'])) {
+            $payment->setAdditionalInformation(
+                self::INSTALLMENT_DATA,
+                json_encode($response['INSTALLMENT_DATA'])
+            );
         }
 
         $payment->setIsTransactionClosed(false);

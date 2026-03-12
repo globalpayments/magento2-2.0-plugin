@@ -8,14 +8,14 @@
         "magento/module-checkout": "100.4.*",
         "magento/module-payment": "100.4.*",
         "magento/module-vault": "101.2.*",
-        "globalpayments/php-sdk": "14.0.4",
+        "globalpayments/php-sdk": "14.1.6",
         "psr/log": "^1 || ^2 || ^3"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
     },
     "type": "magento2-module",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "license": [
         "MIT"
     ],

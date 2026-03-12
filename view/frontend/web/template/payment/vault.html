@@ -21,6 +21,18 @@
             <span translate="'expires'"></span>
             <span text="getExpirationDate()"></span>
             )
+            <!-- ko if: enableInstallment() && defaultCountry() === 'MX' && baseCurrency() === 'MXN' -->
+            <div class="field-tooltip toggle">
+                <span class="field-tooltip-action action-help"
+                      tabindex="0"
+                      data-toggle="dropdown"
+                      data-bind="mageInit: {'dropdown':{'activeClass': '_active'}}">
+                </span>
+                <div class="field-tooltip-content" data-target="dropdown">
+                    <span translate="'For card-based installment payment options, please enter your card information below.'"></span>
+                </div>
+            </div>
+            <!-- /ko -->
         </label>
     </div>
 

@@ -84,6 +84,11 @@ abstract class AbstractClient implements ClientInterface
         $response['RESULT_CODE'] = $gatewayResponse->responseCode;
         $response['TXN_ID'] = $gatewayResponse->transactionId;
 
+        // Add installment data if available
+        if (!empty($gatewayResponse->installment)) {
+            $response['INSTALLMENT_DATA'] = $gatewayResponse->installment;
+        }
+
         return $response;
     }
 }

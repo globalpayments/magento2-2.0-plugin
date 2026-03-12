@@ -923,4 +923,9 @@
             <argument name="commandPool" xsi:type="object">GlobalPaymentsPaymentGatewayCommandPool</argument>
         </arguments>
     </type>
+
+     <!-- Plugin to disable initialize flow for vault payments -->
+    <type name="Magento\Vault\Model\Method\Vault">
+        <plugin name="globalpayments_vault_initialize_disable" type="GlobalPayments\PaymentGateway\Plugin\Vault\VaultInitializePlugin" sortOrder="10"/>
+    </type>
 </config>

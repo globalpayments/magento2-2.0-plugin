@@ -12,6 +12,8 @@ $globalPaymentsOrderId = $block->getGlobalPaymentsOrderId();
 $resultCode = $block->getResultCode();
 $threeDSecureStatus = $block->getThreeDSecureStatus();
 $tokenResponseDetails = $block->getTokenResponseDetails();
+$installmentData = $block->getInstallmentData();
+$magentoOrderId = $block->getMagentoOrderId();
 ?>
 <?php if ($block->canDisplayInfo()): ?>
     <table class="data-table admin__table-secondary order-information-table">
@@ -106,6 +108,53 @@ $tokenResponseDetails = $block->getTokenResponseDetails();
                         </th>
                         <td>
                             <?= $block->escapeHtml($threeDSecureStatus); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($installmentData): ?>
+                <tr>
+                    <th colspan="2" style="background-color: #f5f5f5; font-weight: bold;">
+                        <?= $block->escapeHtml(__('Installment Information')); ?>
+                    </th>
+                </tr>
+                <?php if ($magentoOrderId): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('Order ID')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml($magentoOrderId); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($resultCode): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('Response')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml($resultCode); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($authorizationCode): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('Auth Code')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml($authorizationCode); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if (!empty($installmentData->count)): ?>
+                    <tr>
+                        <th>
+                            <?= $block->escapeHtml(__('Installments Number')); ?>
+                        </th>
+                        <td>
+                            <?= $block->escapeHtml($installmentData->count. ' ' . __('installments')); ?>
                         </td>
                     </tr>
                 <?php endif; ?>

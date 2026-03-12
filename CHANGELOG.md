@@ -3,6 +3,10 @@
 </a>
 
 # Changelog
+## v2.4.1 (03/12/26)
+### Enhancements:
+- Added support for installment payment plans for LATAM market
+
 ## v2.4.0 (03/05/26)
 ### Enhancements:
 - Add payment method now uses drop-in UI

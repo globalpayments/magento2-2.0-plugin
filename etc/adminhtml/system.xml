@@ -186,6 +186,15 @@
                         <config_path>payment/globalpayments_paymentgateway_gpApi/payment_method</config_path>
                         <tooltip>Choose how you would like customers to pay. "Embedded" keeps the user on your site, "Hosted" redirects customers to our secure server for payment</tooltip>
                     </field>
+                     <field id="installments" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable Installments</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/installments</config_path>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\InstallmentsField</frontend_model>
+                        <depends>
+                            <field id="payment_method">embedded</field>
+                        </depends>
+                    </field>
                     <field id="redirect_text" translate="label tooltip" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Redirect Text</label>
                         <tooltip>Text displayed to customers during checkout before redirecting to the hosted payment page</tooltip>

@@ -175,6 +175,15 @@ class ClientMock implements ClientInterface
                         $builder = $builder->withOrderId($this->transactionData['ORDER_ID']);
                     }
 
+                    $tokenResponse = $this->transactionData['TOKEN_RESPONSE'];
+
+                    if (!empty($tokenResponse['installment'])) {
+                        $installmentData = new \GlobalPayments\Api\Entities\InstallmentData();
+                        $installmentData->id = $tokenResponse['installment']['installmentId'] ?? null;
+                        $installmentData->reference = $tokenResponse['installment']['installmentReference'] ?? null;
+                        $builder = $builder->withInstallment($installmentData);
+                    }
+
                     $gatewayResponse = $builder->execute();
 
                     $response['MULTI_USE_TOKEN'] = $this->multiUseToken ?
@@ -370,6 +379,11 @@ class ClientMock implements ClientInterface
             $response['CARD_ISSUER_DATA'] = $gatewayResponse->cardIssuerResponse ?? '';
             $response['TXN_TYPE'] = $this->transactionData['TXN_TYPE'];
             $response['GATEWAY_PROVIDER'] = $gatewayMethodCode;
+
+            // Add installment data if available
+            if (!empty($gatewayResponse->installment)) {
+                $response['INSTALLMENT_DATA'] = $gatewayResponse->installment;
+            }
         } catch (ApiException $e) {
             $this->fraudManagement->updateVelocity($e);
             $message = __($e->getMessage() ?: 'Sorry, but something went wrong');
@@ -616,12 +630,40 @@ class ClientMock implements ClientInterface
                     $storedCreds->sequence = StoredCredentialSequence::SUBSEQUENT;
                     $storedCreds->reason = StoredCredentialReason::INCREMENTAL;
                 }
+
+                 // Set contract_reference for Mexico (MXN) transactions - required by Global Payments API
+                $currency = $this->transactionData['CURRENCY'] ?? '';
+                if (strtoupper($currency) === 'MXN') {
+                    $storedCreds->contract_reference = $this->getContractReference();
+                }
                 break;
             default:
                 $storedCreds->initiator = StoredCredentialInitiator::CARDHOLDER;
         }
 
         return $storedCreds;
+    }
+
+    /**
+     * Generate contract reference for stored credentials.
+     * Required for Mexico (MXN) transactions.
+     *
+     * @return string
+     */
+    private function getContractReference(): string
+    {
+        // Use ORDER_ID if available, otherwise use invoice number or generate a unique reference
+        if (!empty($this->transactionData['ORDER_ID'])) {
+            return (string) $this->transactionData['ORDER_ID'];
+        }
+
+        $invoice = $this->getInvoice();
+        if (!empty($invoice)) {
+            return (string) $invoice;
+        }
+
+        // Fallback to a unique reference based on timestamp
+        return 'CR_' . time() . '_' . uniqid();
     }
 
     /**

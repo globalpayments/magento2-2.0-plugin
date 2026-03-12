@@ -372,15 +372,35 @@ define(
                     }
                 }
 
+                var isInstallmentEnabled = Boolean(paymentMethodConfig.enableInstallment) === true;
+                var isEmbeddedPayment = paymentMethodConfig.paymentMethod === 'embedded';
+                var isMexicanCurrency = paymentMethodConfig.baseCurrency === "MXN";
+                var isMexicanCountry = paymentMethodConfig.defaultCountry === "MX";
+
+                if (isInstallmentEnabled && isEmbeddedPayment && isMexicanCurrency && isMexicanCountry) {
+                    paymentMethodConfig.installments = {
+                        accountName: paymentMethodConfig.appName,
+                        country: "MX",
+                        currency: "MXN",
+                    }
+                }
+
                 GlobalPayments.configure(paymentMethodConfig);
 
                 if (paymentMethodConfig.paymentMethodCode === 'globalpayments_paymentgateway_gpApi' && paymentMethodConfig.paymentMethod === 'embedded') {
+                    var formConfig = {
+                        amount: Quote.totals()['base_grand_total'],
+                        style: "gp-default",
+                        apms: apmArray,
+                    };
+
+                    if (isInstallmentEnabled) {
+                        formConfig.installments = paymentMethodConfig.installments;
+                    }
+
                     this.cardForm = GlobalPayments.creditCard.form(
                         '#' + this.getCode() + '_credit_card_form',
-                        {
-                            style: "gp-default",
-                            apms: apmArray
-                        }
+                        formConfig
                     );
                 } else {
                     this.cardForm = GlobalPayments.ui.form({

@@ -67,7 +67,17 @@ class GetAccessTokenCommand implements CommandInterface
 
             if (!$isCredentialCheck) {
                 //We don't want these permissions set for credential check requests as we need all the accounts returned
-                $config->permissions = ['PMT_POST_Create_Single'];
+                $permissions = ['PMT_POST_Create_Single'];
+
+                $enableInstallment = $gatewayConfig->getValue('installments') ?? false;
+                $defaultCountry = $gatewayConfig->getCountry() ?? '';
+                $baseCurrency = $gatewayConfig->getBaseCurrency() ?? '';
+
+                if ($enableInstallment && $defaultCountry === 'MX' && $baseCurrency === 'MXN') {
+                    $permissions = array_merge($permissions, ['INS_POST_Query', 'BIN_GET_Details', 'PMT_POST_Create']);
+                }
+
+                $config->permissions = $permissions;
             }
 
             $config->dynamicHeaders = [

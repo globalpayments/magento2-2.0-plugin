@@ -50,7 +50,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
 
-    public const PLUGIN_VERSION = '2.4.0';
+    public const PLUGIN_VERSION = '2.4.1';
 
     /**
      * @var string[]
@@ -516,6 +516,10 @@ class Config extends ConfigBase implements ConfigInterface
                         'globalpayments/hostedpaymentpages/initiatePayment',
                         ['_secure' => true]
                     ),
+                    'enableInstallment' => $this->getValue('installments') ? $this->getValue('installments') : 0,
+                    'appName' => $this->getValue('sandbox_mode') ? $this->getValue('sandbox_app_name') : $this->getValue('app_name'),
+                    'defaultCountry' => $this->getCountry(),
+                    'baseCurrency' => $this->getBaseCurrency()
                 ]),
             ],
             'threeDSecure' => [
@@ -541,7 +545,7 @@ class Config extends ConfigBase implements ConfigInterface
      *
      * @return string
      */
-    private function getCountry()
+    public function getCountry()
     {
         $code = $this->getValue('code');
         if ($code === Config::CODE_TXNAPI) {
@@ -549,5 +553,15 @@ class Config extends ConfigBase implements ConfigInterface
         }
 
         return $this->scopeConfig->getValue('general/country/default', ScopeInterface::SCOPE_STORE);
+    }
+
+    /**
+     * Get base currency.
+     *
+     * @return string
+     */
+    public function getBaseCurrency(): string
+    {
+        return $this->scopeConfig->getValue('currency/options/base', ScopeInterface::SCOPE_STORE);
     }
 }

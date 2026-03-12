@@ -28,6 +28,19 @@ define(
         },
 
         /**
+         * Check if stored cards should be visible.
+         * Hides stored cards when allowCardSaving is disabled in admin.
+         * @returns {Boolean}
+         */
+        isActive: function () {
+            var allowCardSaving = window.checkoutConfig.payment.globalpayments_paymentgateway.allowCardSaving == 1;
+            if (!allowCardSaving) {
+                return false;
+            }
+            return this._super();
+        },
+
+        /**
          * Get last 4 digits of card
          * @returns {String}
          */
@@ -273,6 +286,30 @@ define(
         unblockOnError: function () {
             var screenLoader = fullScreenLoader;
             screenLoader.stopLoader();
+        },
+
+        /**
+         * Check if installment is enabled
+         * @returns {Boolean}
+         */
+        enableInstallment: function () {
+            return Boolean(window.checkoutConfig.payment.globalpayments_paymentgateway.enableInstallment) === true;
+        },
+
+        /**
+         * Get default country
+         * @returns {String}
+         */
+        defaultCountry: function () {
+            return window.checkoutConfig.payment.globalpayments_paymentgateway.defaultCountry || '';
+        },
+
+        /**
+         * Get base currency
+         * @returns {String}
+         */
+        baseCurrency: function () {
+            return window.checkoutConfig.payment.globalpayments_paymentgateway.baseCurrency || '';
         }
     });
 });
