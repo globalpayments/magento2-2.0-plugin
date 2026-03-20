@@ -3,6 +3,10 @@
 </a>
 
 # Changelog
+## v2.4.2 (03/19/26)
+### Bug fix:
+- GpApi gateway: Fixed admin panel refunds failing due to improper refund txn ID value calculation
+
 ## v2.4.1 (03/12/26)
 ### Enhancements:
 - Added support for installment payment plans for LATAM market

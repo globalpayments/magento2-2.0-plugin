@@ -291,6 +291,9 @@ class ClientMock implements ClientInterface
                 case 'refund':
                     $targetId = $gatewayMethodCode === Config::CODE_HEARTLAND ?
                         $this->transactionData['AUTH_TXN_ID'] : $this->transactionData['TXN_ID'];
+                    if (!empty($this->transactionData['REFUND_TXN_ID'])) {
+                        $targetId = $this->transactionData['REFUND_TXN_ID'];
+                    }
                     $gatewayResponse = Transaction::fromId($targetId, PaymentMethodType::CREDIT)
                         ->refund(AmountUtils::transitFormat($this->transactionData['AMOUNT']))
                         ->withCurrency($this->transactionData['CURRENCY'])

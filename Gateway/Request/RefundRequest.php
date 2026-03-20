@@ -55,6 +55,7 @@ class RefundRequest implements BuilderInterface
             'TOKEN_RESPONSE' => isset($additionalData['tokenResponse']) ? $additionalData['tokenResponse'] : null,
             'REQUEST_MULTI_USE_TOKEN' => isset($additionalData['is_active_payment_token_enabler']) ?
                 $additionalData['is_active_payment_token_enabler'] : null,
+            'REFUND_TXN_ID' => $paymentData->getDataByKey('refund_transaction_id') ?? null,
         ];
     }
 }
