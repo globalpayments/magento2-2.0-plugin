@@ -2,6 +2,7 @@
 
 namespace GlobalPayments\PaymentGateway\Gateway\Http\Client;
 
+use GlobalPayments\Api\Builders\ManagementBuilder;
 use GlobalPayments\Api\Entities\Enums\StoredCredentialSequence;
 use GlobalPayments\Api\Entities\Enums\StoredCredentialType;
 use GlobalPayments\Api\Services\Secure3dService;
@@ -25,6 +26,7 @@ use GlobalPayments\Api\Entities\Enums\ReasonCode;
 use GlobalPayments\Api\Entities\Enums\Secure3dStatus;
 use GlobalPayments\Api\Entities\Enums\StoredCredentialInitiator;
 use GlobalPayments\Api\Entities\Enums\StoredCredentialReason;
+use GlobalPayments\Api\Entities\Enums\TransactionType;
 use GlobalPayments\Api\Entities\Exceptions\ApiException;
 use GlobalPayments\Api\PaymentMethods\CreditCardData;
 use GlobalPayments\Api\Utils\AmountUtils;
@@ -270,6 +272,16 @@ class ClientMock implements ClientInterface
                             ->withCurrency($this->transactionData['CURRENCY']);
                         $gatewayResponse = $gatewayResponse->execute();
                     }
+                    break;
+                case 'manageToken':
+                    $gatewayResponse = (new ManagementBuilder(TransactionType::TOKEN_UPDATE))
+                        ->withPaymentMethod($this->getTokenizedPaymentMethod())
+                        ->withPaymentMethodUsageMode(PaymentMethodUsageMode::MULTIPLE)
+                        ->execute();
+
+                    $response['MULTI_USE_TOKEN'] = $this->multiUseToken ?: $gatewayResponse->token;
+                    $response['GATEWAY_METHOD_CODE'] = $this->transactionData['GATEWAY_METHOD_CODE'];
+                    $response['CUSTOMER_ID'] = $this->transactionData['CUSTOMER_ID'];
                     break;
                 case 'verify':
                     $tokenizedCard = $this->getTokenizedPaymentMethod();

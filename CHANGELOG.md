@@ -3,6 +3,10 @@
 </a>
 
 # Changelog
+## v2.4.3 (03/26/26)
+### Enhancements:
+- Security enhancements
+
 ## v2.4.2 (03/19/26)
 ### Bug fix:
 - GpApi gateway: Fixed admin panel refunds failing due to improper refund txn ID value calculation

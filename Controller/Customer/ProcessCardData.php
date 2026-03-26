@@ -13,6 +13,8 @@ use GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory;
 use GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock;
 use GlobalPayments\PaymentGateway\Gateway\Request\VerifyRequest;
 use GlobalPayments\PaymentGateway\Gateway\Response\VaultDetailsHandler;
+use GlobalPayments\PaymentGateway\Gateway\Config;
+use GlobalPayments\PaymentGateway\Gateway\Request\ManageTokenRequest;
 
 class ProcessCardData extends Action
 {
@@ -42,6 +44,18 @@ class ProcessCardData extends Action
     private $verifyRequest;
 
     /**
+     * 
+     * @var Config
+     */
+    private Config $config;
+
+    /**
+     * 
+     * @var ManageTokenRequest
+     */
+    private ManageTokenRequest $manageTokenRequest;
+
+    /**
      * ProcessCardData constructor.
      *
      * @param Context $context
@@ -57,7 +71,9 @@ class ProcessCardData extends Action
         StoreManagerInterface $storeManager,
         TransferFactory $transferFactory,
         VaultDetailsHandler $vaultDetailsHandler,
-        VerifyRequest $verifyRequest
+        VerifyRequest $verifyRequest,
+        Config $config,
+        ManageTokenRequest $manageTokenRequest,
     ) {
         parent::__construct($context);
         $this->client = $client;
@@ -65,6 +81,8 @@ class ProcessCardData extends Action
         $this->transferFactory = $transferFactory;
         $this->vaultDetailsHandler = $vaultDetailsHandler;
         $this->verifyRequest = $verifyRequest;
+        $this->config = $config;
+        $this->manageTokenRequest = $manageTokenRequest;
     }
 
     /**
@@ -82,7 +100,12 @@ class ProcessCardData extends Action
         ];
 
         try {
-            $request = $this->verifyRequest->build(['additionalData' => $additionalData]);
+            if ($additionalData["viaCustomerAddCard"] === true && $this->config->getValue('code') === Config::CODE_GPAPI) {
+                $request = $this->manageTokenRequest->build(['additionalData' => $additionalData]);
+            } else {
+                $request = $this->verifyRequest->build(['additionalData' => $additionalData]);
+            }
+
             $response = $this->client->placeRequest($this->transferFactory->create($request));
             $this->vaultDetailsHandler->handle([], $response);
             $this->messageManager->addSuccessMessage(

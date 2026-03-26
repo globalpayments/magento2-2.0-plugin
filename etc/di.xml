@@ -593,6 +593,13 @@
         </arguments>
     </type>
 
+    <!-- Manage Token Request -->
+    <type name="GlobalPayments\PaymentGateway\Gateway\Request\ManageTokenRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+        </arguments>
+    </type>
+
     <!-- Void command -->
     <virtualType name="GlobalPaymentsPaymentGatewayVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
         <arguments>
@@ -815,6 +822,8 @@
             <argument name="transferFactory" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\TransferFactory</argument>
             <argument name="vaultDetailsHandler" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Response\VaultDetailsHandler</argument>
             <argument name="verifyRequest" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\VerifyRequest</argument>
+            <argument name="config" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Config</argument>
+            <argument name="manageTokenRequest" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Request\ManageTokenRequest</argument>
         </arguments>
     </type>
 
