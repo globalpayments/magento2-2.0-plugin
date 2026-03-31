@@ -111,6 +111,13 @@
                         <tooltip>This controls the title which the user sees during checkout.</tooltip>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/title</config_path>
                     </field>
+                    <field id="transaction_region" translate="label tooltip" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Transaction Region</label>
+                        <tooltip>Select where transactions are processed. This controls the GP API host for sandbox and live transactions.</tooltip>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\GpApiRegion</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/transaction_region</config_path>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\RegionEndpoint</frontend_model>
+                    </field>
                     <field id="sandbox_mode" translate="label comment" sortOrder="2" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sandbox Mode</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

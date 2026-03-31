@@ -3,6 +3,10 @@
 </a>
 
 # Changelog
+## v2.5.0 (03/31/26)
+### Enhancements:
+- Added Support for EU GP API endpoint
+
 ## v2.4.3 (03/26/26)
 ### Enhancements:
 - Security enhancements

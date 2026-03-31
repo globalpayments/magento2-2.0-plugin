@@ -42,9 +42,13 @@ require(
             return $('input[id$=' + getGatewayId() + '_' + setting + ']').val().trim();
         }
 
+        function getRegion() {
+            return $('select[id$=' + getGatewayId() + '_transaction_region]').find(':selected').val();
+        }
+
         function getAppNameElement() {
-            return $(`input[id$='${getGatewayId()}_${isSandboxMode() ? 'sandbox' : ''}_app_name']`);
-            // return $('#payment_gb_globalpayments_paymentgateway_gpApi_sandbox_app_name');
+            var suffix = isSandboxMode() == 1 ? 'sandbox_app_name' : 'app_name';
+            return $(`input[id$='${getGatewayId()}_${suffix}']`);
         }
 
         function createCredentialsSelect() {
@@ -122,6 +126,13 @@ require(
             */
             var txtEl = getAppNameElement();
             var originalValue = txtEl.val();
+
+            // Remove existing dropdown if it exists
+            var existingSelect = $('#' + getGatewayId() + '-credentials-select');
+            if (existingSelect.length) {
+                existingSelect.remove();
+            }
+            
             var selectEl = createCredentialsSelect();
             var accountsWithDefault = addDefaultAccount(accounts);
             var originalValueFound = populateSelectOptions(selectEl, accountsWithDefault, originalValue, txtEl);
@@ -177,7 +188,8 @@ require(
                 data: {
                     isSandboxMode: isSandboxMode(),
                     app_id: app_id,
-                    app_key: app_key
+                    app_key: app_key,
+                    region: getRegion()
                 },
                 showLoader: true,
                 success: function (result) {

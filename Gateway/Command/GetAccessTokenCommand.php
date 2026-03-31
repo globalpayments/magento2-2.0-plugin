@@ -4,7 +4,7 @@ namespace GlobalPayments\PaymentGateway\Gateway\Command;
 
 use Exception;
 use InvalidArgumentException;
-use GlobalPayments\Api\Entities\Enums\Environment;
+use GlobalPayments\Api\Entities\Enums\{DataResidency, Environment};
 use GlobalPayments\Api\ServiceConfigs\Gateways\GpApiConfig;
 use GlobalPayments\Api\ServicesContainer;
 use GlobalPayments\Api\Utils\Logging\Logger;
@@ -45,11 +45,16 @@ class GetAccessTokenCommand implements CommandInterface
 
         $result = ['array' => []];
 
+        // Determine dataResidency based on region setting
+        $region = $gatewayConfig->getValue('transaction_region');
+        $dataResidency = ($region === 'eu') ? DataResidency::EU : DataResidency::NONE;
+
         $backendGatewayOptions = [
             'appId' => $gatewayConfig->getCredentialSetting('app_id'),
             'appKey' => $gatewayConfig->getCredentialSetting('app_key'),
             'environment' => ($gatewayConfig->getValue('sandbox_mode') == 1) ?
-                Environment::TEST : Environment::PRODUCTION
+                Environment::TEST : Environment::PRODUCTION,
+            'dataResidency' => $dataResidency
         ];
 
         $backendGatewayOptions = array_merge($backendGatewayOptions, $configData);

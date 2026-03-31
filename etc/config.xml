@@ -70,6 +70,7 @@
                 <app_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <sandbox_app_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <sandbox_mode>1</sandbox_mode>
+                <region>global</region>
                 <allow_card_saving>1</allow_card_saving>
                 <order_status>processing</order_status>
                 <payment_action>authorize</payment_action>

@@ -309,3 +309,7 @@ Currencies,Devises
 "Stored Payment Methods","Méthodes de paiement stockées"
 Yes,Oui
 No,Non
+"Transaction Region","Région de transaction"
+"Select where transactions are processed. This controls the GP API host for sandbox and live transactions.","Sélectionnez l’endroit où les transactions sont traitées. Ceci contrôle l’hôte GP API pour sandbox et live."
+"Global (default)","Global (par défaut)"
+Europe,Europe

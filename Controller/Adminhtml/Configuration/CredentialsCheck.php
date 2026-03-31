@@ -3,7 +3,7 @@
 namespace GlobalPayments\PaymentGateway\Controller\Adminhtml\Configuration;
 
 use Exception;
-use GlobalPayments\Api\Entities\Enums\Environment;
+use GlobalPayments\Api\Entities\Enums\{DataResidency, Environment};
 use GlobalPayments\PaymentGateway\Gateway\Command\GetAccessTokenCommand;
 use GlobalPayments\PaymentGateway\Gateway\Config;
 use Magento\Backend\App\Action;
@@ -55,6 +55,8 @@ class CredentialsCheck extends Action
         $appId = $request->getParam('app_id');
         $appKey = $request->getParam('app_key');
         $storeId = $request->getParam('storeId', 0);
+        $region = $request->getParam('region', 'global');
+        $dataResidency = ($region === 'eu') ? DataResidency::EU : DataResidency::NONE;
 
         /*
          * If the app key from the request has '*' characters (masked default app key), use the default app key.
@@ -76,6 +78,7 @@ class CredentialsCheck extends Action
             'environment' => $environment,
             'appId' => $appId,
             'appKey' => $appKey,
+            'dataResidency' => $dataResidency,
             'isCredentialCheck' => true
         ];
 

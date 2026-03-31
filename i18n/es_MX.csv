@@ -293,4 +293,8 @@ Formato: Lista de códigos ISO 3166-2 (dos caracteres) separados por | <br/>><br
 "Note: The payment method will be displayed at checkout only for the selected currencies.","Nota: El método de pago se mostrará al finalizar la compra solo para las monedas seleccionadas."
 "GlobalPayments - PayPal<i>Connect to PayPal via Unified Payments Gateway</i>","GlobalPayments - PayPal<i>Connect to PayPal via Unified Payments Gateway</i>"
 "Stored Payment Methods","Métodos de pago almacenados"
+"Transaction Region","Región de transacciones"
+"Select where transactions are processed. This controls the GP API host for sandbox and live transactions.","Seleccione dónde se procesan las transacciones. Esto controla el host de la API de GP para sandbox y producción."
+"Global (default)","Global (predeterminado)"
+Europe,Europa
 "For card-based installment payment options, please enter your card information below.","Para opciones de pago a Meses sin Intereses por favor ingresa abajo la información de la tarjeta."

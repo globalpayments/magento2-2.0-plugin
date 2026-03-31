@@ -14,8 +14,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Command\CommandException;
 use Magento\Payment\Gateway\Config\Config as ConfigBase;
 use Magento\Store\Model\ScopeInterface;
-use GlobalPayments\Api\Entities\Enums\Channel;
-use GlobalPayments\Api\Entities\Enums\Environment;
+use GlobalPayments\Api\Entities\Enums\{Channel, DataResidency, Environment};
 use GlobalPayments\Api\Gateways\GpApiConnector;
 use GlobalPayments\Api\ServiceConfigs\AcceptorConfig;
 use GlobalPayments\Api\ServiceConfigs\Gateways\TransitConfig;
@@ -50,7 +49,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
 
-    public const PLUGIN_VERSION = '2.4.3';
+    public const PLUGIN_VERSION = '2.5.0';
 
     /**
      * @var string[]
@@ -442,6 +441,7 @@ class Config extends ConfigBase implements ConfigInterface
             'appName' => $this->getCredentialSetting('app_name', $storeId),
             'channel' => Channel::CardNotPresent,
             'country' => $this->getCountry(),
+            'dataResidency' => $this->getDataResidency(),
             'merchantContactUrl' => $this->getValue('merchant_contact_url'),
             'dynamicHeaders' => [
                 'x-gp-platform' => $this->getPlatformHeader(),
@@ -492,6 +492,7 @@ class Config extends ConfigBase implements ConfigInterface
                     ),
                     'accessToken' => $this->getAccessToken(),
                     'apiVersion' => $this->getApiVersion(),
+                    'dataResidency' => $this->getDataResidency(),
                     'X-GP-Api-Key' => $this->getCredentialSetting('public_x_gp_api_key'),
                     'X-GP-Environment' => $this->getValue('sandbox_mode') ? 'test' : 'prod',
                     'sandboxMode' => $this->getValue('sandbox_mode'),
@@ -563,5 +564,16 @@ class Config extends ConfigBase implements ConfigInterface
     public function getBaseCurrency(): string
     {
         return $this->scopeConfig->getValue('currency/options/base', ScopeInterface::SCOPE_STORE);
+    }
+  
+    /**
+     * Get data residency based on region setting.
+     *
+     * @return string
+     */
+    private function getDataResidency(): string
+    {
+        $region = $this->getValue('transaction_region');
+        return ($region === 'eu') ? DataResidency::EU : DataResidency::NONE;
     }
 }
