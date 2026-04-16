@@ -34,18 +34,24 @@ class HppSecurity
 
     /**
      * Get and validate GP signature from request headers
-     * 
-     * @return string|false
+     *
+     * @return string|false|null
      */
     public function getGpSignature()
     {
         try {
             // Get signature from headers - GP uses X-GP-Signature
             $gpSignature = $this->request->getHeader('X-GP-Signature');
+            if (empty($gpSignature)) {
+                $gpSignature = $this->request->getHeader('x-gp-signature');
+            }
             
             if (!$gpSignature) {
                 // Fallback to check for alternative header names
                 $gpSignature = $this->request->getHeader('GP-Signature');
+                if (empty($gpSignature)) {
+                    $gpSignature = $this->request->getHeader('gp-signature');
+                }
             }
             
             if (!$gpSignature) {
@@ -64,7 +70,7 @@ class HppSecurity
 
     /**
      * Get and sanitize raw input data from POST body
-     * 
+     *
      * @param int $maxLength Maximum input length (default 50KB)
      * @return string|null
      */
@@ -90,10 +96,10 @@ class HppSecurity
 
     /**
      * Validate request signature using GP app key
-     * 
+     *
      * Note: HPP uses SHA512 hash of minified JSON + app key
      * This differs from other payment methods that might use HMAC
-     * 
+     *
      * @param string $rawInput
      * @param string $signature
      * @param string $appKey
@@ -130,7 +136,7 @@ class HppSecurity
 
     /**
      * Sanitize signature parameter
-     * 
+     *
      * @param string $signature
      * @return string|null
      */
@@ -162,7 +168,7 @@ class HppSecurity
 
     /**
      * Sanitize raw input data
-     * 
+     *
      * @param string|null $input
      * @param int $maxLength
      * @return string|null

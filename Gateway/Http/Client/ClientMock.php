@@ -252,6 +252,15 @@ class ClientMock implements ClientInterface
                             $builder = $builder->withOrderId($this->transactionData['ORDER_ID']);
                         }
 
+                        $tokenResponse = $this->transactionData['TOKEN_RESPONSE'];
+
+                        if (!empty($tokenResponse['installment'])) {
+                            $installmentData = new \GlobalPayments\Api\Entities\InstallmentData();
+                            $installmentData->id = $tokenResponse['installment']['installmentId'] ?? null;
+                            $installmentData->reference = $tokenResponse['installment']['installmentReference'] ?? null;
+                            $builder = $builder->withInstallment($installmentData);
+                        }
+
                         $gatewayResponse = $builder->execute();
 
                         $response['MULTI_USE_TOKEN'] = $this->multiUseToken ?

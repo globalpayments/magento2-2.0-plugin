@@ -342,7 +342,9 @@ define(
                 let acceptBlik = (paymentMethodConfig.blikPaymentsEnabled === '1') ? true : false;
                 let acceptOpenBanking = (paymentMethodConfig.bankSelectEnabled === '1') ? true : false;
 
-                let apmsEnabled = ((acceptBlik || acceptOpenBanking) && (Quote.totals()['base_currency_code'] === "PLN")) ? true : false;
+                // Check if APM enums are available in the SDK
+                let hasApmSupport = GlobalPayments.enums && GlobalPayments.enums.ApmProviders && GlobalPayments.enums.ApmEvents;
+                let apmsEnabled = hasApmSupport && ((acceptBlik || acceptOpenBanking) && (Quote.totals()['base_currency_code'] === "PLN")) ? true : false;
 
                 let apmArray = (apmsEnabled) ? [] : false;
 
@@ -409,68 +411,73 @@ define(
                     });
                 }
 
-                this.cardForm.on(GlobalPayments.enums.ApmEvents.PaymentMethodSelection, paymentProviderData => {
-                    const {
-                        provider,
-                        countryCode,
-                        currencyCode,
-                        bankName
-                    } = paymentProviderData;
-                    console.log('Selected provider: ' + provider);
+                if (hasApmSupport) {
+                    this.cardForm.on(GlobalPayments.enums.ApmEvents.PaymentMethodSelection, paymentProviderData => {
+                        const {
+                            provider,
+                            countryCode,
+                            currencyCode,
+                            bankName
+                        } = paymentProviderData;
 
-                    let detail = {};
+                        let detail = {};
 
-                    switch (provider) {
-                        case GlobalPayments.enums.ApmProviders.Blik:
-                            this.placeApmOrder("globalpayments_paymentgateway_blik");
-                            break;
-                        case GlobalPayments.enums.ApmProviders.OpenBanking:
-                            if (!bankName) {
-                                detail = {
-                                    provider,
-                                    redirect_url: "https://fluentlenium.com/",
-                                    countryCode,
-                                    currencyCode,
+                        switch (provider) {
+                            case GlobalPayments.enums.ApmProviders.Blik:
+                                this.placeApmOrder("globalpayments_paymentgateway_blik");
+                                break;
+                            case GlobalPayments.enums.ApmProviders.OpenBanking:
+                                if (!bankName) {
+                                    detail = {
+                                        provider,
+                                        redirect_url: "https://fluentlenium.com/",
+                                        countryCode,
+                                        currencyCode,
+                                    }
+                                } else {
+                                    this.diuiApmPayment = paymentProviderData.provider + '-' + paymentProviderData.bankName;
+                                    this.placeApmOrder("globalpayments_paymentgateway_bank_select");
                                 }
-                            } else {
-                                this.diuiApmPayment = paymentProviderData.provider + '-' + paymentProviderData.bankName;
-                                this.placeApmOrder("globalpayments_paymentgateway_bank_select");
-                            }
 
-                            const merchantCustomEventProvideDetails = new CustomEvent(GlobalPayments.enums.ApmEvents.PaymentMethodActionDetail, {
-                                detail: detail
-                            });
-
-                            // may need to modify this in the future, but for now the only time for this event to fire
-                            // is when Open Banking payment option is clicked 
-                            if (!bankName) window.dispatchEvent(merchantCustomEventProvideDetails);
-
-                            // this prevents the page the checkout form refreshing when this button is clicked
-                            if (document.getElementById("select-another-payment-method-button")) {
-                                document.getElementById("select-another-payment-method-button").addEventListener("click", function (event) {
-                                    event.preventDefault();
+                                const merchantCustomEventProvideDetails = new CustomEvent(GlobalPayments.enums.ApmEvents.PaymentMethodActionDetail, {
+                                    detail: detail
                                 });
-                            }
-                            break;
-                        default:
-                            detail = {
-                                "seconds_to_expire": "900",
-                                "next_action": "REDIRECT_IN_FRAME",
-                                "redirect_url": 'https://google.com/',
-                                provider,
-                            };
-                            break;
+
+                                // may need to modify this in the future, but for now the only time for this event to fire
+                                // is when Open Banking payment option is clicked 
+                                if (!bankName) window.dispatchEvent(merchantCustomEventProvideDetails);
+
+                                // this prevents the page the checkout form refreshing when this button is clicked
+                                if (document.getElementById("select-another-payment-method-button")) {
+                                    document.getElementById("select-another-payment-method-button").addEventListener("click", function (event) {
+                                        event.preventDefault();
+                                    });
+                                }
+                                break;
+                            default:
+                                detail = {
+                                    "seconds_to_expire": "900",
+                                    "next_action": "REDIRECT_IN_FRAME",
+                                    "redirect_url": 'https://google.com/',
+                                    provider,
+                                };
+                                break;
+                        }
+                    });
+                
+
+                    function apmClick(event) {
+                        event.preventDefault();
+                        self.blockOnSubmit();
                     }
-                });
 
-                function apmClick(event) {
-                    event.preventDefault();
-                    this.blockOnSubmit.bind(this);
-                }
-
-                for (let item of document.getElementById("globalpayments_paymentgateway_gpApi_credit_card_form").getElementsByTagName("button")) {
-                    item.addEventListener("click", apmClick, false)
-                }
+                    var creditCardFormElement = document.getElementById("globalpayments_paymentgateway_gpApi_credit_card_form");
+                    if (creditCardFormElement) {
+                        for (let item of creditCardFormElement.getElementsByTagName("button")) {
+                            item.addEventListener("click", apmClick, false)
+                        }
+                    }
+                }    
 
                 this.cardForm.on('submit', 'click', this.blockOnSubmit.bind(this));
                 this.cardForm.on('token-success', this.handleResponse.bind(this));

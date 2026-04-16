@@ -206,6 +206,9 @@ abstract class AbstractUrl extends Action implements CsrfAwareActionInterface
                 break;
             case 'POST':
                 $xgpSignature = $request->getHeader('X-GP-Signature');
+                if (empty($xgpSignature)) {
+                    $xgpSignature = $request->getHeader('x-gp-signature');
+                }
                 $toHash = $request->getParam('rawContent');
 
                 break;
@@ -231,16 +234,16 @@ abstract class AbstractUrl extends Action implements CsrfAwareActionInterface
     protected function getRequestDetails()
     {
         $request = $this->getRequest();
-        $headers = $request->getHeaders()->toArray();
+        $headers = array_change_key_case($request->getHeaders()->toArray());
         $rawContent = $request->getContent();
 
-        if (isset($headers['Content-Encoding']) && strpos($headers['Content-Encoding'], 'gzip') !== false) {
+        if (isset($headers['content-encoding']) && strpos($headers['content-encoding'], 'gzip') !== false) {
             $rawContent = gzdecode($rawContent);
         }
 
         $request->setParams(['rawContent' => $rawContent]);
 
-        if (isset($headers['Content-Type']) && $headers['Content-Type'] === 'application/json') {
+        if (isset($headers['content-type']) && $headers['content-type'] === 'application/json') {
             $rawContent = json_decode($rawContent);
         }
 

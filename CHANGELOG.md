@@ -3,6 +3,13 @@
 </a>
 
 # Changelog
+## v2.5.1 (04/16/26)
+### Enhancements:
+- Security enhancements
+### Bug fixes:
+- Fixed TransIT, Genius, and Portico card payments not working in Magento
+- Fixed issue of installment payment with charge payment action on admin panel
+
 ## v2.5.0 (03/31/26)
 ### Enhancements:
 - Added Support for EU GP API endpoint

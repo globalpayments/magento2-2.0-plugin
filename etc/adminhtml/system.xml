@@ -111,18 +111,18 @@
                         <tooltip>This controls the title which the user sees during checkout.</tooltip>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/title</config_path>
                     </field>
+                    <field id="sandbox_mode" translate="label comment" sortOrder="2" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sandbox Mode</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_mode</config_path>
+                        <comment><![CDATA[Get your App Id and App Key from your <a href="https://developer.globalpay.com/user/register" target="_blank">Global Payments Developer Account</a>. When you are ready for Live, please contact <a href="https://developer.globalpay.com/support/integration-support" target="_blank">support</a> to get your live credentials.]]></comment>
+                    </field>
                     <field id="transaction_region" translate="label tooltip" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Transaction Region</label>
                         <tooltip>Select where transactions are processed. This controls the GP API host for sandbox and live transactions.</tooltip>
                         <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\GpApiRegion</source_model>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/transaction_region</config_path>
                         <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\RegionEndpoint</frontend_model>
-                    </field>
-                    <field id="sandbox_mode" translate="label comment" sortOrder="2" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Sandbox Mode</label>
-                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_mode</config_path>
-                        <comment><![CDATA[Get your App Id and App Key from your <a href="https://developer.globalpay.com/user/register" target="_blank">Global Payments Developer Account</a>. When you are ready for Live, please contact <a href="https://developer.globalpay.com/support/integration-support" target="_blank">support</a> to get you live credentials.]]></comment>
                     </field>
                     <field id="app_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Production App Id*</label>
