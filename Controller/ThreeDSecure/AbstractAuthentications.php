@@ -13,6 +13,7 @@ use Magento\Quote\Model\Quote;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use GlobalPayments\PaymentGateway\Configuration\CorsConfigurationInterface;
 use GlobalPayments\PaymentGateway\Configuration\CorsConfiguration;
+use GlobalPayments\PaymentGateway\Helper\ThreeDSecureSecurity;
 use GlobalPayments\PaymentGateway\Model\Helper\GatewayConfigHelper;
 use GlobalPayments\PaymentGateway\Model\Ui\ConfigProvider;
 
@@ -56,6 +57,11 @@ abstract class AbstractAuthentications extends Action implements CsrfAwareAction
     protected $quote;
 
     /**
+     * @var ThreeDSecureSecurity
+     */
+    protected $threeDSecureSecurity;
+
+    /**
      * AbstractAuthentications constructor.
      *
      * @param Context $context
@@ -66,6 +72,7 @@ abstract class AbstractAuthentications extends Action implements CsrfAwareAction
      * @param GatewayConfigHelper $configHelper
      * @param Logger $logger
      * @param SessionManagerInterface $sessionManager
+     * @param ThreeDSecureSecurity $threeDSecureSecurity
      */
     public function __construct(
         Context $context,
@@ -75,7 +82,8 @@ abstract class AbstractAuthentications extends Action implements CsrfAwareAction
         ConfigProvider $configProvider,
         GatewayConfigHelper $configHelper,
         Logger $logger,
-        SessionManagerInterface $sessionManager
+        SessionManagerInterface $sessionManager,
+        ThreeDSecureSecurity $threeDSecureSecurity
     ) {
         parent::__construct($context);
         $this->corsConfiguration = $corsConfiguration;
@@ -85,6 +93,33 @@ abstract class AbstractAuthentications extends Action implements CsrfAwareAction
         $this->configHelper = $configHelper;
         $this->logger = $logger;
         $this->sessionManager = $sessionManager;
+        $this->threeDSecureSecurity = $threeDSecureSecurity;
+    }
+
+    /**
+     * Validate the 3DS security token to prevent carding attacks.
+     *
+     * @return array ['valid' => bool, 'error' => string|null]
+     */
+    protected function validateSecurityToken(): array
+    {
+        return $this->threeDSecureSecurity->validateSecurityToken();
+    }
+
+    /**
+     * Send security error response.
+     *
+     * @param string|\Magento\Framework\Phrase $errorMessage
+     * @return void
+     */
+    protected function sendSecurityErrorResponse($errorMessage): void
+    {
+        $response = [
+            'error' => true,
+            'message' => (string)$errorMessage,
+            'enrolled' => 'SECURITY_ERROR',
+        ];
+        $this->sendResponse(json_encode($response));
     }
 
     /**

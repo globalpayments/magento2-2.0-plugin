@@ -3,6 +3,11 @@
 </a>
 
 # Changelog
+## v2.5.2 (04/30/26)
+### Enhancements:
+- GpApi gateway: PHP-SDK compatibility updates
+- GpApi gateway: Improved security for 3DS verification flow
+
 ## v2.5.1 (04/16/26)
 ### Enhancements:
 - Security enhancements

@@ -22,6 +22,7 @@ use GlobalPayments\Api\ServicesContainer;
 use GlobalPayments\Api\Utils\Logging\Logger;
 use GlobalPayments\Api\Utils\Logging\SampleRequestLogger;
 use GlobalPayments\PaymentGateway\Helper\Utils;
+use GlobalPayments\PaymentGateway\Helper\ThreeDSecureSecurity;
 use GlobalPayments\PaymentGateway\Model\Ui\ConfigProvider;
 use GlobalPayments\PaymentGateway\Gateway\Command\GetAccessTokenCommand;
 
@@ -49,7 +50,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
 
-    public const PLUGIN_VERSION = '2.5.0';
+    public const PLUGIN_VERSION = '2.5.2';
 
     /**
      * @var string[]
@@ -117,6 +118,11 @@ class Config extends ConfigBase implements ConfigInterface
     private $utils;
 
     /**
+     * @var ThreeDSecureSecurity
+     */
+    private $threeDSecureSecurity;
+
+    /**
      * Config constructor.
      *
      * @param DeploymentConfig $deploymentConfig
@@ -128,6 +134,7 @@ class Config extends ConfigBase implements ConfigInterface
      * @param State $state
      * @param UrlInterface $url
      * @param Utils $utils
+     * @param ThreeDSecureSecurity $threeDSecureSecurity
      * @param string|null $methodCode
      * @param string $pathPattern
      * @param string|null $gatewayCode
@@ -144,6 +151,7 @@ class Config extends ConfigBase implements ConfigInterface
         State $state,
         UrlInterface $url,
         Utils $utils,
+        ThreeDSecureSecurity $threeDSecureSecurity,
         $methodCode = null,
         $pathPattern = self::DEFAULT_PATH_PATTERN,
         $gatewayCode = null,
@@ -159,6 +167,7 @@ class Config extends ConfigBase implements ConfigInterface
         $this->state = $state;
         $this->urlBuilder = $url;
         $this->utils = $utils;
+        $this->threeDSecureSecurity = $threeDSecureSecurity;
 
         $this->availableGateways = $availableGateways;
         $this->gatewayCode = $gatewayCode;
@@ -317,6 +326,37 @@ class Config extends ConfigBase implements ConfigInterface
     protected function getEndpointUrl($path)
     {
         return $this->urlBuilder->getUrl($path, ['_secure' => true]);
+    }
+
+    /**
+     * Gets a secured 3DS endpoint URL with security token.
+     *
+     * The security token prevents carding attacks by:
+     * - Binding the request to the client IP
+     * - Expiring after 5 minutes
+     * - Limiting usage count
+     *
+     * Falls back to the plain endpoint URL when token generation is not possible
+     * (e.g., GPAPI app_key not yet configured on fresh installs), so that
+     * rendering the checkout config does not hard-fail.
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function getSecured3dsUrl($path)
+    {
+        $baseUrl = $this->getEndpointUrl($path);
+
+        try {
+            $securityToken = $this->threeDSecureSecurity->generateSecurityToken();
+            $separator = (strpos($baseUrl, '?') !== false) ? '&' : '?';
+            return $baseUrl . $separator . 'gp3ds_token=' . urlencode($securityToken);
+        } catch (\RuntimeException $e) {
+            // ThreeDSecureSecurity::getSecretKey() already logs a warning before throwing.
+            // Return the plain URL so that checkout config rendering does not hard-fail
+            // on fresh installs or stores that do not use the GPAPI gateway.
+            return $baseUrl;
+        }
     }
 
     /**
@@ -529,10 +569,10 @@ class Config extends ConfigBase implements ConfigInterface
                         $this->getEndpointUrl('globalpayments/threedsecure/methodNotification'),
                     'challengeNotificationUrl' => $this->getConfigUrl('challenge_notification_url') ??
                         $this->getEndpointUrl('globalpayments/threedsecure/challengeNotification'),
-                    'checkEnrollmentUrl' => $this->getEndpointUrl(
+                    'checkEnrollmentUrl' => $this->getSecured3dsUrl(
                         'globalpayments/threedsecure/checkEnrollment'
                     ),
-                    'initiateAuthenticationUrl' => $this->getEndpointUrl(
+                    'initiateAuthenticationUrl' => $this->getSecured3dsUrl(
                         'globalpayments/threedsecure/initiateAuthentication'
                     ),
                     'merchantContactUrl' => $this->getValue('merchant_contact_url'),

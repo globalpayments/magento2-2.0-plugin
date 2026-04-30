@@ -23,6 +23,13 @@ class InitiateAuthentication extends AbstractAuthentications
      */
     public function execute()
     {
+        // Validate security token to prevent carding attacks
+        $securityValidation = $this->validateSecurityToken();
+        if (!$securityValidation['valid']) {
+            $this->sendSecurityErrorResponse($securityValidation['error']);
+            return;
+        }
+
         $response = [];
         $requestData = json_decode($this->getRequest()->getContent());
 

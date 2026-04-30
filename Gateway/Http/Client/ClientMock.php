@@ -155,17 +155,10 @@ class ClientMock implements ClientInterface
                             $this->transactionData['CUSTOMER_REGISTRATION_DATE']
                         );
                     }
-                    if ($this->useStoredCard()) {
+                    if ($this->useStoredCard() || $this->requestMultiUseToken()) {
+                        // Handle stored credential data for initial (ON_SUCCESS) and subsequent stored card transactions
                         $storedCreds = $this->setStoredCard();
-                        $builder = $builder->withStoredCredential($storedCreds)
-                            ->withPaymentMethodUsageMode(PaymentMethodUsageMode::MULTIPLE);
-                    } elseif ($this->requestMultiUseToken()) {
-                        // Handle storage_mode: ON_SUCCESS (first stored credential)
-                        $storedCreds = $this->setStoredCard();
-                        $builder = $builder->withStoredCredential($storedCreds)
-                            ->withPaymentMethodUsageMode(PaymentMethodUsageMode::MULTIPLE);
-                    } else {
-                        $builder = $builder->withPaymentMethodUsageMode(PaymentMethodUsageMode::SINGLE);
+                        $builder = $builder->withStoredCredential($storedCreds);
                     }
                     if (!empty($this->transactionData['DYNAMIC_DESCRIPTOR'])) {
                         $builder = $builder->withDynamicDescriptor($this->transactionData['DYNAMIC_DESCRIPTOR']);
@@ -230,17 +223,10 @@ class ClientMock implements ClientInterface
                                 $this->transactionData['CUSTOMER_REGISTRATION_DATE']
                             );
                         }
-                        if ($this->useStoredCard()) {
-                            $storedCreds = $this->setStoredCard();
-                            $builder = $builder->withStoredCredential($storedCreds)
-                                ->withPaymentMethodUsageMode(PaymentMethodUsageMode::MULTIPLE);
-                        } elseif ($this->requestMultiUseToken()) {
+                        if ($this->requestMultiUseToken() || $this->useStoredCard()) {
                             // Handle storage_mode: ON_SUCCESS (first stored credential)
                             $storedCreds = $this->setStoredCard();
-                            $builder = $builder->withStoredCredential($storedCreds)
-                                ->withPaymentMethodUsageMode(PaymentMethodUsageMode::MULTIPLE);
-                        } else {
-                            $builder = $builder->withPaymentMethodUsageMode(PaymentMethodUsageMode::SINGLE);
+                            $builder = $builder->withStoredCredential($storedCreds);
                         }
                         if (!empty($this->transactionData['DYNAMIC_DESCRIPTOR'])) {
                             $builder = $builder->withDynamicDescriptor($this->transactionData['DYNAMIC_DESCRIPTOR']);
@@ -302,7 +288,6 @@ class ClientMock implements ClientInterface
                             (bool)$this->transactionData['REQUEST_MULTI_USE_TOKEN']
                         );
                     }
-                    $builder = $builder->withPaymentMethodUsageMode(PaymentMethodUsageMode::SINGLE);
                     $gatewayResponse = $builder->execute();
 
                     $response['MULTI_USE_TOKEN'] = $this->multiUseToken ?: $gatewayResponse->token;
