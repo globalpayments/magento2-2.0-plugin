@@ -42,7 +42,11 @@ class HppTransaction
     }
 
     /**
-     * Complete HPP payment and set appropriate order status
+     * Complete HPP payment and apply the configured final status.
+     *
+     * HPP orders stay in pending_payment during placement and only move to
+     * the configured final status when this method is invoked after
+     * successful HPP confirmation, typically via the ReturnUrl flow.
      *
      * @param OrderInterface $order
      * @param array $paymentData
@@ -70,11 +74,11 @@ class HppTransaction
                 // Create authorization transaction manually  
                 $this->createHppAuthorizationTransaction($order, $payment, $transactionId);
             }
-            
-             $methodInstance = $payment->getMethodInstance();
-             $configuredStatus = $methodInstance->getConfigData('order_status');
-             
-             $this->setOrderStatus($order,$configuredStatus);
+
+            $methodInstance = $payment->getMethodInstance();
+            $configuredStatus = (string) ($methodInstance->getConfigData('order_status') ?: Order::STATE_PROCESSING);
+
+            $this->setOrderStatus($order, $configuredStatus);
             
             // Re-enable email notifications (disabled by InitializeCommand)
             $order->setCanSendNewEmailFlag(true);
@@ -97,17 +101,15 @@ class HppTransaction
     }
 
     /**
-     * Set order status based on HPP configuration
+     * Set order status for successful HPP processing.
      *
      * @param OrderInterface $order
-     * @param mixed $config
+     * @param string $configuredStatus
      * @return void
      */
-    private function setOrderStatus(OrderInterface $order, $configuredStatus)
+    private function setOrderStatus(OrderInterface $order, string $configuredStatus)
     {
-        
-        
-        // Map status to appropriate state
+        // Apply the configured final status when this helper completes the payment after ReturnUrl confirmation.
         switch ($configuredStatus) {
             case 'processing':
                 $order->setState(Order::STATE_PROCESSING);
@@ -128,7 +130,23 @@ class HppTransaction
             case 'pending':
                 $order->setState(Order::STATE_NEW);
                 $order->setStatus('pending');
-                break;    
+                break;
+            case 'holded':
+                $order->setState(Order::STATE_HOLDED);
+                $order->setStatus('holded');
+                break;
+            case 'canceled':
+                $order->setState(Order::STATE_CANCELED);
+                $order->setStatus('canceled');
+                break;
+            case 'closed':
+                $order->setState(Order::STATE_CLOSED);
+                $order->setStatus('closed');
+                break;
+            case 'fraud':
+                $order->setState(Order::STATE_PAYMENT_REVIEW);
+                $order->setStatus('fraud');
+                break;
             default:
                 // For custom statuses, try to set directly
                 $order->setStatus($configuredStatus);
@@ -139,6 +157,14 @@ class HppTransaction
                     $order->setState(Order::STATE_PROCESSING);
                 } elseif (strpos($configuredStatus, 'complete') !== false) {
                     $order->setState(Order::STATE_COMPLETE);
+                } elseif (strpos($configuredStatus, 'hold') !== false) {
+                    $order->setState(Order::STATE_HOLDED);
+                } elseif (strpos($configuredStatus, 'cancel') !== false) {
+                    $order->setState(Order::STATE_CANCELED);
+                } elseif (strpos($configuredStatus, 'closed') !== false) {
+                    $order->setState(Order::STATE_CLOSED);
+                } elseif (strpos($configuredStatus, 'fraud') !== false || strpos($configuredStatus, 'review') !== false) {
+                    $order->setState(Order::STATE_PAYMENT_REVIEW);
                 } elseif (strpos($configuredStatus, 'pending') !== false) {
                     $order->setState(Order::STATE_NEW);
                 } else {
@@ -161,16 +187,29 @@ class HppTransaction
         $payment->setAdditionalInformation('hpp_transaction_id', $paymentData['id'] ?? null);
         $payment->setAdditionalInformation('hpp_auth_code', $paymentData['authorization_code'] ?? null);
         $payment->setAdditionalInformation('hpp_status', $paymentData['status'] ?? null);
-        $payment->setAdditionalInformation('hpp_payment_method_result', $paymentData['payment_method']['result'] ?? null);
+        $payment->setAdditionalInformation('hpp_payment_method_result', $paymentData['result'] ?? null);
         
         // Store payment method details if available
-        if (!empty($paymentData['payment_method'])) {
-            $payment->setAdditionalInformation('hpp_payment_method', json_encode($paymentData['payment_method']));
+        if (!empty($paymentData)) {
+            $payment->setAdditionalInformation('hpp_payment_method', json_encode($paymentData));
         }
 
         // Store saved payer information if available
         if (!empty($paymentData['saved_payer_id'])) {
             $payment->setAdditionalInformation('saved_payer_id', $paymentData['saved_payer_id']);
+        }
+        // Store Visa installment data if available (from external HPP)
+        if (!empty($paymentData['installment'])) {
+            $installmentData = $paymentData['installment'];
+
+            
+            $payment->setAdditionalInformation(
+                \GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler::VISA_INSTALLMENT_DATA,
+                json_encode($installmentData)
+            );
+            
+            // Set flag for easy checking
+            $payment->setAdditionalInformation('has_visa_installments', true);
         }
     }
 

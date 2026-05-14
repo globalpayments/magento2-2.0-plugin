@@ -198,8 +198,11 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
 
                 case TransactionStatus::DECLINED:
                 case 'FAILED':
-                    // Cancel the order only if the status is 'Pending Payment'
-                    if ($order->getStatus() === OrderModel::STATE_PENDING_PAYMENT) {
+                    // Cancel failed HPP orders only if still in initial processing state.
+                    // Only cancel if order is still PROCESSING (awaiting callback confirmation).
+                    // If the order has already moved to any other state (final or otherwise),
+                    // it may have been processed or is under manual review, so don't cancel.
+                    if ($order->getState() === OrderModel::STATE_PROCESSING) {
                         $this->cancelOrder($order);
 
                         if ($this->config->isDebugEnabled()) {
@@ -209,8 +212,9 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
                         }
                     } else {
                         if ($this->config->isDebugEnabled()) {
-                            $this->logger->info('HPP StatusUrl: Order not cancelled (status not pending)', [
+                            $this->logger->info('HPP StatusUrl: Order not cancelled (already moved from pending state)', [
                                 'order_id' => $order->getId(),
+                                'current_state' => $order->getState(),
                                 'current_status' => $order->getStatus()
                             ]);
                         }

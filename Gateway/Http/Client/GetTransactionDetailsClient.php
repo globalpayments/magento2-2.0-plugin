@@ -6,6 +6,7 @@ use Magento\Payment\Gateway\Http\ClientException;
 use Magento\Payment\Gateway\Http\TransferInterface;
 use GlobalPayments\Api\Services\ReportingService;
 use GlobalPayments\Api\Entities\Exceptions\ApiException;
+use GlobalPayments\PaymentGateway\Gateway\Response\TxnIdHandler;
 
 class GetTransactionDetailsClient extends AbstractClient
 {
@@ -31,6 +32,11 @@ class GetTransactionDetailsClient extends AbstractClient
             $response['TRANSACTION_ID'] = $gatewayResponse->transactionId;
             $response['TRANSACTION_STATUS'] = $gatewayResponse->transactionStatus;
             $response['TRANSACTION_TYPE'] = $gatewayResponse->transactionType;
+            
+            // Capture Visa installment data if available
+            if (!empty($gatewayResponse->paymentMethod) && !empty($gatewayResponse->paymentMethod->installment)) {
+                $response[TxnIdHandler::VISA_INSTALLMENT_DATA] = $gatewayResponse->paymentMethod->installment;
+            }
 
             return $response;
         } catch (ApiException $e) {

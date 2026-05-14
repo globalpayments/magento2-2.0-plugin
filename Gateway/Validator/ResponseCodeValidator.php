@@ -16,7 +16,7 @@ class ResponseCodeValidator extends AbstractValidator
      * @param array $validationSubject
      * @return ResultInterface
      */
-    public function validate(array $validationSubject)
+    public function validate(array $validationSubject) : ResultInterface
     {
         if (!isset($validationSubject['response']) || !is_array($validationSubject['response'])) {
             throw new \InvalidArgumentException('Response does not exist');
@@ -43,7 +43,7 @@ class ResponseCodeValidator extends AbstractValidator
      * @param array $response
      * @return bool
      */
-    private function isSuccessfulTransaction(array $response)
+    private function isSuccessfulTransaction(array $response): bool
     {
         return isset($response[self::RESULT_CODE])
         && $response[self::RESULT_CODE] !== ClientMock::FAILURE;

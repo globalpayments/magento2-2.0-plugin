@@ -20,6 +20,7 @@ class TxnIdHandler implements HandlerInterface
     public const THREE_D_SECURE_STATUS = 'threeDSecureStatus';
     public const SERVER_TRANS_ID = 'serverTransId';
     public const INSTALLMENT_DATA = 'installmentData';
+    public const VISA_INSTALLMENT_DATA = "visaInstallmentsData";
 
     /**
      * Handles transaction id
@@ -102,6 +103,13 @@ class TxnIdHandler implements HandlerInterface
             $payment->setAdditionalInformation(
                 self::INSTALLMENT_DATA,
                 json_encode($response['INSTALLMENT_DATA'])
+            );
+        }
+
+        if(!empty($response[self::VISA_INSTALLMENT_DATA])){
+              $payment->setAdditionalInformation(
+                self::VISA_INSTALLMENT_DATA,
+                json_encode($response[self::VISA_INSTALLMENT_DATA])
             );
         }
 

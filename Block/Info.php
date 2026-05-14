@@ -5,6 +5,7 @@ namespace GlobalPayments\PaymentGateway\Block;
 use Magento\Framework\Phrase;
 use Magento\Payment\Block\ConfigurableInfo;
 use GlobalPayments\PaymentGateway\Gateway\Response\FraudHandler;
+Use GlobalPayments\PaymentGateway\Helper\VisaInstallmentsHelper;
 
 class Info extends ConfigurableInfo
 {
@@ -65,6 +66,17 @@ class Info extends ConfigurableInfo
                 $data[(string)__('Switch/Solo/Maestro Start Date')] = sprintf('%s/%s', sprintf('%02d', $month), $year);
             }
         }
+        // Adds Visa Installments Data if available
+        $additionalInfo  = $this->getInfo()->getAdditionalInformation();
+       
+        if (isset($additionalInfo["has_visa_installments"]) && !empty($additionalInfo["has_visa_installments"]) &&
+            isset($additionalInfo["visaInstallmentsData"]) && !empty($additionalInfo["visaInstallmentsData"])
+        )
+        {
+            $visaInstallmentsData = json_decode($additionalInfo["visaInstallmentsData"], true);
+            $data = array_merge($data, VisaInstallmentsHelper::formatVisaInstallmentsData($visaInstallmentsData));
+        }
+        
         return $transport->setData(array_merge($data, $transport->getData()));
     }
 }

@@ -10,6 +10,7 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
+use Magento\Sales\Model\Order\Payment\Transaction;
 
 class ConditionalInitializeCommand implements CommandInterface
 {
@@ -98,12 +99,13 @@ class ConditionalInitializeCommand implements CommandInterface
             /** @var Order $order */
             $order = $payment->getOrder();
             $order->setCanSendNewEmailFlag(false);
-            $this->createInvoiceForOrder($order, $payment);
 
             /** @var DataObject $stateObject */
             $stateObject = $commandSubject['stateObject'];
-            $stateObject->setState($orderState);
-            $stateObject->setStatus($orderStatus);
+            // HPP orders start in processing state during initial checkout
+            // until the async callback confirms the final outcome.
+            $stateObject->setState(Order::STATE_PROCESSING);
+            $stateObject->setStatus(Order::STATE_PROCESSING);
             $stateObject->setIsNotified(false);
         } else {
             // For embedded/drop-in UI payments
@@ -111,8 +113,17 @@ class ConditionalInitializeCommand implements CommandInterface
             if ($config->getValue("payment_action") === MethodInterface::ACTION_AUTHORIZE) {
                 // Authorize mode: execute authorize command during initialize
                 $this->commandPool->get("authorize")->execute($commandSubject);
-                $stateObject->setState($orderState);
-                $stateObject->setStatus($orderStatus);
+
+                if ($payment->getTransactionId()) {
+                    $payment->setLastTransId($payment->getTransactionId());
+                    $payment->setIsTransactionClosed(false);
+                    $payment->setShouldCloseParentTransaction(false);
+                    $payment->addTransaction(Transaction::TYPE_AUTH);
+                }
+
+                // Force processing state for authorize-only to prevent order from being marked as complete before capture
+                $stateObject->setState('processing');
+                $stateObject->setStatus(Order::STATE_PROCESSING);
                 $stateObject->setIsNotified(false);
             } else {
                 // Authorize+Capture mode: execute capture command

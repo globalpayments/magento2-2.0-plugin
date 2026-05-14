@@ -1,6 +1,20 @@
 <?xml version="1.0"?>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- RemoteAddress instance for 3DS security that reads proxy headers for correct client IP detection -->
+    <virtualType name="GlobalPayments\PaymentGateway\RemoteAddress\ProxyAware" type="Magento\Framework\HTTP\PhpEnvironment\RemoteAddress">
+        <arguments>
+            <argument name="alternativeHeaders" xsi:type="array">
+                <item name="0" xsi:type="string">HTTP_X_FORWARDED_FOR</item>
+                <item name="1" xsi:type="string">HTTP_X_REAL_IP</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="GlobalPayments\PaymentGateway\Helper\ThreeDSecureSecurity">
+        <arguments>
+            <argument name="remoteAddress" xsi:type="object">GlobalPayments\PaymentGateway\RemoteAddress\ProxyAware</argument>
+        </arguments>
+    </type>
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">

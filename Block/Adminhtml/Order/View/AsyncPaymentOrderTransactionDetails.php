@@ -21,7 +21,7 @@ class AsyncPaymentOrderTransactionDetails extends OrderView
         parent::_construct();
 
         $order = $this->getOrder();
-        if ($order === null || $order->getStatus() !== OrderModel::STATE_PENDING_PAYMENT) {
+        if ($order === null) {
             return;
         }
 

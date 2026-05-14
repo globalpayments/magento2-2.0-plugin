@@ -2,6 +2,10 @@
 
 namespace GlobalPayments\PaymentGateway\Controller\HostedPaymentPages;
 
+
+
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Model\QuoteFactory;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -20,6 +24,16 @@ use GlobalPayments\PaymentGateway\Model\HostedPaymentPages\Config as HppConfig;
  */
 class Success extends Action
 {
+    /**
+     * @var CartRepositoryInterface 
+     */
+    private $quoteRepository;
+
+    /**
+     * @var QuoteFactory  
+     */
+    private $quoteFactory;
+
     /**
      * @var CheckoutSession
      */
@@ -64,6 +78,8 @@ class Success extends Action
     public function __construct(
         Context $context,
         CheckoutSession $checkoutSession,
+        CartRepositoryInterface $quoteRepository,
+        QuoteFactory $quoteFactory,
         OrderRepositoryInterface $orderRepository,
         PageFactory $pageFactory,
         LoggerInterface $logger,
@@ -72,6 +88,8 @@ class Success extends Action
     ) {
         parent::__construct($context);
         $this->checkoutSession = $checkoutSession;
+        $this->quoteRepository = $quoteRepository;
+        $this->quoteFactory = $quoteFactory;
         $this->orderRepository = $orderRepository;
         $this->pageFactory = $pageFactory;
         $this->logger = $logger;
@@ -123,11 +141,24 @@ class Success extends Action
         }
 
         try {
-            $order = $this->orderRepository->get($orderId);
 
+            
+            $quote = $this->checkoutSession->getQuote();
+            $quote->setIsActive(false);
+            $this->quoteRepository->save($quote);
+            $this->checkoutSession->setLastQuoteId($quote->getId());
+            $this->checkoutSession->setLastSuccessQuoteId($quote->getId());
+            
+            $order = $this->orderRepository->get($orderId);
             $this->checkoutSession->setLastOrderId($order->getId());
             $this->checkoutSession->setLastRealOrderId($order->getIncrementId());
             $this->checkoutSession->clearQuote();
+            
+            // Replace quote with new 
+            $this->checkoutSession->replaceQuote(
+                $this->quoteFactory->create()
+            );
+
 
             if ($this->config->isDebugEnabled()) {
                 $this->logger->info('HPP Success: Session recreated', [

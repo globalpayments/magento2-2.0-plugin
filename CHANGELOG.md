@@ -3,6 +3,13 @@
 </a>
 
 # Changelog
+## v2.6.0 (05/14/26)
+### Enhancements:
+- Fixed Order status behaviour issue for HPP
+- Added installments to HPP
+### Bug fixes:
+- GpApi gateway: Voiding of Authorized payments fixed 
+
 ## v2.5.2 (04/30/26)
 ### Enhancements:
 - GpApi gateway: PHP-SDK compatibility updates

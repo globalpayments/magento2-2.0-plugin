@@ -398,6 +398,9 @@
                         <label>New Order Status</label>
                         <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
                         <config_path>payment/globalpayments_paymentgateway_genius/order_status</config_path>
+                        <depends>
+                            <field id="payment_action">authorize</field>
+                        </depends>
                     </field>
                     <!-- <field id="cctypes" translate="label" type="multiselect" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Credit Card Types</label>

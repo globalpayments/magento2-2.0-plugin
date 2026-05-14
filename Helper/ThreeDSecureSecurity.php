@@ -223,7 +223,7 @@ class ThreeDSecureSecurity
         }
 
         // Check token usage limit (atomic: lock prevents concurrent bypasses)
-        $usageKey = self::CACHE_PREFIX_TOKEN . md5($token);
+        $usageKey = self::CACHE_PREFIX_TOKEN . hash('sha256', $token);
         $remainingTtl = max(1, self::TOKEN_EXPIRY_SECONDS - $tokenAge);
         $usageResult = $this->checkAndIncrementCounter($usageKey, self::MAX_TOKEN_USES, $remainingTtl);
 
@@ -236,7 +236,7 @@ class ThreeDSecureSecurity
         }
 
         // Rate limiting: max requests per minute per IP (atomic)
-        $rateLimitKey = self::CACHE_PREFIX_RATE . md5($clientIp);
+        $rateLimitKey = self::CACHE_PREFIX_RATE . hash('sha256', $clientIp);
         $rateLimitResult = $this->checkAndIncrementCounter($rateLimitKey, self::RATE_LIMIT_PER_MINUTE, 60);
 
         if ($rateLimitResult['exceeded']) {
@@ -251,7 +251,7 @@ class ThreeDSecureSecurity
         }
 
         // Hourly limit: max requests per hour per IP (atomic)
-        $hourlyKey = self::CACHE_PREFIX_HOURLY . md5($clientIp);
+        $hourlyKey = self::CACHE_PREFIX_HOURLY . hash('sha256', $clientIp);
         $hourlyResult = $this->checkAndIncrementCounter($hourlyKey, self::HOURLY_LIMIT, 3600);
 
         if ($hourlyResult['exceeded']) {
