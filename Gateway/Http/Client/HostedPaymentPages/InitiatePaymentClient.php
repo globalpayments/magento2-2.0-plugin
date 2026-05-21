@@ -92,6 +92,7 @@ class InitiatePaymentClient extends AbstractClient
             $hppAppName = $config->getCredentialSetting('app_name');
             $sandboxMode = $config->getValue('sandbox_mode');
             $storeCountry = $transactionData['SERVICES_CONFIG']['country'] ?? 'GB';
+            $dccConfigValue = $config->getValue('dcc_hpp');
 
             // Validate HPP credentials exist
             if (empty($hppAppId)) {
@@ -276,6 +277,13 @@ class InitiatePaymentClient extends AbstractClient
             // Add digital wallets if configured
             if (!empty($digitalWallets)) {
                 $hppBuilder->withDigitalWallets($digitalWallets);
+            }
+
+            // Add currency conversion mode in order when DCC is enabled.
+            if (isset($dccConfigValue) && $dccConfigValue == '1') {
+                $hppBuilder->withCurrencyConversionMode(true);
+            } else {
+                $hppBuilder->withCurrencyConversionMode(false);
             }
 
             // Execute the HPP request

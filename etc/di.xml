@@ -925,6 +925,15 @@
         <plugin disabled="false" name="GlobalPayments_PaymentGateway_Plugin_Model_Quote_Payment" sortOrder="10" type="GlobalPayments\PaymentGateway\Plugin\Model\Quote\Payment"/>
     </type>
 
+    <type name="Magento\Sales\Model\ResourceModel\Order\Handler\State">
+        <plugin
+            disabled="false"
+            name="globalpayments_dropin_order_state_handler"
+            type="GlobalPayments\PaymentGateway\Plugin\Sales\Order\ResourceModel\Handler\StateHandlerPlugin"
+            sortOrder="10"
+        />
+    </type>
+
     <!-- ConditionalInitializeCommand DI configuration -->
     <type name="GlobalPayments\PaymentGateway\Gateway\Command\ConditionalInitializeCommand">
         <arguments>

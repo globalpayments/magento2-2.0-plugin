@@ -2,14 +2,22 @@
 
 namespace GlobalPayments\PaymentGateway\Gateway\Command;
 
-use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
+use GlobalPayments\PaymentGateway\Gateway\{
+    Config,
+    ConfigFactory
+};
+use Magento\Payment\Model\{
+    InfoInterface,
+    MethodInterface
+};
+
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Invoice;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Framework\DataObject;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\Command\CommandPoolInterface;
-use Magento\Payment\Model\InfoInterface;
-use Magento\Payment\Model\MethodInterface;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Invoice;
+use GlobalPayments\PaymentGateway\Model\DropInOrderStatusService;
 use Magento\Sales\Model\Order\Payment\Transaction;
 
 class ConditionalInitializeCommand implements CommandInterface
@@ -65,6 +73,9 @@ class ConditionalInitializeCommand implements CommandInterface
     {
         /** @var InfoInterface $payment */
         $payment = $commandSubject['payment']->getPayment();
+        if (!$payment instanceof OrderPayment) {
+            return;
+        }
 
         // Get the payment method configuration
         $config = $this->configFactory->create($payment->getMethod());
@@ -78,6 +89,11 @@ class ConditionalInitializeCommand implements CommandInterface
 
         $isHppMode = ($paymentMethod === 'hosted') ||
             ($tokenResponse === 'HPP_TRANSACTION' && $payment->getMethod() === 'globalpayments_paymentgateway_gpApi');
+
+        $isDropInUiMode =
+            !$isHppMode
+            && $payment->getMethod() === Config::CODE_GPAPI
+            && $paymentMethod === 'embedded';
 
         // Get configured order status from admin panel
         $methodInstance = $payment->getMethodInstance();
@@ -121,9 +137,20 @@ class ConditionalInitializeCommand implements CommandInterface
                     $payment->addTransaction(Transaction::TYPE_AUTH);
                 }
 
-                // Force processing state for authorize-only to prevent order from being marked as complete before capture
-                $stateObject->setState('processing');
-                $stateObject->setStatus(Order::STATE_PROCESSING);
+                if ($isDropInUiMode) {
+                    $payment->setAdditionalInformation(
+                        DropInOrderStatusService::DROPIN_STATUS_PHASE_KEY,
+                        DropInOrderStatusService::DROPIN_PHASE_INITIALIZING
+                    );
+                    // Drop-in orders should always remain in processing during initialize.
+                    // Final configured status is applied after placement.
+                    $stateObject->setState(Order::STATE_PROCESSING);
+                    $stateObject->setStatus(Order::STATE_PROCESSING);
+                } else {
+                    $stateObject->setState($orderState);
+                    $stateObject->setStatus($orderStatus);
+                }
+
                 $stateObject->setIsNotified(false);
             } else {
                 // Authorize+Capture mode: execute capture command
@@ -134,10 +161,22 @@ class ConditionalInitializeCommand implements CommandInterface
                 // as a related object to be saved when the order is saved
                 /** @var Order $order */
                 $order = $payment->getOrder();
-                $this->createInvoiceForOrder($order, $payment);
+                $this->createInvoiceForOrder($order, $payment, true);
 
-                $stateObject->setState($orderState);
-                $stateObject->setStatus($orderState);
+                if ($isDropInUiMode) {
+                    $payment->setAdditionalInformation(
+                        DropInOrderStatusService::DROPIN_STATUS_PHASE_KEY,
+                        DropInOrderStatusService::DROPIN_PHASE_INITIALIZING
+                    );
+                    // For Drop-in Charge flow, always start in processing during initialize.
+                    // Final configured status should be applied by the completion/callback flow.
+                    $stateObject->setState(Order::STATE_PROCESSING);
+                    $stateObject->setStatus(Order::STATE_PROCESSING);
+                } else {
+                    $stateObject->setState($orderState);
+                    $stateObject->setStatus($orderStatus);
+                }
+
                 $stateObject->setIsNotified(false);
             }
         }
@@ -147,10 +186,15 @@ class ConditionalInitializeCommand implements CommandInterface
      * Create invoice for order during Drop-in UI capture
      *
      * @param Order $order
-     * @param InfoInterface $payment
+     * @param OrderPayment  $payment
+     * @param bool $requireTransactionId Throw when a capture invoice cannot be linked to a gateway transaction.
      * @return void
      */
-    private function createInvoiceForOrder($order, $payment)
+    private function createInvoiceForOrder(
+        Order $order,
+        OrderPayment $payment,
+        bool $requireTransactionId = false
+    ): void
     {
         if (!$order->canInvoice()) {
             return;
@@ -158,7 +202,21 @@ class ConditionalInitializeCommand implements CommandInterface
 
         /** @var Invoice $invoice */
         $invoice = $order->prepareInvoice();
-        $invoice->setTransactionId($payment->getTransactionId());
+        $transactionId = (string)(
+            $payment->getTransactionId()
+            ?: $payment->getLastTransId()
+            ?: $payment->getParentTransactionId()
+        );
+
+        if ($transactionId === '') {
+            if ($requireTransactionId) {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __('Unable to create invoice: gateway transaction id is missing.')
+                );
+            }
+        } else {
+            $invoice->setTransactionId($transactionId);
+        }
         $invoice->register();
         $invoice->pay();
 

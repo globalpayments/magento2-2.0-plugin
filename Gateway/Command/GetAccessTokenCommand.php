@@ -74,6 +74,13 @@ class GetAccessTokenCommand implements CommandInterface
                 //We don't want these permissions set for credential check requests as we need all the accounts returned
                 $permissions = ['PMT_POST_Create_Single'];
 
+                if (
+                    $gatewayConfig->getValue('dcc_hpp') === '1'
+                    && $gatewayConfig->getValue('payment_method') === 'hosted'
+                ) {
+                    $permissions = array_merge($permissions, ['CCS_POST_DCC', 'PMT_POST_Create']);
+                }
+
                 $enableInstallment = $gatewayConfig->getValue('installments') ?? false;
                 $defaultCountry = $gatewayConfig->getCountry() ?? '';
                 $baseCurrency = $gatewayConfig->getBaseCurrency() ?? '';
@@ -82,6 +89,8 @@ class GetAccessTokenCommand implements CommandInterface
                     $permissions = array_merge($permissions, ['INS_POST_Query', 'BIN_GET_Details', 'PMT_POST_Create']);
                 }
 
+                // Ensure there are no duplicate permissions
+                $permissions = array_values(array_unique($permissions));
                 $config->permissions = $permissions;
             }
 

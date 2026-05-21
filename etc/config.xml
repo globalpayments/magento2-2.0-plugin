@@ -81,6 +81,7 @@
                 <enable_three_d_secure>1</enable_three_d_secure>
                 <enable_blik_payments>0</enable_blik_payments>
                 <enable_bank_select_payments>0</enable_bank_select_payments>
+                <dcc_hpp>0</dcc_hpp>
                 <sort_order>0</sort_order>
                 <txn_descriptor />
                 <active>0</active>

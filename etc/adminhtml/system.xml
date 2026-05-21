@@ -278,7 +278,17 @@
                             <field id="payment_method">embedded</field>
                         </depends>
                     </field>
-                    <field id="sort_order" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                
+                    <field id="dcc_hpp" translate="label tooltip" type="select" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable Dynamic Currency Conversion</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/dcc_hpp</config_path>
+                        <depends>
+                            <field id="payment_method">hosted</field>
+                        </depends>
+                    </field>
+
+                    <field id="sort_order" translate="label" type="text" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sort Order</label>
                         <frontend_class>validate-number</frontend_class>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/sort_order</config_path>

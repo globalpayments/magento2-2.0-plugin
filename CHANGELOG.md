@@ -3,6 +3,11 @@
 </a>
 
 # Changelog
+## v2.7.0 (05/21/26)
+### Enhancements:
+- Added support for DCC(Dynamic currency conversion)
+- Fixed Order status behaviour issue for DropinUI
+
 ## v2.6.0 (05/14/26)
 ### Enhancements:
 - Fixed Order status behaviour issue for HPP
