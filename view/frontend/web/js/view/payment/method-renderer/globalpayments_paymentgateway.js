@@ -428,6 +428,7 @@ define(
                                 break;
                             case GlobalPayments.enums.ApmProviders.OpenBanking:
                                 if (!bankName) {
+                                    self.unblockOnError();
                                     detail = {
                                         provider,
                                         redirect_url: "https://fluentlenium.com/",
@@ -451,6 +452,7 @@ define(
                                 if (document.getElementById("select-another-payment-method-button")) {
                                     document.getElementById("select-another-payment-method-button").addEventListener("click", function (event) {
                                         event.preventDefault();
+                                        self.unblockOnError();
                                     });
                                 }
                                 break;

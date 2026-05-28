@@ -3,6 +3,10 @@
 </a>
 
 # Changelog
+## v2.7.1 (05/28/26)
+### Bug fixes:
+- Fixed Order Payment Stuck issue for PayU
+
 ## v2.7.0 (05/21/26)
 ### Enhancements:
 - Added support for DCC(Dynamic currency conversion)
