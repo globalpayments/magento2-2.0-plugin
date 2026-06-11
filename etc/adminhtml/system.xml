@@ -125,7 +125,7 @@
                         <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\RegionEndpoint</frontend_model>
                     </field>
                     <field id="app_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Production App Id*</label>
+                        <label>Production App Id</label>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/app_id</config_path>
                         <depends>
                             <field id="sandbox_mode">0</field>
@@ -133,7 +133,7 @@
                         <validate>required-entry</validate>
                     </field>
                     <field id="app_key" translate="label" type="obscure" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Production App Key*</label>
+                        <label>Production App Key</label>
                         <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/app_key</config_path>
                         <depends>
@@ -142,7 +142,7 @@
                         <validate>required-entry</validate>
                     </field>
                     <field id="app_name" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Production App Name*</label>
+                        <label>Production App Name</label>
                         <tooltip>For a list of available options, click the ‘Credentials Check’ button below.</tooltip>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/app_name</config_path>
                         <depends>
@@ -151,7 +151,7 @@
                         <validate>required-entry</validate>
                     </field>
                     <field id="sandbox_app_id" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Sandbox App Id*</label>
+                        <label>Sandbox App Id</label>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_app_id</config_path>
                         <depends>
                             <field id="sandbox_mode">1</field>
@@ -159,7 +159,7 @@
                         <validate>required-entry</validate>
                     </field>
                     <field id="sandbox_app_key" translate="label" type="obscure" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Sandbox App Key*</label>
+                        <label>Sandbox App Key</label>
                         <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_app_key</config_path>
                         <depends>
@@ -168,7 +168,7 @@
                         <validate>required-entry</validate>
                     </field>
                     <field id="sandbox_app_name" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Sandbox App Name*</label>
+                        <label>Sandbox App Name</label>
                         <tooltip>For a list of available options, click the ‘Credentials Check’ button below.</tooltip>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_app_name</config_path>
                         <depends>

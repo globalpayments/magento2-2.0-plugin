@@ -2,14 +2,21 @@
 
 namespace GlobalPayments\PaymentGateway\Controller\ThreeDSecure;
 
-use GlobalPayments\Api\Entities\Address;
-use GlobalPayments\Api\Entities\BrowserData;
-use GlobalPayments\Api\Entities\Enums\AddressType;
-use GlobalPayments\Api\Entities\Enums\MethodUrlCompletion;
-use GlobalPayments\Api\Entities\ThreeDSecure;
+use GlobalPayments\Api\Entities\{Address, BrowserData, ThreeDSecure};
+use GlobalPayments\Api\Entities\Enums\{AddressType, MethodUrlCompletion};
 use GlobalPayments\Api\PaymentMethods\CreditCardData;
 use GlobalPayments\Api\Services\Secure3dService;
 use GlobalPayments\Api\Utils\CountryUtils;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Payment\Model\Method\Logger;
+use Magento\Quote\Model\Quote;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
+use GlobalPayments\PaymentGateway\Configuration\CorsConfigurationInterface;
+use GlobalPayments\PaymentGateway\Helper\ThreeDSecureSecurity;
+use GlobalPayments\PaymentGateway\Model\Helper\GatewayConfigHelper;
+use GlobalPayments\PaymentGateway\Model\Ui\ConfigProvider;
 
 class InitiateAuthentication extends AbstractAuthentications
 {
@@ -17,6 +24,49 @@ class InitiateAuthentication extends AbstractAuthentications
      * @var array
      */
     private $_states = [ 'US', 'CA' ];
+
+    /**
+     * @var EncryptorInterface
+     */
+    private $encryptor;
+
+    /**
+     * @param Context $context
+     * @param CorsConfigurationInterface $corsConfiguration
+     * @param PaymentTokenManagementInterface $tokenManagement
+     * @param Quote $quote
+     * @param ConfigProvider $configProvider
+     * @param GatewayConfigHelper $configHelper
+     * @param Logger $logger
+     * @param SessionManagerInterface $sessionManager
+     * @param ThreeDSecureSecurity $threeDSecureSecurity
+     * @param EncryptorInterface $encryptor
+     */
+    public function __construct(
+        Context $context,
+        CorsConfigurationInterface $corsConfiguration,
+        PaymentTokenManagementInterface $tokenManagement,
+        Quote $quote,
+        ConfigProvider $configProvider,
+        GatewayConfigHelper $configHelper,
+        Logger $logger,
+        SessionManagerInterface $sessionManager,
+        ThreeDSecureSecurity $threeDSecureSecurity,
+        EncryptorInterface $encryptor
+    ) {
+        parent::__construct(
+            $context,
+            $corsConfiguration,
+            $tokenManagement,
+            $quote,
+            $configProvider,
+            $configHelper,
+            $logger,
+            $sessionManager,
+            $threeDSecureSecurity
+        );
+        $this->encryptor = $encryptor;
+    }
 
     /**
      * @inheritDoc
@@ -79,11 +129,23 @@ class InitiateAuthentication extends AbstractAuthentications
                 $response['serverTransactionId'] = $threeDSecureData->serverTransactionId;
                 $response['messageVersion'] = $threeDSecureData->messageVersion;
                 $response['eci'] = $threeDSecureData->eci;
-
             } else { //challenge flow
+                // Encrypt challenge data into the relay URL to avoid session-sharing issues
+                // between AJAX requests and iframe form submissions
+                $challengePayload = json_encode([
+                    'requestUrl' => $threeDSecureData->issuerAcsUrl,
+                    'encodedChallengeRequest' => $threeDSecureData->payerAuthenticationRequest,
+                    'messageType' => $threeDSecureData->messageType ?? 'creq',
+                ], JSON_THROW_ON_ERROR);
+
+                $encryptedData = $this->encryptor->encrypt($challengePayload);
+
                 $response['status'] = $threeDSecureData->status;
                 $response['challengeMandated'] = $threeDSecureData->challengeMandated;
-                $response['challenge']['requestUrl'] = $threeDSecureData->issuerAcsUrl;
+                $response['challenge']['requestUrl'] = $this->_url->getUrl(
+                    'globalpayments/threedsecure/challengerelay',
+                    ['data' => base64_encode($encryptedData)]
+                );
                 $response['challenge']['encodedChallengeRequest'] = $threeDSecureData->payerAuthenticationRequest;
                 $response['challenge']['messageType'] = $threeDSecureData->messageType;
             }

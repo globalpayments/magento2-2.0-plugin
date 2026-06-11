@@ -1,0 +1,302 @@
+Get Transaction Details,获取交易详情
+%1$s Address Information,%1$s 地址信息
+Are you sure you want to Hold the order?,您确定要将订单设置为保留状态吗？
+Hold,保留
+Are you sure you want to Release the order?,您确定要释放该订单吗？
+Release,释放
+Credentials Check,凭据检查
+Card Type,卡类型
+Card Number,卡号
+Switch/Solo/Maestro Issue Number,Switch / Solo / Maestro 发行编号
+Switch/Solo/Maestro Start Date,Switch / Solo / Maestro 起始日期
+Your credentials were successfully confirmed!,您的凭据已成功验证！
+Unable to perform request. Invalid data. %1$s,无法执行请求。数据无效。%1$s
+The request method is missing.,缺少请求方法。
+This request method is not supported.,不支持该请求方法。
+Missing transaction id.,缺少交易 ID。
+You put the order on hold.,您已将订单设置为保留状态。
+You have released the order.,您已释放该订单。
+Order ID: %1$d. Unexpected transaction status on returnUrl: %2$s,订单 ID：%1$d。returnUrl 返回了异常的交易状态：%2$s
+"Thank you. Your order has been received, but we have encountered an issue when redirecting back. Please contact us for assistance.",“感谢您的下单。您的订单已收到，但在返回时遇到问题。请联系我们以获得帮助。”
+"Payment of %1$s initiated. Transaction ID: ""%2$s""",已发起金额为 %1$s 的支付。交易 ID：“%2$s”
+Order ID: %1$d. Order not found,订单 ID：%1$d。未找到订单
+Order ID: %1$d. Transaction ID changed. Expected %2$s but found %3$s.,订单 ID：%1$d。交易 ID 已更改，期望为 %2$s，实际为 %3$s。
+"Payment of %1$s declined/failed. Transaction ID: ""%2$s""",金额 %1$s 的支付被拒绝/失败。交易 ID：“%2$s”
+Invalid request signature.,无效的请求签名。
+"Canceled amount of %1$s by customer. Transaction ID: ""%2$s""",客户已取消金额 %1$s 的交易。交易 ID：“%2$s”
+Order ID: %1$d. Unexpected transaction status on statusUrl: %2$s,订单 ID：%1$d。statusUrl 返回了异常的交易状态：%2$s
+Add New Card,添加新卡
+Global Payments Card successfully added.,Global Payments 卡已成功添加。
+Something went wrong. Please try again later or use another card.,出现错误。请稍后再试或使用其他卡片。
+Not enough data to perform 3DS. Unable to retrieve token.,数据不足，无法执行 3DS。未能获取令牌。
+Please try again with another card.,请尝试使用其他卡片。
+"You can enable only one Global Payments gateway at a time. Please check the configuration. No gateway enabled.",“一次只能启用一个 Global Payments 网关。请检查配置。目前未启用任何网关。”
+"Sorry, but something went wrong",抱歉，发生了错误
+AVS/CVV Declined!,AVS / CVV 被拒绝！
+Invalid token,无效的令牌
+3DS Authentication failed. Please try again.,3DS 验证失败。请重试。
+Your order,您的订单
+Gateway rejected the transaction.,网关拒绝了该交易。
+"Authorized amount of %1$s. Transaction ID: ""%2$s""",已授权金额为 %1$s。交易 ID：“%2$s”
+"Captured amount of %1$s online. Transaction ID: ""%2$s""",已在线扣取金额 %1$s。交易 ID：“%2$s”
+Your payment was unsuccessful. Please try again or use a different payment method.,您的付款未成功。请重试或使用其他付款方式。
+"An error occurred while processing the payment. Please try again or use a different payment method.",“处理付款时发生错误。请重试或使用其他付款方式。”
+White,白色
+White with Outline,白色（带描边）
+Black,黑色
+"A - Address matches, zip No Match",A - 地址匹配，邮编不匹配
+N - Neither address or zip code match,N - 地址和邮编均不匹配
+R - Retry - system unable to respond,R - 重试（系统无法响应）
+U - Visa / Discover card AVS not supported,U - Visa / Discover 卡不支持 AVS
+S - Master / Amex card AVS not supported,S - Master / Amex 卡不支持 AVS
+"Z - Visa / Discover card 9-digit zip code match, address no match",Z - Visa / Discover 卡 9 位邮编匹配，地址不匹配
+"W - Master / Amex card 9-digit zip code match, address no match",W - Master / Amex 卡 9 位邮编匹配，地址不匹配
+Y - Visa / Discover card 5-digit zip code and address match,Y - Visa / Discover 卡 5 位邮编和地址均匹配
+X - Master / Amex card 5-digit zip code and address match,X - Master / Amex 卡 5 位邮编和地址均匹配
+G - Address not verified for International transaction,G - 国际交易地址未验证
+"B - Address match, Zip not verified",B - 地址匹配，邮编未验证
+C - Address and zip mismatch,C - 地址与邮编不匹配
+D - Address and zip match,D - 地址与邮编匹配
+I - AVS not verified for International transaction,I - 国际交易未验证 AVS
+M - Street address and postal code matches,M - 街道地址与邮政编码匹配
+P - Address and Zip not verified,P - 地址和邮编未验证
+N - Not Matching,N - 不匹配
+P - Not Processed,P - 未处理
+S - Result not present,S - 无结果
+U - Issuer not certified,U - 发卡行未认证
+? - CVV unrecognized,? - CVV 无法识别
+Off,关闭
+Passive,被动
+Active,启用
+PAN_ONLY,PAN_ONLY
+CRYPTOGRAM_3DS,CRYPTOGRAM_3DS
+Authorize,授权
+Charge,扣款
+United States,美国
+Canada,加拿大
+Please check the Shipping address.,请检查收货地址。
+Please check the Billing address.,请检查账单地址。
+Zip/Postal Code is mandatory.,邮编为必填项。
+Telephone is mandatory.,电话为必填项。
+"Required parameter ""Global Payments_paymentgateway_gpApi"" for ""payment_method"" is missing.",缺少“payment_method”所需的参数“Global Payments_paymentgateway_gpApi”。
+"Required parameter ""Global Payments_paymentgateway_gpApi_vault"" for ""payment_method"" is missing.",缺少“payment_method”所需的参数“Global Payments_paymentgateway_gpApi_vault”。
+"Required parameter ""public_hash"" for ""Global Payments_vault"" is missing.",缺少“Global Payments_vault”所需的参数“public_hash”。
+The current customer isnt authorized.,当前客户未获授权。
+Invalid gift card. Please check the entered card details and try again.,礼品卡无效。请检查输入的卡信息后重试。
+Pending Review,待审核
+Held,已保留
+FRAUD_MSG_LIST,FRAUD_MSG_LIST
+PUBLIC_DATA,PUBLIC_DATA
+Success,成功
+Fraud,欺诈
+This page is currently in sandbox/test mode. Do not use real/active card numbers.,当前页面处于沙箱/测试模式。请勿使用真实或有效的卡号。
+Credit Card Number,信用卡号
+Please enter a valid Credit Card Number,请输入有效的信用卡号
+Credit Card Expiration Date,信用卡到期日期
+Please enter a valid Credit Card Expiration Date,请输入有效的信用卡到期日期
+Credit Card Security Code,信用卡安全码
+Please enter a Credit Card Security Code,请输入信用卡安全码
+Card Holder Name,持卡人姓名
+Please enter a valid Card Holder Name,请输入有效的持卡人姓名
+Save for later use,保存以供以后使用
+ending,末尾
+expires,到期
+"There was something wrong, please try again later.",出现错误，请稍后重试。
+Billing Address,账单地址
+Shipping Address,收货地址
+Global Payments Fraud Filter Result,Global Payments 欺诈过滤结果
+Fraud Filter Mode,欺诈过滤模式
+Fraud Filter Result,欺诈过滤结果
+Fraud Filter Rules:,欺诈过滤规则：
+Order ID,订单 ID
+Result Code,结果代码
+Auth Code,授权码
+CVN Result,CVN 结果
+AVS Address Result,AVS 地址结果
+AVS Postcode Result,AVS 邮编结果
+3D Secure Status,3D Secure 状态
+My Payment Methods,我的支付方式
+Expiration Date,到期日期
+Type,类型
+maskedCC,已屏蔽的卡号
+expirationDate,到期日期
+type,类型
+Actions,操作
+Delete,删除
+You have no stored payment methods.,您没有已保存的支付方式。
+Place Order,提交订单
+Apple Pay Mark,Apple Pay 标识
+Google Pay Mark,Google Pay 标识
+PayPal Mark,PayPal 标识
+Credit Card Information,信用卡信息
+Apply Gift Card,使用礼品卡
+Please enter Gift card number,请输入礼品卡号
+Please enter Gift card Pin,请输入礼品卡 PIN
+Remove Gift Card,移除礼品卡
+Gift Card Number,礼品卡号
+PIN,PIN
+Bank Payment Mark,银行转账标识
+ending in,末尾为
+Transaction Id,交易 ID
+Transaction Status,交易状态
+Transaction Type,交易类型
+Amount,金额
+Currency,货币
+BNPL Provider,先买后付（BNPL）服务商
+Payment Type,支付类型
+Provider Name,服务商名称
+Close,关闭
+There is already another Global Payments gateway enabled. Enable this gateway instead?,已有其他 Global Payments 网关处于启用状态。是否改为启用此网关？
+This is a required field.,此为必填项。
+Please enter an App ID,请输入 App ID
+Please enter an App Key,请输入 App 密钥
+Global Payments Credentials Check Failed,Global Payments 凭据验证失败
+Were checking your credentials...,正在检查您的凭据……
+Invalid gateway configuration.,网关配置无效。
+Get Token,获取令牌
+Were not able to process this payment. Please refresh the page and try again.,无法处理此付款。请刷新页面后重试。
+Cancel,取消
+Pay with Apple Pay,使用 Apple Pay 支付
+Were unable to take your payment through Apple Pay. Please try again or use an alternative payment method.,无法通过 Apple Pay 完成付款。请重试或使用其他支付方式。
+Please try again later or use another payment method,请稍后重试或使用其他支付方式
+Orders,订单
+Global Payments Get Transaction Details,Global Payments 获取交易详情
+Global Payments Hold,Global Payments 保留
+Global Payments Release,Global Payments 释放
+"Global Payments (Heartland, Unified Payments & TSYS)",Global Payments（Heartland、统一支付 & TSYS）
+Accept credit/debit cards in your Magento store. Your customers never leave your store to complete the purchase. Begin configuration and choose with which you were onboarded to access the correct gateway.,在您的 Magento 商店中接受信用卡/借记卡支付。客户无需离开您的商店即可完成购买。开始配置并选择您所接入的服务，以访问正确的网关。
+"<div class=""card-brands""></div>","<div class=""card-brands""></div>"
+Heartland<i>Connect to Heartlands Online Payments gateway</i>,Heartland<i>连接至 Heartland 在线支付网关</i>
+"<a href=""https://developer.heartlandpaymentsystems.com/Account/Register"" target=""_blank"">Click here to sign up for SecureSubmit account","<a href=""https://developer.heartlandpaymentsystems.com/Account/Register"" target=""_blank"">点击此处注册 SecureSubmit 账户"
+Enabled,已启用
+Title,标题
+Sandbox Mode,沙箱模式
+Production Public API Key,生产环境公共 API 密钥
+Production Secret API Key,生产环境机密 API 密钥
+Sandbox Public API Key,沙箱公共 API 密钥
+Sandbox Secret API Key,沙箱机密 API 密钥
+Payment Action,支付操作
+Allow Card Saving,允许保存卡信息
+New Order Status,新订单状态
+Debug,调试
+Unified Payments<i>Connect to the Global Payments Unified Payments Gateway</i>,统一支付<i>连接至 Global Payments 统一支付网关</i>
+"<a href=""https://developer.globalpay.com/user/register"" target=""_blank"">Register For a Global Payments Developer Account","<a href=""https://developer.globalpay.com/user/register"" target=""_blank"">注册 Global Payments 开发者账户"
+Production App Id,生产环境 App ID
+Production App Key,生产环境 App 密钥
+Sandbox App Id,沙箱 App ID
+Sandbox App Key,沙箱 App 密钥
+Contact Url,联系网址
+Order Transaction Descriptor,订单交易描述符
+Fraud Mode,欺诈模式
+Enable 3D Secure,启用 3D Secure
+Sort Order,排序顺序
+TSYS Genius<i>Connect to TSYS Genius Gateway. Accept credit/debit/gift cards</i>,TSYS Genius<i>连接至 TSYS Genius 网关。支持信用卡/借记卡/礼品卡</i>
+Production Name,生产环境名称
+Production Site ID,生产环境站点 ID
+Production Key,生产环境密钥
+Production Web API Key,生产环境 Web API 密钥
+Sandbox Name,沙箱名称
+Sandbox Site ID,沙箱站点 ID
+Sandbox Key,沙箱密钥
+Sandbox Web API Key,沙箱 Web API 密钥
+Gift Card PIN,礼品卡 PIN
+TSYS TransIT<i>Connect to TSYS TransIT Gateway</i>,TSYS TransIT<i>连接至 TSYS TransIT 网关</i>
+Production Merchant ID,生产环境商户 ID
+Production Username,生产环境用户名
+Production Password,生产环境密码
+Production Device Id,生产环境设备 ID
+Production TSEP Device Id,生产环境 TSEP 设备 ID
+Production Transaction Key,生产环境交易密钥
+Sandbox Merchant ID,沙箱商户 ID
+Sandbox Username,沙箱用户名
+Sandbox Password,沙箱密码
+Sandbox Device Id,沙箱设备 ID
+Sandbox TSEP Device Id,沙箱 TSEP 设备 ID
+Sandbox Transaction Key,沙箱交易密钥
+Transaction API<i>Connect to the Global Payments Transaction API</i>,交易 API<i>连接至 Global Payments 交易 API</i>
+Production Public Key,生产环境公钥
+Sandbox Public Key,沙箱公钥
+Production API Key,生产环境 API 密钥
+Sandbox API Key,沙箱 API 密钥
+Production API Secret,生产环境 API 密钥密文
+Sandbox API Secret,沙箱 API 密钥密文
+Production Account Credential,生产环境账户凭据
+Sandbox Account Credential,沙箱账户凭据
+Region,地区
+Fraud Management<i>General Fraud Management Settings </i>,欺诈管理<i>常规欺诈管理设置</i>
+Enable Anti-Fraud Controls,启用反欺诈控制
+Allow Suspicious,允许可疑交易
+Email Store Owner on Suspicious Orders,可疑订单时通过电子邮件通知店主
+Notification Email Address,通知邮箱地址
+Fraud Text,欺诈提示文本
+Max Velocity Attempts,最大频率尝试次数
+Velocity Attempts Timeout,频率尝试超时时间
+AVS CVV Result Management<i> Settings </i>,AVS / CVV 结果管理<i> 设置</i>
+Check AVS/CVV Result,检查 AVS / CVV 结果
+AVS Decline Codes,AVS 拒绝代码
+CVV Decline Codes,CVV 拒绝代码
+Global Payments - Affirm<i>Connect to Affirm via Unified Payments Gateway</i>,Global Payments - Affirm<i>通过统一支付网关连接至 Affirm</i>
+Global Payments - Clearpay<i>Connect to Clearpay via Unified Payments Gateway</i>,Global Payments - Clearpay<i>通过统一支付网关连接至 Clearpay</i>
+Global Payments - Klarna<i>Connect to Klarna via Unified Payments Gateway</i>,Global Payments - Klarna<i>通过统一支付网关连接至 Klarna</i>
+Global Payments - Google Pay<i>Connect to Google Pay via Unified Payments Gateway</i>,Global Payments - Google Pay<i>通过统一支付网关连接至 Google Pay</i>
+Global Payments Client ID,Global Payments 客户端 ID
+"Your Client ID, provided by Global Payments.",由 Global Payments 提供的客户端 ID。
+Google Merchant ID,Google 商户 ID
+"Your Merchant ID, provided by Google.",由 Google 提供的商户 ID。
+Google Merchant Display Name,Google 商户显示名称
+Displayed to the customer in the Google Pay dialog.,在 Google Pay 对话框中向客户显示。
+Accepted Cards,接受的卡种
+Allowed Card Auth Methods,允许的卡片授权方式
+Button Color,按钮颜色
+Global Payments - Apple Pay<i>Connect to Apple Pay via Unified Payments Gateway</i>,Global Payments - Apple Pay<i>通过统一支付网关连接至 Apple Pay</i>
+Apple Merchant ID,Apple 商户 ID
+"Your Merchant ID, provided by Apple.",由 Apple 提供的商户 ID。
+Apple Merchant Cert Path,Apple 商户证书路径
+Apple Merchant Key Path,Apple 商户密钥路径
+Apple Merchant Key Passphrase,Apple 商户密钥口令
+Apple Merchant Domain,Apple 商户域名
+Apple Merchant Display Name,Apple 商户显示名称
+Displayed to the customer in the Apple Pay dialog.,在 Apple Pay 对话框中向客户显示。
+Global Payments - Click To Pay<i>Connect to Click To Pay via Unified Payments Gateway</i>,Global Payments - Click To Pay<i>通过统一支付网关连接至 Click To Pay</i>
+Click To Pay Client ID,Click To Pay 客户端 ID
+Your Merchant ID provided by Click To Pay.,由 Click To Pay 提供的商户 ID。
+Click To Pay will render natively within the payment form,Click To Pay 将在支付表单中以原生方式呈现
+Click To Pay will render natively within the payment form.,Click To Pay 将在支付表单中以原生方式呈现。
+Accept Canadian Visa debit cards,接受加拿大 Visa 借记卡
+Accept Canadian Visa debit cards.,接受加拿大 Visa 借记卡。
+Display Global Payments footer within the payment form,在支付表单中显示 Global Payments 页脚
+Display Global Payments footer within the payment form.,在支付表单中显示 Global Payments 页脚。
+Global Payments - Bank Payment<i>Connect to Bank Payment via Unified Payments Gateway</i>,Global Payments - 银行转账<i>通过统一支付网关连接至银行转账</i>
+Account Number,账号
+"Account number, for bank transfers within the UK (UK to UK bank). Only required if no bank details are stored on account.",账户号码，用于英国境内银行转账（英国银行之间）。仅在账户中未保存银行信息时才需要填写。
+Account Name,账户名称
+The name of the individual or business on the bank account. Only required if no bank details are stored on account.,银行账户对应的个人或公司名称。仅在账户中未保存银行信息时才需要填写。
+Sort Code,银行排序代码
+Six digits which identify the bank and branch of an account. Included with the Account Number for UK to UK bank transfers. Only required if no bank details are stored on account.,用于识别开户银行及其分支机构的六码代码。英国境内银行转账时需与账户号码一同提供，仅在账户中未保存银行信息时才需要填写。
+IBAN,IBAN
+"Key field for bank transfers for Europe-to-Europe transfers. Only required if no bank details are stored on account. <br/><br/>Only required for EUR transacting merchants.",“欧洲境内银行转账的关键字段。仅在账户中未保存银行信息时才需要填写。<br/><br/>仅适用于以欧元（EUR）交易的商户。”
+Countries,国家
+"Allows you to input a COUNTRY or string of COUNTRIES to limit what is shown to the customer. Including a country overrides your default account configuration. <br/><br/>Format: List of ISO 3166-2 (two characters) codes separated by a | <br/><br/>Example: FR|GB|IE",允许您输入一个或多个国家，以限制显示给客户的内容。制定国家将覆盖您的预设账户设定。<br/><br/> 格式：以 | 分隔的 ISO 3166-2（两个字元）国家代码清单 <br/><br/> 范例：FR|GB|IE」
+Currencies,货币
+Note: The payment method will be displayed at checkout only for the selected currencies.,注意：该支付方式仅会在所选货币下于结账时显示。
+Global Payments - PayPal<i>Connect to PayPal via Unified Payments Gateway</i>,Global Payments - PayPal<i>通过统一支付网关连接至 PayPal</i>
+Stored Payment Methods,已保存的支付方式
+"Get your App Id and App Key from your <a href=""https://developer.globalpay.com/user/register"" target=""_blank"">Global Payments Developer Account</a>. When you are ready for Live, please contact <a href=""https://developer.globalpay.com/support/integration-support"" target=""_blank"">support</a> to get your live credentials.", 从您的 <a href='https://developer.globalpay.com/user/register' target='_blank'>Global Payments 开发者账户</a> 获取您的 App ID 和 App 密钥。当您准备好进入生产环境时，请联系 <a href='https://developer.globalpay.com/support/integration-support' target='_blank'>支持团队</a> 以获取您的生产环境凭据。
+Transaction Region, 交易区域
+API Endpoint, API 端点
+Sandbox App Name, 沙箱 App 名称
+Production App Name, 生产环境 App 名称
+Note: The Payment Methods will not be displayed at checkout if the credentials are not correct., 注意：如果凭据不正确，支付方式将不会在结账时显示。
+Payment Method, 支付方式
+Enable Blik Payments, 启用 Blik 支付
+Enable Bank Select Payments, 启用银行选择支付
+A link to an About or Contact page on your website with customer care information (maxLength: 256), 指向您网站“关于”或“联系”页面的链接，包含客户支持信息（最大长度：256）
+"For a list of available options, click the ‘Credentials Check’ button below.", 如需查看可用选项列表，请点击下方的“凭据检查”按钮。
+"Choose how you would like customers to pay. 'Embedded' keeps the user on your site, 'Hosted' redirects customers to our secure server for payment.", 选择客户的支付方式。“嵌入式”将用户保留在您的网站上，“托管式”会将客户重定向至我们的安全服务器完成支付。
+Redirect Text, 重定向提示文本
+Accepted Wallets and APMs, 接受的钱包和 APM
+Choose whether you wish to capture funds immediately or authorize payment only for a delayed capture., 选择是立即扣款，还是仅进行授权以便稍后扣款。
+Log all request to and from gateway. This can also log private data and should only be enabled in a development or stage environment., 记录所有发送至和来自网关的请求。该功能可能会记录敏感数据，仅应在开发或测试环境中启用。
+"If Fraud is set to Off in Real Control, you can’t override the setting with the setting from Admin Dashboard", 如果在 Real Control 中将欺诈防护设置为“关闭”，则无法通过管理控制台的设置进行覆盖。
+"Note: to use the card saving feature, you must have multi-use token support enabled on your account. Please contact <a href=""https://developer.globalpay.com/support/integration-support"" target=""_blank"">support</a> with any questions regarding this option.", 注意：要使用卡片保存功能，您的账户必须启用多用途令牌支持。如有任何疑问，请联系<a href='https://developer.globalpay.com/support/integration-support' target='_blank'>支持团队</a>。
+"During a Capture or Authorize payment action, this value will be passed along as the transaction-specific descriptor listed on the customer's bank account. Please contact <a href=""https://developer.globalpay.com/support/integration-support"" target=""_blank"">support</a> with any questions regarding this option (maxLength: 25).", 在进行扣款或授权支付操作时，该值将作为交易特定描述符传递给客户的银行账户。如有任何疑问，请联系<a href='https://developer.globalpay.com/support/integration-support' target='_blank'>支持团队</a>（最大长度：25）。

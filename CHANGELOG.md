@@ -3,6 +3,12 @@
 </a>
 
 # Changelog
+## v2.7.2 (06/11/26)
+### Enhancements:
+- Updated the PHP SDK version to 14.1.15
+- Added translations for Traditional and Simplified Chinese
+- Improved 3DS reliability when challenge is initiated
+
 ## v2.7.1 (05/28/26)
 ### Bug fixes:
 - Fixed Order Payment Stuck issue for PayU
