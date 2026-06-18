@@ -3,6 +3,10 @@
 </a>
 
 # Changelog
+## v2.7.4 (06/18/26)
+### Enhancements:
+- Update to PHP SDK version 14.2.1
+
 ## v2.7.3 (06/16/26)
 ### Enhancements:
 - Update to PHP SDK version 14.2.0
