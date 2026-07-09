@@ -816,6 +816,11 @@
         </arguments>
     </type>
 
+    <type name="Magento\Backend\Block\Widget\Button">
+        <plugin name="globalpayments_unified_creditmemo_button_fallback"
+                type="GlobalPayments\PaymentGateway\Plugin\Backend\Block\Widget\Button\OpenBankingCreditMemoTooltipPlugin"/>
+    </type>
+
     <type name="GlobalPayments\Controller\Customer\ProcessCardData">
         <arguments>
             <argument name="client" xsi:type="object">GlobalPayments\PaymentGateway\Gateway\Http\Client\ClientMock</argument>

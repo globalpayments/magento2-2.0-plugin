@@ -258,6 +258,7 @@ Region,Région
 "Your Client ID, provided by Global Payments.","Votre ID de client, fourni par Global Payments."
 "Google Merchant ID","ID de marchand Google"
 "Your Merchant ID, provided by Google.","Votre ID de marchand, fourni par Google."
+"Payment confirmation for this method may take several days. Refunds are only available after a final payment status is received. Please wait for confirmation or contact support if the delay continues","La confirmation de paiement pour cette méthode peut prendre quelque jours. Les remboursements ne sont possibles qu'après reception du paiement final. SVP attendez la confirmation, ou contactez le support si le délai persiste."
 "Google Merchant Display Name","Nom de marchand Google affiché"
 "Displayed to the customer in the Google Pay dialog.","Ce que voit le client dans le dialogue Google Pay."
 "Accepted Cards","Cartes acceptées"

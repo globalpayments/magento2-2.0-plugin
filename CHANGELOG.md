@@ -3,6 +3,10 @@
 </a>
 
 # Changelog
+## v2.7.5 (07/09/26)
+### Enhancements:
+- Added tooltip on Credit memo button for Open banking transactions
+
 ## v2.7.4 (06/18/26)
 ### Enhancements:
 - Update to PHP SDK version 14.2.1
