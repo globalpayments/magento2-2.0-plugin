@@ -142,7 +142,7 @@
                         <validate>required-entry</validate>
                     </field>
                     <field id="app_name" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Production App Name</label>
+                        <label>Production Account Name</label>
                         <tooltip>For a list of available options, click the ‘Credentials Check’ button below.</tooltip>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/app_name</config_path>
                         <depends>
@@ -168,7 +168,7 @@
                         <validate>required-entry</validate>
                     </field>
                     <field id="sandbox_app_name" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Sandbox App Name</label>
+                        <label>Sandbox Account Name</label>
                         <tooltip>For a list of available options, click the ‘Credentials Check’ button below.</tooltip>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/sandbox_app_name</config_path>
                         <depends>
@@ -193,7 +193,40 @@
                         <config_path>payment/globalpayments_paymentgateway_gpApi/payment_method</config_path>
                         <tooltip>Choose how you would like customers to pay. "Embedded" keeps the user on your site, "Hosted" redirects customers to our secure server for payment</tooltip>
                     </field>
-                     <field id="installments" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="visa_installments" type="hidden" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Visa Installments</label>
+                        <comment>Note: Visa Installments is an account‑level feature. This payment option will only display during checkout if it has been enabled on your Global Payments account.</comment>
+                        <depends>
+                            <field id="payment_method">hosted</field>
+                        </depends>
+                    </field>
+                    <field id="max_time_unit_number" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Max Installments</label>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/max_time_unit_number</config_path>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\VisaInstallmentsMaxInstallments</source_model>
+                        <comment>Filter Visa installments max number of installments.</comment>
+                        <depends>
+                            <field id="payment_method">hosted</field>
+                        </depends>
+                    </field>
+                    <field id="funding_mode" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Installments Funding Mode</label>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/funding_mode</config_path>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\VisaInstallmentsFundingMode</source_model>
+                        <comment>Filter Visa installments by funding mode.</comment>
+                        <depends>
+                            <field id="payment_method">hosted</field>
+                        </depends>
+                    </field>
+                    <field id="max_amount" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Installments Max Amount</label>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/max_amount</config_path>
+                        <comment>Maximum value for Visa installments in your local currency. (Default is 1000)</comment>
+                        <depends>
+                            <field id="payment_method">hosted</field>
+                        </depends>
+                    </field>
+                    <field id="installments" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enable Installments</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/installments</config_path>

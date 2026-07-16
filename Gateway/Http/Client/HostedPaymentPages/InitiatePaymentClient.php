@@ -93,6 +93,9 @@ class InitiatePaymentClient extends AbstractClient
             $sandboxMode = $config->getValue('sandbox_mode');
             $storeCountry = $transactionData['SERVICES_CONFIG']['country'] ?? 'GB';
             $dccConfigValue = $config->getValue('dcc_hpp');
+            $maxInstallments = $config->getValue('max_time_unit_number') ?? 24;
+            $installmentsFundingMode = $config->getValue('funding_mode') ?? 'ANY';
+            $installmentsMaxValue = $config->getValue('max_amount') ?? null;
 
             // Validate HPP credentials exist
             if (empty($hppAppId)) {
@@ -285,6 +288,8 @@ class InitiatePaymentClient extends AbstractClient
             } else {
                 $hppBuilder->withCurrencyConversionMode(false);
             }
+
+            $hppBuilder->withInstallments($installmentsFundingMode, $maxInstallments, $installmentsMaxValue);
 
             // Execute the HPP request
             $payment_request = $hppBuilder->execute($serviceName);

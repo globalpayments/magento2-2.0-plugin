@@ -118,7 +118,7 @@ require(
             Differs slightly from the WooCommerce version
             When the button is clicked and accounts are returned,
             we hide the text input and replace it with a select dropdown
-            populated with the returned accounts. When the account select 
+            populated with the returned accounts. When the account select
             changes so does the hidden text input value.
 
             By doing it this way we preserve the original account value
@@ -143,6 +143,25 @@ require(
 
             replaceInputWithSelect(txtEl, selectEl);
             setupSelectChangeHandler(selectEl, txtEl);
+        }
+
+        function renderHPPVisaInstallmentsInfo() {
+            const installmentsInfoEl = $('tr[id*="_visa_installments"]').first();
+            const merchantCountryElGb = $('select[id="payment_gb_account_merchant_country"]');
+            const merchantCountryElCa = $('select[id="payment_ca_account_merchant_country"]');
+
+            if (merchantCountryElGb.length === 0 && merchantCountryElCa.length === 0) {
+                const allMatches = $('tr[id*="_visa_installments"]');
+
+                // having to force this element to hide with multiple methods
+                allMatches.each(function() {
+                    $(this).hide();
+                    $(this).css('display', 'none');
+                    $(this).attr('style', 'display: none !important');
+                });
+
+                allMatches.remove();
+            }
         }
 
         window.globalPaymentsCredentialCheck = function() {
@@ -209,5 +228,7 @@ require(
                 $(self).text($t('Credentials Check')).attr('disabled', false);
             });
         }
+
+        renderHPPVisaInstallmentsInfo();
     }
 );
