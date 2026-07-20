@@ -3,6 +3,13 @@
 </a>
 
 # Changelog
+## v2.7.6 (07/16/26)
+### Enhancements:
+- Updated app name to account name in shopping cart admin settings
+- Added Visa Installments filtering functionality
+### Bug fixes:
+- Fixed duplicate invoice issue for BLIK transactions in Drop-in UI
+
 ## v2.7.5 (07/09/26)
 ### Enhancements:
 - Added tooltip on Credit memo button for Open banking transactions
