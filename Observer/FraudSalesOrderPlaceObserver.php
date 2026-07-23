@@ -62,6 +62,7 @@ class FraudSalesOrderPlaceObserver implements ObserverInterface
             return;
         }
 
+        $order->setState(Order::STATE_PAYMENT_REVIEW);
         $order->setStatus($fraudStatus);
         $this->orderRepository->save($order);
     }

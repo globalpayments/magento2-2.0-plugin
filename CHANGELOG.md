@@ -3,6 +3,12 @@
 </a>
 
 # Changelog
+## v2.7.7 (07/23/26)
+### Enhancements:
+- Updated globalpayments/php-sdk dependency to latest version (v14.3.1) 
+### Bug fixes:
+- GPAPI: Fixed order state not being set to 'pending-review' on orders flagged as possible fraud
+
 ## v2.7.6 (07/16/26)
 ### Enhancements:
 - Updated app name to account name in shopping cart admin settings
