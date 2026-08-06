@@ -3,6 +3,10 @@
 </a>
 
 # Changelog
+## v2.7.8 (08/06/26)
+### Enhancements:
+- GPAPI: Added Support for Visa Installments Payment Plans
+
 ## v2.7.7 (07/23/26)
 ### Enhancements:
 - Updated globalpayments/php-sdk dependency to latest version (v14.3.1) 

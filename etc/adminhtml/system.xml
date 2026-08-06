@@ -226,13 +226,43 @@
                             <field id="payment_method">hosted</field>
                         </depends>
                     </field>
-                    <field id="installments" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="installments" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enable Installments</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/installments</config_path>
                         <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\InstallmentsField</frontend_model>
                         <depends>
                             <field id="payment_method">embedded</field>
+                        </depends>
+                    </field>
+                    <field id="funding_mode_diui" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Funding Mode</label>
+                        <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\FundingMode</source_model>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/funding_mode</config_path>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\InstallmentsCriteriaField</frontend_model>
+                        <depends>
+                            <field id="payment_method">embedded</field>
+                            <field id="installments">1</field>
+                        </depends>
+                    </field>
+                    <field id="max_time_unit_number_diui" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Max Time Unit Number</label>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/max_time_unit_number</config_path>
+                        <validate>validate-number validate-zero-or-greater</validate>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\InstallmentsCriteriaField</frontend_model>
+                        <depends>
+                            <field id="payment_method">embedded</field>
+                            <field id="installments">1</field>
+                        </depends>
+                    </field>
+                    <field id="max_amount_diui" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Max Amount</label>
+                        <config_path>payment/globalpayments_paymentgateway_gpApi/max_amount</config_path>
+                        <validate>validate-number validate-zero-or-greater</validate>
+                        <frontend_model>GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field\InstallmentsCriteriaField</frontend_model>
+                        <depends>
+                            <field id="payment_method">embedded</field>
+                            <field id="installments">1</field>
                         </depends>
                     </field>
                     <field id="redirect_text" translate="label tooltip" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">

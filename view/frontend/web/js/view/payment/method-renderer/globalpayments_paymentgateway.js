@@ -378,12 +378,34 @@ define(
                 var isEmbeddedPayment = paymentMethodConfig.paymentMethod === 'embedded';
                 var isMexicanCurrency = paymentMethodConfig.baseCurrency === "MXN";
                 var isMexicanCountry = paymentMethodConfig.defaultCountry === "MX";
+                var fundingMode = GlobalPayments.enums.FundingMode[paymentMethodConfig.fundingMode] ||
+                    GlobalPayments.enums.FundingMode.ANY;
+                var maxTimeUnitNumber = Number(paymentMethodConfig.maxTimeUnitNumber || 0);
+                var maxAmount = Number(paymentMethodConfig.maxAmount || 0);
 
                 if (isInstallmentEnabled && isEmbeddedPayment && isMexicanCurrency && isMexicanCountry) {
                     paymentMethodConfig.installments = {
+                        program: "LATAM",
                         accountName: paymentMethodConfig.appName,
                         country: "MX",
                         currency: "MXN",
+                    }
+                }
+
+                var isGbInstallment = paymentMethodConfig.defaultCountry === "GB" && paymentMethodConfig.baseCurrency === "GBP";
+                var isCanadaInstallment = paymentMethodConfig.defaultCountry === "CA" && paymentMethodConfig.baseCurrency === "CAD";
+
+                if (isInstallmentEnabled && isEmbeddedPayment && (isGbInstallment || isCanadaInstallment)) {
+                    paymentMethodConfig.installments = {
+                        program: "VIS",
+                        accountName: paymentMethodConfig.appName,
+                        country: paymentMethodConfig.defaultCountry === "GB" ? "UK" : paymentMethodConfig.defaultCountry,
+                        currency: paymentMethodConfig.baseCurrency,
+                        config:{
+                            funding_mode: fundingMode,
+                            max_time_unit_number: maxTimeUnitNumber,
+                            max_amount: maxAmount
+                        },
                     }
                 }
 
@@ -391,7 +413,7 @@ define(
 
                 if (paymentMethodConfig.paymentMethodCode === 'globalpayments_paymentgateway_gpApi' && paymentMethodConfig.paymentMethod === 'embedded') {
                     var formConfig = {
-                        amount: Quote.totals()['base_grand_total'],
+                        amount: Quote.totals()['base_grand_total'] * 100,
                         style: "gp-default",
                         apms: apmArray,
                     };

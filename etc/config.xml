@@ -102,8 +102,11 @@
                 <can_initialize>1</can_initialize>
                 <payment_method>embedded</payment_method>
                 <funding_mode>ANY</funding_mode>
+                <funding_mode_diui>ANY</funding_mode_diui>
                 <max_time_unit_number>0</max_time_unit_number>
+                <max_time_unit_number_diui>0</max_time_unit_number_diui>
                 <max_amount>0</max_amount>
+                <max_amount_diui>0</max_amount_diui>
                 <redirect_text>You Will Be Redirected To Complete Payment.</redirect_text>
                 <hpp_wallets>google_pay,apple_pay,blik,payu,bank_payment</hpp_wallets>
             </globalpayments_paymentgateway_gpApi>

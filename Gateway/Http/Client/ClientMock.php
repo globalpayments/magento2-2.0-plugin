@@ -172,11 +172,42 @@ class ClientMock implements ClientInterface
 
                     $tokenResponse = $this->transactionData['TOKEN_RESPONSE'];
 
+                    // Add installment data if present in token response
                     if (!empty($tokenResponse['installment'])) {
-                        $installmentData = new \GlobalPayments\Api\Entities\InstallmentData();
-                        $installmentData->id = $tokenResponse['installment']['installmentId'] ?? null;
-                        $installmentData->reference = $tokenResponse['installment']['installmentReference'] ?? null;
-                        $builder = $builder->withInstallment($installmentData);
+
+                        $visaInstallmentsEnabled = (bool)($this->transactionData['SERVICES_CONFIG']['enable_visa_installments'] ?? false);
+
+                        if ($visaInstallmentsEnabled) {
+                            // VISA installment processing with full terms and language mapping
+                            $installmentData = new \GlobalPayments\Api\Entities\InstallmentData();
+                            $installmentData->id = $tokenResponse['installment']['installmentId'] ?? null;
+                            if (!empty($tokenResponse['installment']['installmentReference'])) {
+                                $installmentData->reference = $tokenResponse['installment']['installmentReference'];
+                                $installmentData->program = 'VIS';
+
+                                $installmentTerms = new \GlobalPayments\Api\Entities\InstallmentTerms();
+                                $languageMapping = [
+                                    'en' => 'eng',
+                                    'fr' => 'fre'
+                                ];
+
+                                $lang = $tokenResponse['installment']['language'] ?? 'en';
+                                $installmentTerms->language = $languageMapping[$lang] ?? null;
+                                $installmentTerms->version = $tokenResponse['installment']['version'] ?? null;
+                                $installmentData->terms = $installmentTerms;
+                            }
+
+                            // Only add installment if we have a reference
+                            if (!empty($installmentData->reference)) {
+                                $builder = $builder->withInstallment($installmentData);
+                            }
+                        } else {
+
+                            $installmentData = new \GlobalPayments\Api\Entities\InstallmentData();
+                            $installmentData->id = $tokenResponse['installment']['installmentId'] ?? null;
+                            $installmentData->reference = $tokenResponse['installment']['installmentReference'] ?? null;
+                            $builder = $builder->withInstallment($installmentData);
+                        }
                     }
 
                     $gatewayResponse = $builder->execute();

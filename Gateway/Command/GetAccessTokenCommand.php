@@ -85,7 +85,14 @@ class GetAccessTokenCommand implements CommandInterface
                 $defaultCountry = $gatewayConfig->getCountry() ?? '';
                 $baseCurrency = $gatewayConfig->getBaseCurrency() ?? '';
 
-                if ($enableInstallment && $defaultCountry === 'MX' && $baseCurrency === 'MXN') {
+                if (
+                    $enableInstallment
+                    && (
+                        ($defaultCountry === 'MX' && $baseCurrency === 'MXN')
+                        || ($defaultCountry === 'GB' && $baseCurrency === 'GBP')
+                        || ($defaultCountry === 'CA' && $baseCurrency === 'CAD')
+                    )
+                ) {
                     $permissions = array_merge($permissions, ['INS_POST_Query', 'BIN_GET_Details', 'PMT_POST_Create']);
                 }
 

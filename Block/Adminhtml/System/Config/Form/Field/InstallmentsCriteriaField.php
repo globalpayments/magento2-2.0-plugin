@@ -2,13 +2,13 @@
 
 namespace GlobalPayments\PaymentGateway\Block\Adminhtml\System\Config\Form\Field;
 
-use Magento\Config\Block\System\Config\Form\Field;
-use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Backend\Block\Template\Context;
+use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Store\Model\ScopeInterface;
 
-class InstallmentsField extends Field
+class InstallmentsCriteriaField extends Field
 {
     /**
      * @var ScopeConfigInterface
@@ -34,8 +34,7 @@ class InstallmentsField extends Field
      */
     public function render(AbstractElement $element)
     {
-
-        if (!$this->isInstallmentsAvailable()) {
+        if (!$this->isFieldAvailable()) {
             return '';
         }
 
@@ -43,11 +42,9 @@ class InstallmentsField extends Field
     }
 
     /**
-     * Check if installments should be available based on base currency and default country
-     *
-     * @return bool
+     * Show field only for allowed country/currency combinations.
      */
-    protected function isInstallmentsAvailable(): bool
+    protected function isFieldAvailable(): bool
     {
         $baseCurrency = $this->scopeConfig->getValue(
             'currency/options/base',
@@ -59,8 +56,7 @@ class InstallmentsField extends Field
             ScopeInterface::SCOPE_STORE
         );
 
-        return ($baseCurrency === 'MXN' && $defaultCountry === 'MX')
-            || ($baseCurrency === 'GBP' && $defaultCountry === 'GB')
+        return ($baseCurrency === 'GBP' && $defaultCountry === 'GB')
             || ($baseCurrency === 'CAD' && $defaultCountry === 'CA');
     }
 }

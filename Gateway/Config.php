@@ -50,7 +50,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
 
-    public const PLUGIN_VERSION = '2.7.7';
+    public const PLUGIN_VERSION = '2.7.8';
 
     /**
      * @var string[]
@@ -509,6 +509,10 @@ class Config extends ConfigBase implements ConfigInterface
                 ScopeInterface::SCOPE_WEBSITES
             ),
             'hppWallets' => $this->getValue('hpp_wallets', $storeId),
+            'enable_visa_installments' =>
+                ((int)($this->getValue('installments') ? $this->getValue('installments') : 0) === 1
+                && in_array(strtoupper((string)$this->getCountry()), ['GB', 'UK', 'CA'], true)) ? 1 : 0,
+
         ];
     }
 
@@ -558,6 +562,9 @@ class Config extends ConfigBase implements ConfigInterface
                         ['_secure' => true]
                     ),
                     'enableInstallment' => $this->getValue('installments') ? $this->getValue('installments') : 0,
+                    'fundingMode' => $this->getInstallmentsConfigValue('funding_mode_diui', 'funding_mode', 'ANY'),
+                    'maxTimeUnitNumber' => $this->getInstallmentsConfigValue('max_time_unit_number_diui', 'max_time_unit_number', 0),
+                    'maxAmount' => $this->getInstallmentsConfigValue('max_amount_diui', 'max_amount', 0),
                     'appName' => $this->getValue('sandbox_mode') ? $this->getValue('sandbox_app_name') : $this->getValue('app_name'),
                     'defaultCountry' => $this->getCountry(),
                     'baseCurrency' => $this->getBaseCurrency()
@@ -604,6 +611,33 @@ class Config extends ConfigBase implements ConfigInterface
     public function getBaseCurrency(): string
     {
         return $this->scopeConfig->getValue('currency/options/base', ScopeInterface::SCOPE_STORE);
+    }
+
+    /**
+     * Resolve installments settings, preferring embedded-specific keys in embedded mode.
+     *
+     * @param string $embeddedKey
+     * @param string $defaultKey
+     * @param mixed $fallback
+     * @return mixed
+     */
+    private function getInstallmentsConfigValue(string $embeddedKey, string $defaultKey, $fallback)
+    {
+        $paymentMethod = (string) $this->getValue('payment_method');
+
+        if ($paymentMethod === 'embedded') {
+            $embeddedValue = $this->getValue($embeddedKey);
+            if ($embeddedValue !== null && $embeddedValue !== '') {
+                return $embeddedValue;
+            }
+        }
+
+        $defaultValue = $this->getValue($defaultKey);
+        if ($defaultValue !== null && $defaultValue !== '') {
+            return $defaultValue;
+        }
+
+        return $fallback;
     }
   
     /**
