@@ -21,6 +21,7 @@ use GlobalPayments\Api\ServicesContainer;
 use GlobalPayments\Api\Entities\Enums\Environment;
 use GlobalPayments\Api\Entities\Enums\HPPAllowedPaymentMethods;
 use GlobalPayments\Api\Utils\CountryUtils;
+use GlobalPayments\Api\Utils\StringUtils;
 
 /**
  * HPP Initiate Payment Client
@@ -95,7 +96,7 @@ class InitiatePaymentClient extends AbstractClient
             $dccConfigValue = $config->getValue('dcc_hpp');
             $maxInstallments = $config->getValue('max_time_unit_number') ?? 24;
             $installmentsFundingMode = $config->getValue('funding_mode') ?? 'ANY';
-            $installmentsMaxValue = $config->getValue('max_amount') ?? null;
+            $installmentsMaxValue = $config->getValue('max_amount') != 0 ? $config->getValue('max_amount') : null;
 
             // Validate HPP credentials exist
             if (empty($hppAppId)) {
@@ -145,7 +146,10 @@ class InitiatePaymentClient extends AbstractClient
             // Set payer language from locale
             $locale = $this->localeResolver->getLocale();
             $payer->language = ($locale) ? strtoupper(strstr($locale, '_', true)) : 'EN';
-
+            // This payer->reference property will be removed in the future 
+            if( property_exists($payer , "reference")){
+                $payer->reference = uniqid();
+            }
             // Get billing and shipping country for validation
             $billingCountry = $transactionData['BILLING_COUNTRY'] ?? 'US';
             $shippingCountry = $transactionData['SHIPPING_COUNTRY'] ?? $billingCountry;
@@ -241,6 +245,8 @@ class InitiatePaymentClient extends AbstractClient
                         $allowedPaymentMethods[] = HPPAllowedPaymentMethods::PAYU;
                     } else if ($wallet === 'bank_payment') {
                         $allowedPaymentMethods[] = HPPAllowedPaymentMethods::BANK_PAYMENT;
+                    } else if (defined(HPPAllowedPaymentMethods::class . '::ERATY') && $wallet === 'eraty' ) {
+                        $allowedPaymentMethods[] = HPPAllowedPaymentMethods::ERATY;
                     }
                 }
             }
@@ -258,7 +264,7 @@ class InitiatePaymentClient extends AbstractClient
                 ->withName($storeName)
                 ->withDescription('Order payment for order #' . $transactionData['ORDER_ID'])
                 ->withReference("order_id_" . $orderEntityId)
-                ->withAmount($transactionData['AMOUNT'])
+                ->withAmount(StringUtils::toNumeric($transactionData['AMOUNT'], $transactionData['CURRENCY']))
                 ->withCurrency($transactionData['CURRENCY'])
                 ->withPayer($payer)
                 ->withShippingAddress($shippingAddress)
@@ -299,7 +305,7 @@ class InitiatePaymentClient extends AbstractClient
             if (isset($payment_request->payByLinkResponse->url)) {
                 $hppUrl = $payment_request->payByLinkResponse->url;
             }
-            
+
             if ($hppUrl) {
                 // Get transaction ID
                 $transactionId = $payment_request->payByLinkResponse->id ?? uniqid('hpp_');

@@ -349,6 +349,15 @@ define(
                 let apmArray = (apmsEnabled) ? [] : false;
 
                 if (apmsEnabled) {
+                    if (acceptBlik) {
+                        apmArray.push(GlobalPayments.enums.Apm.Blik);
+                    }
+                    if (acceptOpenBanking) {
+                        apmArray.push(GlobalPayments.enums.Apm.OpenBankingPayment);
+                    }
+                    if (apmArray.length === 0) {
+                        apmArray = false;
+                    }
                     paymentMethodConfig.apms = {
                         currencyCode: "PLN",
                         countryCode: "PL",

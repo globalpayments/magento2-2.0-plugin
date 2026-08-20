@@ -144,6 +144,10 @@ class Config extends AbstractPaymentMethod
             $apms[] = 'PAYU';
         }
         
+        if ($this->getValue('enable_eraty', $storeId)) {
+            $apms[] = 'ERATY';
+        }
+        
         return $apms;
     }
 
@@ -200,6 +204,17 @@ class Config extends AbstractPaymentMethod
     public function isPayUEnabled(?string $storeId = null): bool
     {
         return (bool) $this->getValue('enable_payu', $storeId);
+    }
+
+    /**
+     * Check if Eraty is enabled
+     *
+     * @param string|null $storeId Store ID for scope-specific configuration
+     * @return bool True if Eraty is enabled, false otherwise
+     */
+    public function isEratyEnabled(?string $storeId = null): bool
+    {
+        return (bool) $this->getValue('enable_eraty', $storeId);
     }
 
     /**

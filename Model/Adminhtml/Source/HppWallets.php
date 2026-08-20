@@ -28,6 +28,14 @@ class HppWallets implements OptionSourceInterface
                 'value' => 'bank_payment',
                 'label' => 'Open Banking'
             ],
+            [
+                'value' => 'eraty',
+                'label' => 'Eraty'
+            ],
+            [
+                'value' => 'payu',
+                'label' => 'PayU'
+            ],
         ];
     }
 }

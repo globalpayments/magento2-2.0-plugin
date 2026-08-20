@@ -7,6 +7,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
 use Psr\Log\LoggerInterface;
+use GlobalPayments\Api\Entities\Enums\HPPAllowedPaymentMethods;
 
 class HppTransaction
 {
@@ -198,6 +199,12 @@ class HppTransaction
         if (!empty($paymentData['saved_payer_id'])) {
             $payment->setAdditionalInformation('saved_payer_id', $paymentData['saved_payer_id']);
         }
+        
+        // Check if payment was made with ERATY to prevent refunds
+        if ($this->isEratyPayment($paymentData)) {
+            $payment->setAdditionalInformation('_HPP_ERATY_PAYMENT', true);
+        }
+        
         // Store Visa installment data if available (from external HPP)
         if (!empty($paymentData['installment'])) {
             $installmentData = $paymentData['installment'];
@@ -287,5 +294,24 @@ class HppTransaction
                 $transactionId
             )
         );
+    }
+
+    /**
+     * Check if payment was made with ERATY
+     *
+     * @param array $paymentData
+     * @return bool
+     */
+    private function isEratyPayment(array $paymentData): bool
+    {
+        // Check if ERATY constant is defined in the SDK
+        if (!defined(HPPAllowedPaymentMethods::class . '::ERATY')) {
+            return false;
+        }
+        
+        // Check if payment method provider is ERATY
+        return isset($paymentData['payment_method']['apm']['provider']) 
+            && $paymentData['payment_method']['apm']['provider'] === HPPAllowedPaymentMethods::ERATY;
+;
     }
 }
