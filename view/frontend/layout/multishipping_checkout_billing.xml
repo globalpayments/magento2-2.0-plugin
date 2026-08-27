@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GlobalPayments Multishipping Billing Layout
+ *
+ * Provides payment form templates for the multishipping billing page.
+ * Only card-based payment methods that support multishipping are included.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout_billing">
+            <arguments>
+                <argument name="form_templates" xsi:type="array">
+                    <item name="globalpayments_paymentgateway_gpApi" xsi:type="string">GlobalPayments_PaymentGateway::multishipping/form.phtml</item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

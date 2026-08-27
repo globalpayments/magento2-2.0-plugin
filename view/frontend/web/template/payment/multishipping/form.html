@@ -1,0 +1,114 @@
+<!--
+/**
+ * GlobalPayments Multishipping Payment Form Template
+ *
+ * Knockout template for the multishipping billing page payment form.
+ * Renders the GlobalPayments secure card fields (either Drop-in UI or
+ * hosted fields) along with a fallback submit button for the
+ * multishipping billing form workflow.
+ *
+ * Unlike the regular checkout form, this template:
+ * - Does not include billing address form (handled by the multishipping page)
+ * - Does not include radio buttons (handled by the multishipping page)
+ * - Does not include gift card functionality
+ * - Forces vault enabling for multi-order token reuse
+ */
+-->
+<div data-bind="attr: {class: 'payment-method payment-method-multishipping globalpayments_paymentgateway ' + getCode()}, afterRender: initPaymentFields()">
+    <!-- ko foreach: getRegion('messages') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <!--/ko-->
+
+    <!-- Drop-in UI (GP API embedded mode) -->
+    <!-- ko if: (useDropInUi() && !useHpp()) -->
+    <div data-bind="attr: {id: getCode() + '_credit_card_form'}"></div>
+    <!-- /ko -->
+
+    <!-- HPP mode warning (should not appear due to payment.xml restrictions, but just in case) -->
+    <!-- ko if: (useHpp()) -->
+    <div class="message warning">
+        <span data-bind="i18n: 'Hosted Payment Pages mode is not available for multishipping checkout. Please configure embedded payment mode in admin.'"></span>
+    </div>
+    <!-- /ko -->
+
+    <!-- Hosted fields -->
+    <!-- ko if: (!useDropInUi() && !useHpp()) -->
+    <!-- ko if: (isSandboxMode()) -->
+    <div class="globalpayments-sandbox-warning">
+        <!-- ko i18n: 'This page is currently in sandbox/test mode. Do not use real/active card numbers.'--><!-- /ko -->
+    </div>
+    <!-- /ko -->
+
+    <fieldset class="fieldset payment items" data-bind="attr: {id: getCode() + '_new_credit_card_number'}">
+        <legend class="legend">
+            <span><!-- ko i18n: 'Credit Card Information'--><!-- /ko --></span>
+        </legend>
+        <br>
+        <div class="field credit-card-number required">
+            <label data-bind="attr: {for: getCode() + '_credit_card_number'}" class="label">
+                <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
+            </label>
+            <div class="control">
+                <div data-bind="attr: {id: getCode() + '_credit_card_number'}" class="credit-card-number-target"></div>
+                <div class="validation-error" style="display: none;"><!-- ko i18n: 'Please enter a valid Credit Card Number'--><!-- /ko --></div>
+            </div>
+        </div>
+        <div class="field credit-card-expiration required">
+            <label data-bind="attr: {for: getCode() + '_credit_card_expiration'}" class="label">
+                <span><!-- ko i18n: 'Credit Card Expiration Date'--><!-- /ko --></span>
+            </label>
+            <div class="control">
+                <div data-bind="attr: {id: getCode() + '_credit_card_expiration'}" class="credit-card-expiration-target"></div>
+                <div class="validation-error" style="display: none;"><!-- ko i18n: 'Please enter a valid Credit Card Expiration Date'--><!-- /ko --></div>
+            </div>
+        </div>
+        <div class="field credit-card-cvv required">
+            <label data-bind="attr: {for: getCode() + '_credit_card_cvv'}" class="label">
+                <span><!-- ko i18n: 'Credit Card Security Code'--><!-- /ko --></span>
+            </label>
+            <div class="control">
+                <div data-bind="attr: {id: getCode() + '_credit_card_cvv'}" class="credit-card-cvv-target"></div>
+                <div class="validation-error" style="display: none;"><!-- ko i18n: 'Please enter a Credit Card Security Code'--><!-- /ko --></div>
+            </div>
+        </div>
+        <!-- ko if: (showCardHolderName()) -->
+        <div class="field card-holder-name required">
+            <label data-bind="attr: {for: getCode() + '_card_holder_name'}" class="label">
+                <span><!-- ko i18n: 'Card Holder Name'--><!-- /ko --></span>
+            </label>
+            <div class="control">
+                <div data-bind="attr: {id: getCode() + '_card_holder_name'}" class="card-holder-name-target"></div>
+                <div class="validation-error" style="display: none;"><!-- ko i18n: 'Please enter a valid Card Holder Name'--><!-- /ko --></div>
+            </div>
+        </div>
+        <!-- /ko -->
+    </fieldset>
+    <!-- /ko -->
+
+    <!-- SDK submit button target (used by both Drop-in UI and hosted fields) -->
+    <!-- ko if: (!useHpp()) -->
+    <div class="actions-toolbar">
+        <div class="primary">
+            <div data-bind="attr: {id: getCode() + '_credit_card_submit'}" class="credit-card-submit-target"></div>
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <!-- Fallback submit button for mage.payment widget compatibility -->
+    <!-- The multishipping payment.js widget looks for button[type=submit] -->
+    <!-- in the payment method area when #payment-continue is clicked -->
+    <div class="actions-toolbar" style="display: none !important;">
+        <div class="primary">
+            <button type="submit"
+                    class="action primary checkout"
+                    data-bind="click: submitPayment,
+                               attr: {title: $t('Continue to Review Your Order')}">
+                <span data-bind="i18n: 'Continue to Review Your Order'"></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="globalpayments-multishipping-note" style="margin-top: 10px; font-size: 12px; color: #666;">
+        <span data-bind="i18n: 'Your card will be saved securely for processing multiple shipping orders.'"></span>
+    </div>
+</div>

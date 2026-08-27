@@ -1,0 +1,40 @@
+<?php
+/**
+ * GlobalPayments Multishipping Payment Form Template
+ *
+ * Renders the GlobalPayments payment component on the multishipping
+ * billing page. Uses uiLayout to instantiate the multishipping-specific
+ * JS renderer which handles tokenization and payment info submission.
+ *
+ * @var \Magento\Payment\Block\Form $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+
+$code = $escaper->escapeJs($block->getMethod()->getCode());
+$scriptString = <<<SCRIPT
+    require([
+        'uiLayout',
+        'jquery'
+    ], function (layout, $) {
+        $(function () {
+            var paymentMethodData = {
+                method: '{$code}'
+            };
+
+            layout([
+                {
+                    component: 'GlobalPayments_PaymentGateway/js/view/payment/method-renderer/multishipping/globalpayments',
+                    name: 'payment_method_' + paymentMethodData.method,
+                    method: paymentMethodData.method,
+                    item: paymentMethodData
+                }
+            ]);
+
+            $('body').trigger('contentUpdated');
+        });
+    });
+SCRIPT;
+echo $secureRenderer->renderTag('script', [], $scriptString, false);
+?>
+<!-- ko template: getTemplate() --><!-- /ko -->
