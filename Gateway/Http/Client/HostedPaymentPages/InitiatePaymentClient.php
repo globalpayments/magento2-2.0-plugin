@@ -251,6 +251,8 @@ class InitiatePaymentClient extends AbstractClient
                 }
             }
 
+            $captureMode = ($config->getValue('payment_action') === 'authorize') ? CaptureMode::LATER : CaptureMode::AUTO;
+
             // Build HPP request
             $storeName = $transactionData['STORE_NAME'] ?? 'Magento Store';
             $orderEntityId = $transactionData['ORDER_ENTITY_ID'];
@@ -271,7 +273,7 @@ class InitiatePaymentClient extends AbstractClient
                 ->withBillingAddress($billingAddress)
                 ->withAddressMatchIndicator($shippingAddress->streetAddress1 === $billingAddress->streetAddress1)
                 ->withNotifications($returnUrl, $statusUrl, $cancelUrl)
-                ->withTransactionConfig(Channel::CardNotPresent, $billingCountry, CaptureMode::AUTO, $allowedPaymentMethods)
+                ->withTransactionConfig(Channel::CardNotPresent, $billingCountry, $captureMode, $allowedPaymentMethods)
                 ->withAuthentication(
                     ChallengeRequestIndicator::CHALLENGE_PREFERRED,
                     ExemptStatus::LOW_VALUE,
@@ -305,7 +307,7 @@ class InitiatePaymentClient extends AbstractClient
             if (isset($payment_request->payByLinkResponse->url)) {
                 $hppUrl = $payment_request->payByLinkResponse->url;
             }
-
+            
             if ($hppUrl) {
                 // Get transaction ID
                 $transactionId = $payment_request->payByLinkResponse->id ?? uniqid('hpp_');

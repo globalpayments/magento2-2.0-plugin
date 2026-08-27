@@ -956,4 +956,13 @@
     <type name="Magento\Sales\Model\Order\Creditmemo\RefundOperation">
         <plugin name="globalpayments_prevent_apm_refund" type="GlobalPayments\PaymentGateway\Plugin\Refund\PreventAPMRefund" />
     </type>
+
+    <!-- Multishipping: register custom PlaceOrder to handle multi-use token propagation -->
+    <type name="Magento\Multishipping\Model\Checkout\Type\Multishipping\PlaceOrderPool">
+        <arguments>
+            <argument name="services" xsi:type="array">
+                <item name="globalpayments_paymentgateway_gpApi" xsi:type="string">GlobalPayments\PaymentGateway\Model\Multishipping\PlaceOrder</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

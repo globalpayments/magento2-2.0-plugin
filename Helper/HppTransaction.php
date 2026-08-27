@@ -5,6 +5,8 @@ namespace GlobalPayments\PaymentGateway\Helper;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order\InvoiceRepository;
+use Magento\Sales\Model\Order\Payment\Transaction;
 use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
 use Psr\Log\LoggerInterface;
 use GlobalPayments\Api\Entities\Enums\HPPAllowedPaymentMethods;
@@ -15,6 +17,11 @@ class HppTransaction
      * @var OrderRepositoryInterface
      */
     private $orderRepository;
+
+    /**
+     * @var InvoiceRepository
+     */
+    private $invoiceRepository;
 
     /**
      * @var ConfigFactory
@@ -28,16 +35,19 @@ class HppTransaction
 
     /**
      * @param OrderRepositoryInterface $orderRepository
+     * @param InvoiceRepository $invoiceRepository
      * @param ConfigFactory $configFactory
      * @param LoggerInterface $logger
      * @param Transaction $transactionHelper
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
+        InvoiceRepository $invoiceRepository,
         ConfigFactory $configFactory,
         LoggerInterface $logger,
     ) {
         $this->orderRepository = $orderRepository;
+        $this->invoiceRepository = $invoiceRepository;
         $this->configFactory = $configFactory;
         $this->logger = $logger;
     }
@@ -61,12 +71,12 @@ class HppTransaction
             
             // Store HPP transaction data in payment additional information
             $this->storeHppTransactionData($payment, $paymentData);
-            
-            // Get HPP configuration
-            $config = $this->configFactory->create('globalpayments_paymentgateway_hpp');
-            
+
+            // Read payment_action from the order's actual method, not the unused legacy hpp code
+            $config = $this->configFactory->create($payment->getMethod());
+
             // For HPP, manually create transactions to avoid triggering payment gateway
-            $paymentAction = $config->getPaymentAction();
+            $paymentAction = $config->getValue('payment_action');
 
             if ($paymentAction === \Magento\Payment\Model\MethodInterface::ACTION_AUTHORIZE_CAPTURE) {
                 // Create sale transaction manually
@@ -95,7 +105,11 @@ class HppTransaction
             // Save order
             $this->orderRepository->save($order);
         } catch (\Exception $e) {
-            $this->logger->error('HPP Payment completion failed');
+            $this->logger->error('HPP Payment completion failed', [
+                'this_line' => $e->getLine(),
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             throw $e;
         }
@@ -234,6 +248,10 @@ class HppTransaction
         $payment->setTransactionId($transactionId);
         $payment->setLastTransId($transactionId);
         $payment->setIsTransactionClosed(false);
+        $payment->setShouldCloseParentTransaction(false);
+
+        // Record a formal auth transaction so a later admin capture settles against it instead of re-charging
+        $payment->addTransaction(Transaction::TYPE_AUTH);
 
         // Add authorization comment
         $order->addCommentToStatusHistory(
@@ -272,21 +290,31 @@ class HppTransaction
      */
     private function createHppCaptureTransaction($order, $payment, $transactionId): void
     {
-        // Set capture transaction details
-        $payment->setTransactionId($transactionId . '_capture');
-        $payment->setLastTransId($transactionId . '_capture');
+        // Use a suffixed ID for the DB record to avoid a unique constraint violation when auth
+        // already registered $transactionId; then reset so lastTransId stays as the gateway ID.
+        $payment->setTransactionId($transactionId . '-capture');
         $payment->setIsTransactionClosed(true);
+        $payment->addTransaction(Transaction::TYPE_CAPTURE);
+        $payment->setTransactionId($transactionId);
+        $payment->setLastTransId($transactionId);
 
-        // Create invoice for the order
-        if ($order->canInvoice()) {
+        // Mark any existing payable invoices as paid before creating a new one
+        $invoiced = false;
+        foreach ($order->getInvoiceCollection() as $invoice) {
+            if ($invoice->getState() === \Magento\Sales\Model\Order\Invoice::STATE_OPEN) {
+                $invoice->setTransactionId($transactionId)->pay();
+                $this->invoiceRepository->save($invoice);
+                $invoiced = true;
+            }
+        }
+
+        if (!$invoiced && $order->canInvoice()) {
             $invoice = $order->prepareInvoice();
             $invoice->setTransactionId($transactionId);
             $invoice->register()->pay();
-            
-            // Note: Invoice will be saved when order is saved
+            $this->invoiceRepository->save($invoice);
         }
 
-        // Add capture comment
         $order->addCommentToStatusHistory(
             sprintf(
                 __('HPP Captured amount of %1$s. Transaction ID: "%2$s"'),

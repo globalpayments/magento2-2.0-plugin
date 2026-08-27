@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GlobalPayments Multishipping Payment Method Configuration
+ *
+ * Declares which payment methods support multishipping checkout
+ * via the allow_multiple_address flag.
+ */
+-->
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+    <methods>
+        <!-- Only GP API supports multishipping for now -->
+        <method name="globalpayments_paymentgateway_heartland">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="globalpayments_paymentgateway_genius">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="globalpayments_paymentgateway_gpApi">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="globalpayments_paymentgateway_transit">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="globalpayments_paymentgateway_txnapi">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+
+        <!-- vaults -->
+        <method name="globalpayments_paymentgateway_heartland_vault">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="globalpayments_paymentgateway_genius_vault">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="globalpayments_paymentgateway_gpApi_vault">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="globalpayments_paymentgateway_transit_vault">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="globalpayments_paymentgateway_txnapi_vault">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+    </methods>
+</payment>

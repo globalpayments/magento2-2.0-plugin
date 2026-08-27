@@ -50,7 +50,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
 
-    public const PLUGIN_VERSION = '2.8.0';
+    public const PLUGIN_VERSION = '2.9.0';
 
     /**
      * @var string[]
@@ -192,6 +192,20 @@ class Config extends ConfigBase implements ConfigInterface
         } else {
             $this->setMethodCode($this->gatewayCode);
         }
+    }
+
+    /**
+     * Restore the Config's methodCode and pathPattern to the payment gateway defaults.
+     * Must be called after any code that temporarily mutates the shared Config singleton
+     * (e.g. FraudManagementHelper) to prevent corrupting subsequent payment processing.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function restore()
+    {
+        $this->setPathPattern(self::DEFAULT_PATH_PATTERN);
+        $this->setGpCode();
     }
 
     /**

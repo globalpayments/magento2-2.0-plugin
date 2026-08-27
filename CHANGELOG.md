@@ -3,6 +3,13 @@
 </a>
 
 # Changelog
+
+## v2.9.0 (08/27/26)
+### Enhancements:
+- GPAPI: Multi-address shipping now supported
+### Bug fixes:
+- GPAPI: Hosted payment page payments can now be run via 'authorize only' payment action
+
 ## v2.8.0 (08/20/26)
 ### Enhancements:
 - GPAPI: Added Eraty APM to Hosted Payment Pages for Polish merchants 
@@ -10,7 +17,6 @@
 - Fixed the APMs issue for upgraded js version(5.0.1)
 - Fixed InstallmentsMaxValue bug on Hosted Payment Pages.
 
-### Enhancements:
 ## v2.7.8 (08/06/26)
 ### Enhancements:
 - GPAPI: Added Support for Visa Installments Payment Plans

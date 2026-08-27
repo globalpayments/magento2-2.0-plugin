@@ -94,6 +94,10 @@ class FraudManagementHelper extends AbstractModel
                 $this->_fraud_velocity_timeout = self::FRAUD_VELOCITY_TIMEOUT_DEFAULT;
             }
         }
+
+        // Restore the shared Config singleton back to the payment gateway method/path
+        // for use with multi use payment tokens
+        $this->config->restore();
     }
 
     protected function maybeResetVelocityTimeout()

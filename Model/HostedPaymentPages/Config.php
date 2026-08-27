@@ -247,8 +247,7 @@ class Config extends AbstractPaymentMethod
      */
     public function getPaymentAction(?string $storeId = null): string
     {
-        // return $this->getValue('payment_action', $storeId) ?: 'authorize_capture';
-        return 'authorize_capture';
+        return $this->getValue('payment_action', $storeId) ?: 'authorize_capture';
     }
 
     /**
