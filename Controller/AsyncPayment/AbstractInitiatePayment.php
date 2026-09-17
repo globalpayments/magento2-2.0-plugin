@@ -154,7 +154,10 @@ abstract class AbstractInitiatePayment extends Action
             $paymentData = $this->paymentDataObjectFactory->create($payment);
             $request = $this->request->build(['payment' => $paymentData]);
             $response = $this->client->placeRequest($this->transferFactory->create($request));
-            $this->handler->handle(['payment' => $paymentData], $response);
+            $request = $this->request->build([
+                'payment' => $paymentData,
+                'request_data' => $this->getDecodedRequestBody(),
+            ]);
 
             $order->addCommentToStatusHistory(
                 sprintf(
@@ -178,5 +181,18 @@ abstract class AbstractInitiatePayment extends Action
         }
 
         return $resultJson->setData($response);
+    }
+
+    /**
+     * Decode the JSON body posted from the checkout page, if any.
+     *
+     * @return array
+     */
+    private function getDecodedRequestBody(): array
+    {
+        $content = $this->getRequest()->getContent();
+        $decoded = $content ? json_decode($content, true) : null;
+
+        return is_array($decoded) ? $decoded : [];
     }
 }

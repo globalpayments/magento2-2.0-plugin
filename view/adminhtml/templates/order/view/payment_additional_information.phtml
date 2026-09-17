@@ -21,30 +21,30 @@ $magentoOrderId = $block->getMagentoOrderId();
             <?php if ($globalPaymentsOrderId): ?>
                 <tr>
                     <th>
-                        <?= $block->escapeHtml(__('Order ID')); ?>
+                        <?= $escaper->escapeHtml(__('Order ID')); ?>
                     </th>
                     <td>
-                        <?= $block->escapeHtml($globalPaymentsOrderId); ?>
+                        <?= $escaper->escapeHtml($globalPaymentsOrderId); ?>
                     </td>
                 </tr>
             <?php endif; ?>
             <?php if ($resultCode): ?>
                 <tr>
                     <th>
-                        <?= $block->escapeHtml(__('Result Code')); ?>
+                        <?= $escaper->escapeHtml(__('Result Code')); ?>
                     </th>
                     <td>
-                        <?= $block->escapeHtml($resultCode); ?>
+                        <?= $escaper->escapeHtml($resultCode); ?>
                     </td>
                 </tr>
             <?php endif; ?>
             <?php if ($authorizationCode): ?>
                 <tr>
                     <th>
-                        <?= $block->escapeHtml(__('Auth Code')); ?>
+                        <?= $escaper->escapeHtml(__('Auth Code')); ?>
                     </th>
                     <td>
-                        <?= $block->escapeHtml($authorizationCode); ?>
+                        <?= $escaper->escapeHtml($authorizationCode); ?>
                     </td>
                 </tr>
             <?php endif; ?>
@@ -52,20 +52,20 @@ $magentoOrderId = $block->getMagentoOrderId();
                 <?php if ($tokenResponseDetails['cardType']): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('Card Type')); ?>
+                            <?= $escaper->escapeHtml(__('Card Type')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml(strtoupper($tokenResponseDetails['cardType'])); ?>
+                            <?= $escaper->escapeHtml(strtoupper($tokenResponseDetails['cardType'])); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
                 <?php if ($tokenResponseDetails['cardLast4']): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('Card Number')); ?>
+                            <?= $escaper->escapeHtml(__('Card Number')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml('xxxx-' . $tokenResponseDetails['cardLast4']); ?>
+                            <?= $escaper->escapeHtml('xxxx-' . $tokenResponseDetails['cardLast4']); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -74,40 +74,40 @@ $magentoOrderId = $block->getMagentoOrderId();
                 <?php if ($cardIssuerResponseData->cvvResult): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('CVN Result')); ?>
+                            <?= $escaper->escapeHtml(__('CVN Result')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml($cardIssuerResponseData->cvvResult); ?>
+                            <?= $escaper->escapeHtml($cardIssuerResponseData->cvvResult); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
                 <?php if ($cardIssuerResponseData->avsAddressResult): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('AVS Address Result')); ?>
+                            <?= $escaper->escapeHtml(__('AVS Address Result')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml($cardIssuerResponseData->avsAddressResult); ?>
+                            <?= $escaper->escapeHtml($cardIssuerResponseData->avsAddressResult); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
                 <?php if ($cardIssuerResponseData->avsPostalCodeResult): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('AVS Postcode Result')); ?>
+                            <?= $escaper->escapeHtml(__('AVS Postcode Result')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml($cardIssuerResponseData->avsPostalCodeResult); ?>
+                            <?= $escaper->escapeHtml($cardIssuerResponseData->avsPostalCodeResult); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
                 <?php if ($threeDSecureStatus): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('3D Secure Status')); ?>
+                            <?= $escaper->escapeHtml(__('3D Secure Status')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml($threeDSecureStatus); ?>
+                            <?= $escaper->escapeHtml($threeDSecureStatus); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -115,46 +115,46 @@ $magentoOrderId = $block->getMagentoOrderId();
             <?php if ($installmentData): ?>
                 <tr>
                     <th colspan="2" style="background-color: #f5f5f5; font-weight: bold;">
-                        <?= $block->escapeHtml(__('Installment Information')); ?>
+                        <?= $escaper->escapeHtml(__('Installment Information')); ?>
                     </th>
                 </tr>
                 <?php if ($magentoOrderId): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('Order ID')); ?>
+                            <?= $escaper->escapeHtml(__('Order ID')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml($magentoOrderId); ?>
+                            <?= $escaper->escapeHtml($magentoOrderId); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
                 <?php if ($resultCode): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('Response')); ?>
+                            <?= $escaper->escapeHtml(__('Response')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml($resultCode); ?>
+                            <?= $escaper->escapeHtml($resultCode); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
                 <?php if ($authorizationCode): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('Auth Code')); ?>
+                            <?= $escaper->escapeHtml(__('Auth Code')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml($authorizationCode); ?>
+                            <?= $escaper->escapeHtml($authorizationCode); ?>
                         </td>
                     </tr>
                 <?php endif; ?>
                 <?php if (!empty($installmentData->count)): ?>
                     <tr>
                         <th>
-                            <?= $block->escapeHtml(__('Installments Number')); ?>
+                            <?= $escaper->escapeHtml(__('Installments Number')); ?>
                         </th>
                         <td>
-                            <?= $block->escapeHtml($installmentData->count. ' ' . __('installments')); ?>
+                            <?= $escaper->escapeHtml($installmentData->count. ' ' . __('installments')); ?>
                         </td>
                     </tr>
                 <?php endif; ?>

@@ -42,6 +42,7 @@ define(
                 giftcard_pin: null,
                 displayPaymentMethod: true,
                 diuiApmPayment: null,
+                hppSaveCard: false,
             },
 
             initialize: function() {
@@ -58,7 +59,7 @@ define(
 
             initObservable: function() {
                 this._super()
-                    .observe(['displayPaymentMethod']);
+                    .observe(['displayPaymentMethod', 'hppSaveCard']);
 
                 return this;
             },
@@ -255,6 +256,7 @@ define(
                     form_key: window.checkoutConfig.payment.globalpayments_paymentgateway.form_key,
                     amount: amount,
                     currency: currency,
+                    saveCard: this.hppSaveCard() ? 1 : 0,
                     billing_same_as_shipping: this.billingAddressSameAsShipping(),
                     shippingAddress: {
                         firstName: effectiveShippingAddress.firstname || '',
@@ -301,6 +303,17 @@ define(
              */
             isCustomerLoggedIn: function () {
                 return window.checkoutConfig.isCustomerLoggedIn || false;
+            },
+
+            /**
+             * Whether the 'Save card details' checkbox should be shown for HPP checkout.
+             * Only relevant for logged in customers, since the saved card is linked to their account.
+             *
+             * @returns {Boolean}
+             */
+            isHppCardSavingEnabled: function () {
+                return (window.checkoutConfig.payment.globalpayments_paymentgateway.allowCardSaving == 1)
+                    && this.isCustomerLoggedIn();
             },
 
             /**

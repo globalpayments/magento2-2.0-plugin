@@ -44,13 +44,13 @@ class ProcessCardData extends Action
     private $verifyRequest;
 
     /**
-     * 
+     *
      * @var Config
      */
     private Config $config;
 
     /**
-     * 
+     *
      * @var ManageTokenRequest
      */
     private ManageTokenRequest $manageTokenRequest;

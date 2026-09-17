@@ -91,12 +91,12 @@ class BlikReturn extends AbstractUrl
     }
 
         /**
-     * Get Magento order associated with the order ID from Transaction Summary.
-     *
-     * @param array $gatewayResponse
-     * @return OrderInterface
-     * @throws LogicException
-     */
+         * Get Magento order associated with the order ID from Transaction Summary.
+         *
+         * @param array $gatewayResponse
+         * @return OrderInterface
+         * @throws LogicException
+         */
     protected function getOrder($gatewayResponse)
     {
         $orderId = $gatewayResponse['ORDER_ID'];

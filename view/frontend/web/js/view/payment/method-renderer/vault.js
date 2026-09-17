@@ -41,6 +41,19 @@ define(
         },
 
         /**
+         * Check if vault payment method should be visible
+         * @returns {Boolean}
+         */
+        isVisible: function () {
+            // Hide vault if payment method is 'hosted'
+            if (window.checkoutConfig.payment.globalpayments_paymentgateway.paymentMethod === 'hosted') {
+                return false;
+            }
+
+            return true;
+        },
+
+        /**
          * Get last 4 digits of card
          * @returns {String}
          */

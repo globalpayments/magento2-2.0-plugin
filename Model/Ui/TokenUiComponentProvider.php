@@ -78,6 +78,14 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
             ]);
         }
 
+        // Payer tokens (type 'account') are used for HPP and aren't a selectable payment method
+        if ($paymentToken->getType() === PaymentTokenFactoryInterface::TOKEN_TYPE_ACCOUNT) {
+            return $this->componentFactory->create([
+                'config' => [],
+                'name' => '',
+            ]);
+        }
+
         if ($paymentToken->getPaymentMethodCode() == $this->config->getValue('code')) {
             $jsonDetails = json_decode($paymentToken->getTokenDetails() ?: '{}', true);
             $config = [

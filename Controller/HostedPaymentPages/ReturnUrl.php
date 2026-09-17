@@ -28,9 +28,9 @@ use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * HPP Return URL Controller
- * 
- * Note: HPP uses POST with signature validation instead of GET parameters 
- * used by other async methods, so direct inheritance from AbstractUrl 
+ *
+ * Note: HPP uses POST with signature validation instead of GET parameters
+ * used by other async methods, so direct inheritance from AbstractUrl
  * would break the payment flow. This maintains the established HPP flow
  * while following module patterns where possible.
  */
@@ -99,7 +99,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
 
     /**
      * HPP Return Controller Constructor
-     * 
+     *
      * @param Context $context Magento action context
      * @param ConfigFactory $configFactory Payment gateway configuration factory
      * @param CheckoutHelper $checkoutHelper Checkout process helper
@@ -175,7 +175,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
             if ($this->config->isDebugEnabled()) {
                 $this->logger->info('HPP Return: Payment data validated successfully', ['data_keys' => array_keys($paymentData)]);
             }
-            // Extract transaction ID from payment data 
+            // Extract transaction ID from payment data
             $transactionId = $paymentData['id'] ?? null;
 
             if ($this->config->isDebugEnabled()) {
@@ -196,7 +196,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
             $identifierData = $this->extractQuoteIdentifier($paymentData);
 
             if (!$identifierData['is_quote_reference']) {
-                // Direct order ID reference 
+                // Direct order ID reference
                 $gatewayResponse['ORDER_ID'] = $identifierData['identifier'];
             } else {
                 // This should not happen, but handle gracefully
@@ -366,7 +366,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
 
         $isQuoteReference = false;
 
-        // Check link_data.reference 
+        // Check link_data.reference
         if (!empty($paymentData['link_data']['reference'])) {
             $reference = $paymentData['link_data']['reference'];
 
@@ -429,7 +429,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
 
     /**
      * Create success response
-     * 
+     *
      * Generates a branded success page that automatically redirects to the
      * checkout success page with order information
      *
@@ -558,9 +558,9 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
 </head>
 <body>
     <div class="container">
-        <div class="header">' . 
+        <div class="header">' .
         // Add store logo if available
-        ($storeLogo ? '<img src="' . htmlspecialchars($storeLogo) . '" alt="' . htmlspecialchars($storeName) . '" class="logo">' : 
+        ($storeLogo ? '<img src="' . htmlspecialchars($storeLogo) . '" alt="' . htmlspecialchars($storeName) . '" class="logo">' :
          (!empty($storeName) ? '<h1 class="store-name">' . htmlspecialchars($storeName) . '</h1>' : '')) .'
         </div>
 
@@ -601,7 +601,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
 
     /**
      * Create error response with branded styling
-     * 
+     *
      * Generates a user-friendly error page that displays the error message
      * and automatically redirects back to the checkout cart.
      *
@@ -734,9 +734,9 @@ setTimeout(function() {
 </head>
 <body>
     <div class="container">
-        <div class="header">' . 
+        <div class="header">' .
         // Add store logo if available
-        ($storeLogo ? '<img src="' . htmlspecialchars($storeLogo) . '" alt="' . htmlspecialchars($storeName) . '" class="logo">' : 
+        ($storeLogo ? '<img src="' . htmlspecialchars($storeLogo) . '" alt="' . htmlspecialchars($storeName) . '" class="logo">' :
          (!empty($storeName) ? '<h1 class="store-name">' . htmlspecialchars($storeName) . '</h1>' : '')) .'
         </div>
         
@@ -758,7 +758,7 @@ setTimeout(function() {
 
     /**
      * Disable CSRF validation for external HPP returns
-     * 
+     *
      * HPP return requests come from Global Payments external servers
      * and cannot include CSRF tokens, so we disable validation.
      *
@@ -771,7 +771,7 @@ setTimeout(function() {
 
     /**
      * Allow external HPP return requests
-     * 
+     *
      * @return bool|null
      */
     public function validateForCsrf(RequestInterface $request): ?bool
@@ -799,7 +799,7 @@ setTimeout(function() {
 
     /**
      * Get store logo URL for branding
-     * 
+     *
      * Attempts to retrieve store logo from multiple configuration locations
      * for maximum compatibility with different store setups.
      *
@@ -855,7 +855,7 @@ setTimeout(function() {
 
     /**
      * Get Magento order from gateway response
-     * 
+     *
      * @param array $gatewayResponse
      * @return \Magento\Sales\Api\Data\OrderInterface
      * @throws Exception
@@ -905,7 +905,7 @@ setTimeout(function() {
 
     /**
      * Get fully qualified URL with domain
-     * 
+     *
      * @param string $url Relative or absolute URL
      * @return string Fully qualified URL with domain
      */

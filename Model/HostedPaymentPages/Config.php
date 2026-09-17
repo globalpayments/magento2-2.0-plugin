@@ -21,7 +21,7 @@ class Config extends AbstractPaymentMethod
 
     /**
      * Check if HPP payment method is active
-     * 
+     *
      * Follows the same pattern as other payment methods in the module
      * for consistent activation checking.
      *
@@ -35,11 +35,11 @@ class Config extends AbstractPaymentMethod
 
     /**
      * Get credential setting with sandbox/production environment handling
-     * 
-     * Uses the same pattern as Gateway\Config::getCredentialSetting() 
+     *
+     * Uses the same pattern as Gateway\Config::getCredentialSetting()
      * but for HPP-specific sandbox/production credentials. Provides proper
      * handling of encrypted fields and environment-specific configurations.
-     * 
+     *
      *
      * @param string $setting Configuration setting name
      * @param string|null $storeId Store ID for scope-specific configuration
@@ -47,14 +47,14 @@ class Config extends AbstractPaymentMethod
      */
     public function getCredentialSetting(string $setting, ?string $storeId = null): ?string
     {
-        return $this->getValue('sandbox_mode', $storeId) 
-            ? $this->getValue('sandbox_' . $setting, $storeId) 
+        return $this->getValue('sandbox_mode', $storeId)
+            ? $this->getValue('sandbox_' . $setting, $storeId)
             : $this->getValue($setting, $storeId);
     }
 
     /**
      * Get backend gateway options for HPP configuration
-     * 
+     *
      * Inherits base gateway configuration from parent and overrides with
      * HPP-specific settings. Follows the same pattern as other payment methods.
      *
@@ -79,7 +79,7 @@ class Config extends AbstractPaymentMethod
 
     /**
      * Get frontend gateway options for HPP
-     * 
+     *
      * HPP does not require frontend gateway options as it redirects
      * to an external hosted payment page.
      *
@@ -93,10 +93,10 @@ class Config extends AbstractPaymentMethod
 
     /**
      * Get enabled digital wallets as array
-     * 
+     *
      * Returns an array of enabled digital wallet payment methods based on
      * the configuration settings.
-     * 
+     *
      * Enhanced for PHP 8.4 compatibility with strict type hints
      *
      * @param string|null $storeId Store ID for scope-specific configuration
@@ -119,10 +119,10 @@ class Config extends AbstractPaymentMethod
 
     /**
      * Get enabled alternative payment methods as array
-     * 
+     *
      * Returns an array of enabled alternative payment methods (APMs) based on
      * the configuration settings.
-     * 
+     *
      * Enhanced for PHP 8.4 compatibility with strict type hints
      *
      * @param string|null $storeId Store ID for scope-specific configuration
@@ -252,10 +252,10 @@ class Config extends AbstractPaymentMethod
 
     /**
      * Check if debug mode is enabled for HPP
-     * 
+     *
      * Used throughout the HPP implementation to conditionally enable
      * debug logging and additional validation.
-     * 
+     *
      * @param string|null $storeId Store ID for scope-specific configuration
      * @return bool True if debug mode is enabled, false otherwise
      */
@@ -266,7 +266,7 @@ class Config extends AbstractPaymentMethod
 
     /**
      * Check if 3D Secure is enabled for HPP
-     * 
+     *
      * @param string|null $storeId Store ID for scope-specific configuration
      * @return bool True if 3D Secure is enabled, false otherwise
      */

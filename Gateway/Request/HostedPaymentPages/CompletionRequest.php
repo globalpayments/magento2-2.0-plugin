@@ -7,7 +7,7 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 
 /**
  * HPP Completion Request Builder
- * 
+ *
  * Builds request data for HPP order completion.
  * Since payment was already processed, this mainly extracts
  * transaction data from payment additional information.

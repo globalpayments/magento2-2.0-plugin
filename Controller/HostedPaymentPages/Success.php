@@ -2,8 +2,6 @@
 
 namespace GlobalPayments\PaymentGateway\Controller\HostedPaymentPages;
 
-
-
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Checkout\Model\Session as CheckoutSession;
@@ -25,12 +23,12 @@ use GlobalPayments\PaymentGateway\Model\HostedPaymentPages\Config as HppConfig;
 class Success extends Action
 {
     /**
-     * @var CartRepositoryInterface 
+     * @var CartRepositoryInterface
      */
     private $quoteRepository;
 
     /**
-     * @var QuoteFactory  
+     * @var QuoteFactory
      */
     private $quoteFactory;
 
@@ -154,7 +152,7 @@ class Success extends Action
             $this->checkoutSession->setLastRealOrderId($order->getIncrementId());
             $this->checkoutSession->clearQuote();
             
-            // Replace quote with new 
+            // Replace quote with new
             $this->checkoutSession->replaceQuote(
                 $this->quoteFactory->create()
             );

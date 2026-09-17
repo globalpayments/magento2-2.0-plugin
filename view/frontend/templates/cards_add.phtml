@@ -13,35 +13,35 @@ $allowCardSaving = $gatewayConfig['allowCardSaving'] === '1';
 ?>
 <?php if (!$allowCardSaving) { ?>
     <div class="globalpayments-error">
-        <?= $block->escapeHtml(
+        <?= $escaper->escapeHtml(
             __('This merchant currently does not support card saving features.')
         ) ?>
     </div>
 <?php } else { ?>
     <form
         class="globalpayments-payment-form"
-        action="<?= $block->escapeHtml($block->getFormAction()) ?>"
+        action="<?= $escaper->escapeUrl($block->getFormAction()) ?>"
         method="POST">
         <fieldset
             class="fieldset payment items payment-method-content globalpayments_paymentgateway
-            <?= $block->escapeHtml($code) ?>"
+            <?= $escaper->escapeHtml($code) ?>"
             data-mage-init='{
             "GlobalPayments_PaymentGateway/js/customer_account/add_card":
-                <?= $block->escapeHtml(json_encode($gatewayConfig)) ?>
+                <?= $escaper->escapeHtml(json_encode($gatewayConfig)) ?>
         }'>
             <div class="globalpayments-error" style="display:none;"></div>
             <?php if ($sandboxMode): ?>
                 <div class="globalpayments-sandbox-warning">
-                    <?= $block->escapeHtml(
+                    <?= $escaper->escapeHtml(
                         __('This page is currently in sandbox/test mode. Do not use real/active card numbers.')
                     ) ?>
                 </div>
             <?php endif ?>
 
-            <div id="<?= $block->escapeHtml($code)?>_diui_target"></div>
+            <div id="<?= $escaper->escapeHtml($code)?>_diui_target"></div>
 
             <input type="hidden" name="payment[tokenResponse]" id="tokenResponse" value="" />
-            <input name="form_key" type="hidden" value="<?= $block->escapeHtml($block->getFormKey()) ?>" />
+            <input name="form_key" type="hidden" value="<?= $escaper->escapeHtml($block->getFormKey()) ?>" />
         </fieldset>
     </form>
 <?php } ?>

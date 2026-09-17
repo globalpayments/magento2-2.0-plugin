@@ -5,7 +5,7 @@ namespace GlobalPayments\PaymentGateway\Block;
 use Magento\Framework\Phrase;
 use Magento\Payment\Block\ConfigurableInfo;
 use GlobalPayments\PaymentGateway\Gateway\Response\FraudHandler;
-Use GlobalPayments\PaymentGateway\Helper\VisaInstallmentsHelper;
+use GlobalPayments\PaymentGateway\Helper\VisaInstallmentsHelper;
 
 class Info extends ConfigurableInfo
 {
@@ -71,8 +71,7 @@ class Info extends ConfigurableInfo
        
         if (isset($additionalInfo["has_visa_installments"]) && !empty($additionalInfo["has_visa_installments"]) &&
             isset($additionalInfo["visaInstallmentsData"]) && !empty($additionalInfo["visaInstallmentsData"])
-        )
-        {
+        ) {
             $visaInstallmentsData = json_decode($additionalInfo["visaInstallmentsData"], true);
             $data = array_merge($data, VisaInstallmentsHelper::formatVisaInstallmentsData($visaInstallmentsData));
         }

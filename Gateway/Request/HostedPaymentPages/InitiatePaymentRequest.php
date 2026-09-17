@@ -33,7 +33,7 @@ class InitiatePaymentRequest implements BuilderInterface
 
     /**
      * Constructor
-     * 
+     *
      * @param LoggerInterface $logger
      * @param ConfigFactory $configFactory
      * @param StoreManagerInterface $storeManager
@@ -78,6 +78,7 @@ class InitiatePaymentRequest implements BuilderInterface
                 'CONFIG' => $config,
                 'SERVICES_CONFIG' => $config->getBackendGatewayOptions(),
                 'STORE_NAME' => $this->getStoreName(),
+                'SAVE_CARD_REQUESTED' => !empty($buildSubject['request_data']['saveCard']),
             ];
 
             // Add customer information

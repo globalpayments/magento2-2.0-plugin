@@ -38,7 +38,6 @@ class HppTransaction
      * @param InvoiceRepository $invoiceRepository
      * @param ConfigFactory $configFactory
      * @param LoggerInterface $logger
-     * @param Transaction $transactionHelper
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
@@ -82,7 +81,7 @@ class HppTransaction
                 // Create sale transaction manually
                 $this->createHppSaleTransaction($order, $payment, $transactionId);
             } else {
-                // Create authorization transaction manually  
+                // Create authorization transaction manually
                 $this->createHppAuthorizationTransaction($order, $payment, $transactionId);
             }
 
@@ -338,8 +337,7 @@ class HppTransaction
         }
         
         // Check if payment method provider is ERATY
-        return isset($paymentData['payment_method']['apm']['provider']) 
+        return isset($paymentData['payment_method']['apm']['provider'])
             && $paymentData['payment_method']['apm']['provider'] === HPPAllowedPaymentMethods::ERATY;
-;
     }
 }

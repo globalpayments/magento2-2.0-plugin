@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Visa Installments Helper
- * 
+ *
  * Centralized helper for retrieving and formatting Visa installment data
  */
 class VisaInstallmentsHelper
@@ -34,7 +34,7 @@ class VisaInstallmentsHelper
      * @param OrderInterface|null $order
      * @return bool
      */
-    public  function hasVisaInstallments(?OrderInterface $order): bool
+    public function hasVisaInstallments(?OrderInterface $order): bool
     {
         try {
             if (!$order || !$order->getId()) {
@@ -67,7 +67,7 @@ class VisaInstallmentsHelper
      * @param InfoInterface|null $payment
      * @return bool
      */
-    public  function paymentHasVisaInstallments(?InfoInterface $payment): bool
+    public function paymentHasVisaInstallments(?InfoInterface $payment): bool
     {
         try {
             if (!$payment) {
@@ -122,7 +122,7 @@ class VisaInstallmentsHelper
      * @param InfoInterface|null $payment
      * @return array|null
      */
-    public  function getInstallmentDataFromPayment(?InfoInterface $payment): ?array
+    public function getInstallmentDataFromPayment(?InfoInterface $payment): ?array
     {
         try {
             if (!$payment) {
@@ -359,9 +359,10 @@ class VisaInstallmentsHelper
     }
 
     // TODO: comments and php84
-    public static function formatVisaInstallmentsData(?array $visaInstallmentsData) : ?array{
+    public static function formatVisaInstallmentsData(?array $visaInstallmentsData) : ?array
+    {
     
-    if(empty($visaInstallmentsData)){
+        if (empty($visaInstallmentsData)) {
             
             return [];
         }
@@ -373,11 +374,11 @@ class VisaInstallmentsHelper
             (string)__("Order Amount")         => self::formatAmount((int)$visaInstallmentsData['total_amount']
                  - (int)$visaInstallmentsData['fees']['total_amount'], $currencyCode),
             (string)__("Payment Plan")         => self::getInstallmentCount($visaInstallmentsData) ." ". self::getTimeUnit($visaInstallmentsData),
-            (string)__("Monthly Amount")       => self::getTotalPlanCost($visaInstallmentsData) . " / " . 
-                ucfirst(strtolower($visaInstallmentsData["time_unit"])) . (string)__(" (Inci fees)"),
+            (string)__("Monthly Amount")       => self::getTotalPlanCost($visaInstallmentsData) . " / " .
+                ucfirst(strtolower($visaInstallmentsData["time_unit"])) . (string)__(" (Incl fees)"),
             (string)__("Installment Fees")     => self::getInstallmentFees($visaInstallmentsData, $currencyCode),
-            (string)__("Intrest Rate")         => self::getInterestRate($visaInstallmentsData) . " APR",
-            (string)__("Total Amount")         => self::getTotalAmount($visaInstallmentsData , $currencyCode), 
+            (string)__("Interest Rate")        => self::getInterestRate($visaInstallmentsData) . " APR",
+            (string)__("Total Amount")         => self::getTotalAmount($visaInstallmentsData, $currencyCode),
             (string)__("Terms and Conditions") => self::getDescription($visaInstallmentsData),
             (string)__("More Information")     => self::getTermsUrl($visaInstallmentsData)
         ];

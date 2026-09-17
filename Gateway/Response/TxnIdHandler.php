@@ -106,11 +106,11 @@ class TxnIdHandler implements HandlerInterface
             );
         }
 
-        if(!empty($response[self::VISA_INSTALLMENT_DATA])){
+        if (!empty($response[self::VISA_INSTALLMENT_DATA])) {
               $payment->setAdditionalInformation(
-                self::VISA_INSTALLMENT_DATA,
-                json_encode($response[self::VISA_INSTALLMENT_DATA])
-            );
+                  self::VISA_INSTALLMENT_DATA,
+                  json_encode($response[self::VISA_INSTALLMENT_DATA])
+              );
         }
 
         $payment->setIsTransactionClosed(false);

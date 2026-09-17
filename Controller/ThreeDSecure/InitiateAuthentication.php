@@ -2,8 +2,11 @@
 
 namespace GlobalPayments\PaymentGateway\Controller\ThreeDSecure;
 
-use GlobalPayments\Api\Entities\{Address, BrowserData, ThreeDSecure};
-use GlobalPayments\Api\Entities\Enums\{AddressType, MethodUrlCompletion};
+use GlobalPayments\Api\Entities\Address;
+use GlobalPayments\Api\Entities\BrowserData;
+use GlobalPayments\Api\Entities\ThreeDSecure;
+use GlobalPayments\Api\Entities\Enums\AddressType;
+use GlobalPayments\Api\Entities\Enums\MethodUrlCompletion;
 use GlobalPayments\Api\PaymentMethods\CreditCardData;
 use GlobalPayments\Api\Services\Secure3dService;
 use GlobalPayments\Api\Utils\CountryUtils;
@@ -113,10 +116,10 @@ class InitiateAuthentication extends AbstractAuthentications
                 ->withAddress($shippingAddress, AddressType::SHIPPING)
                 ->withAddressMatchIndicator($addressMatchIndicator)
                 ->withCustomerEmail($emailAddress)
-                ->withAuthenticationSource($requestData->authenticationSource ?? 'BROWSER' )
+                ->withAuthenticationSource($requestData->authenticationSource ?? 'BROWSER')
                 ->withAuthenticationRequestType($requestData->authenticationRequestType ?? 'PAYMENT_TRANSACTION')
                 ->withMessageCategory($requestData->messageCategory ?? 'PAYMENT_AUTHENTICATION')
-                ->withChallengeRequestIndicator($requestData->challengeRequestIndicator ?? 'NO_PREFERENCE' )
+                ->withChallengeRequestIndicator($requestData->challengeRequestIndicator ?? 'NO_PREFERENCE')
                 ->withBrowserData($this->getBrowserData($requestData))
                 ->withMethodUrlCompletion($methodUrlCompletion)
                 ->execute();

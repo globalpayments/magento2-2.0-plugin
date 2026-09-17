@@ -303,3 +303,4 @@ Sandbox App Name, 沙盒 App 名稱
 Production App Name, 正式環境 App 名稱
 Note: The Payment Methods will not be displayed at checkout if the credentials are not correct., 注意：如果憑證不正確，付款方式將不會在結帳時顯示。
 Payment Method, 付款方式
+"Refunds for eRaty transactions are not supported via Magento. Please follow your eRaty/acquirer refund process.", Magento 不支援透過 eRaty 交易進行退款。請依照您的 eRaty／收單機構退款流程處理。

@@ -4,7 +4,8 @@ namespace GlobalPayments\PaymentGateway\Gateway\Command;
 
 use Exception;
 use InvalidArgumentException;
-use GlobalPayments\Api\Entities\Enums\{DataResidency, Environment};
+use GlobalPayments\Api\Entities\Enums\DataResidency;
+use GlobalPayments\Api\Entities\Enums\Environment;
 use GlobalPayments\Api\ServiceConfigs\Gateways\GpApiConfig;
 use GlobalPayments\Api\ServicesContainer;
 use GlobalPayments\Api\Utils\Logging\Logger;
@@ -74,8 +75,7 @@ class GetAccessTokenCommand implements CommandInterface
                 //We don't want these permissions set for credential check requests as we need all the accounts returned
                 $permissions = ['PMT_POST_Create_Single'];
 
-                if (
-                    $gatewayConfig->getValue('dcc_hpp') === '1'
+                if ($gatewayConfig->getValue('dcc_hpp') === '1'
                     && $gatewayConfig->getValue('payment_method') === 'hosted'
                 ) {
                     $permissions = array_merge($permissions, ['CCS_POST_DCC', 'PMT_POST_Create']);
@@ -85,8 +85,7 @@ class GetAccessTokenCommand implements CommandInterface
                 $defaultCountry = $gatewayConfig->getCountry() ?? '';
                 $baseCurrency = $gatewayConfig->getBaseCurrency() ?? '';
 
-                if (
-                    $enableInstallment
+                if ($enableInstallment
                     && (
                         ($defaultCountry === 'MX' && $baseCurrency === 'MXN')
                         || ($defaultCountry === 'GB' && $baseCurrency === 'GBP')

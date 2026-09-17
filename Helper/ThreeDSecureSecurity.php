@@ -2,7 +2,8 @@
 
 namespace GlobalPayments\PaymentGateway\Helper;
 
-use Magento\Framework\App\{CacheInterface, RequestInterface};
+use Magento\Framework\App\CacheInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\Lock\LockManagerInterface;

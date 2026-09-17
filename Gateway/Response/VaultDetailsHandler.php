@@ -244,4 +244,32 @@ class VaultDetailsHandler implements HandlerInterface
         $expDate->add(new \DateInterval('P1M'));
         return $expDate->format('Y-m-d 00:00:00');
     }
+
+    /**
+     * Handle active payer token scenario for HPP
+     *
+     * @param string $token
+     * @param string $gatewayCode
+     * @param int $customerId
+     * @return PaymentTokenInterface
+     */
+    public function handleActivePayerToken(string $token, string $gatewayCode, int $customerId): PaymentTokenInterface {
+        $paymentToken = $this->paymentTokenFactory->create(
+            PaymentTokenFactoryInterface::TOKEN_TYPE_ACCOUNT
+        );
+
+        // Expiry date is necceary for dispplaying the token in the vault
+        $expiresAt = new \DateTime('+5 years', new \DateTimeZone('UTC'));
+
+        $paymentToken->setGatewayToken($token);
+        $paymentToken->setCustomerId($customerId);
+        $paymentToken->setPaymentMethodCode($gatewayCode);
+        $paymentToken->setExpiresAt($expiresAt->format('Y-m-d 00:00:00'));
+        $paymentToken->setPublicHash($this->generatePublicHash($paymentToken));
+        $paymentToken->setIsVisible(true);
+        $paymentToken->setIsActive(true);
+        $this->saveToken($paymentToken);
+
+        return $paymentToken;
+    }
 }

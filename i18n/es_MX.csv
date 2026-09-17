@@ -299,3 +299,4 @@ Formato: Lista de códigos ISO 3166-2 (dos caracteres) separados por | <br/>><br
 "Global (default)","Global (predeterminado)"
 Europe,Europa
 "For card-based installment payment options, please enter your card information below.","Para opciones de pago a Meses sin Intereses por favor ingresa abajo la información de la tarjeta."
+"Refunds for eRaty transactions are not supported via Magento. Please follow your eRaty/acquirer refund process.", "Los reembolsos de transacciones eRaty no son compatibles a través de Magento. Siga el proceso de reembolso de eRaty o de su adquirente."

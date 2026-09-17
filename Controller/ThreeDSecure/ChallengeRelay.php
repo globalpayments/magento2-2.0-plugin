@@ -5,8 +5,10 @@ namespace GlobalPayments\PaymentGateway\Controller\ThreeDSecure;
 use Magento\Csp\Api\CspAwareActionInterface;
 use Magento\Csp\Api\Data\PolicyInterface;
 use Magento\Csp\Model\Policy\FetchPolicy;
-use Magento\Framework\App\Action\{Action, Context};
-use Magento\Framework\App\{CsrfAwareActionInterface, RequestInterface};
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\Encryption\EncryptorInterface;
 
@@ -87,8 +89,7 @@ class ChallengeRelay extends Action implements CsrfAwareActionInterface, CspAwar
             return;
         }
 
-        if (
-            empty($challengeData)
+        if (empty($challengeData)
             || empty($challengeData['requestUrl'])
             || empty($challengeData['encodedChallengeRequest'])
         ) {

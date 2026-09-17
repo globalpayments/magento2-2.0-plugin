@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace GlobalPayments\PaymentGateway\Observer;
 
-use Magento\Framework\Event\{
-    Observer,
-    ObserverInterface
-};
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
 use GlobalPayments\PaymentGateway\Gateway\Config;
 use GlobalPayments\PaymentGateway\Model\DropInOrderStatusService;
 use Magento\Checkout\Model\Session as CheckoutSession;

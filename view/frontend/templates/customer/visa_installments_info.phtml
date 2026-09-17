@@ -4,23 +4,23 @@
  */
 ?>
 <?php if ($block->hasVisaInstallments()): ?>
-    <?php 
+    <?php
     $installmentData = $block->getInstallmentData();
     if (!$installmentData) {
         return;
     }
     $installmentsDataFormatted = $block->getFormmatedInstallmentData($installmentData);
-    $seprateInstallmentsDataFormatted = array(
-        (string)__('More Information'), 
-        (string)__('Terms and Conditions'), 
+    $seprateInstallmentsDataFormatted = [
+        (string)__('More Information'),
+        (string)__('Terms and Conditions'),
         (string)__('Visa Installments Information')
-        );
+        ];
     ?>
 
     <!-- Visa Installments Info Modal Trigger Button -->
     <div class="gp-installments-trigger">
         <button id="gp-installments-btn" class="gp-installments-button" type="button">
-            <?php echo $block->escapeHtml(__('View Installment Plan Details')); ?>
+            <?= $escaper->escapeHtml(__('View Installment Plan Details')); ?>
         </button>
     </div>
 
@@ -28,25 +28,25 @@
     <div id="gp-installments-modal" class="gp-modal-overlay">
         <div class="gp-modal-container">
             <div class="gp-modal-header">
-                <h3><?php echo $block->escapeHtml(__('Installment Plan Details')); ?></h3>
-                <button class="gp-modal-close" id="gp-modal-close" type="button" aria-label="<?php echo $block->escapeHtmlAttr(__('Close modal')); ?>">&times;</button>
+                <h3><?= $escaper->escapeHtml(__('Installment Plan Details')); ?></h3>
+                <button class="gp-modal-close" id="gp-modal-close" type="button" aria-label="<?= $escaper->escapeHtmlAttr(__('Close modal')); ?>">&times;</button>
             </div>
             
             <div class="gp-modal-content">
                 <div class="gp-installment-summary">
                     <div class="gp-installment-badge">
-                        <span class="gp-plan-months"><?php echo $block->escapeHtml($installmentData['terms']['count']); ?></span>
-                        <span class="gp-plan-label"><?php echo $block->escapeHtml(__('Month Plan')); ?></span>
+                        <span class="gp-plan-months"><?= $escaper->escapeHtml($installmentData['terms']['count']); ?></span>
+                        <span class="gp-plan-label"><?= $escaper->escapeHtml(__('Month Plan')); ?></span>
                     </div>
                     
                     <div class="gp-installment-details">
 
-                        <?php foreach($installmentsDataFormatted as $label => $value):?>
-                        <?php if (!in_array($label, $seprateInstallmentsDataFormatted)) :?>
+                        <?php foreach ($installmentsDataFormatted as $label => $value):?>
+                            <?php if (!in_array($label, $seprateInstallmentsDataFormatted)):?>
                         <div class= <?=$label !== "Intrest Rate" ? '"gp-detail-row"' : '"gp-detail-row gp-highlight"' ?>>
-                            <span class="gp-label"><?php echo $block->escapeHtml($label); ?></span>
+                            <span class="gp-label"><?= $escaper->escapeHtml($label); ?></span>
                             <span class="gp-value">
-                                <?php echo $block->escapeHtml($value); ?> 
+                                <?= $escaper->escapeHtml($value); ?> 
                             </span>
                         </div>
                         <?php endif ;?>
@@ -56,17 +56,17 @@
                 
                 <?php if (!empty($installmentsDataFormatted['Terms and Conditions'])): ?>
                 <div class="gp-installment-description">
-                    <p><?php echo $block->escapeHtml($installmentsDataFormatted['Terms and Conditions']); ?></p>
+                    <p><?= $escaper->escapeHtml($installmentsDataFormatted['Terms and Conditions']); ?></p>
                 </div>
                 <?php endif; ?>
                 
                 <?php if (!empty($installmentsDataFormatted['More Information'])): ?>
                 <div class="gp-installment-terms">
-                    <a href="<?php echo $block->escapeUrl($installmentsDataFormatted['More Information']); ?>" 
+                    <a href="<?= $escaper->escapeUrl($installmentsDataFormatted['More Information']); ?>" 
                        target="_blank" 
                        rel="noopener noreferrer" 
                        class="gp-terms-link">
-                        <?php echo $block->escapeHtml(__("More Infomation")); ?> →
+                        <?= $escaper->escapeHtml(__('More Information')); ?> →
                     </a>
                 </div>
                 <?php endif; ?>
@@ -74,9 +74,9 @@
             
             <div class="gp-modal-footer">
                 <button class="gp-modal-close-btn" id="gp-modal-close-btn" type="button">
-                    <?php echo $block->escapeHtml(__('Close')); ?>
+                    <?= $escaper->escapeHtml(__('Close')); ?>
                 </button>
-                <div class="gp-powered-by"><?php echo $block->escapeHtml(__('Powered by GlobalPayments')); ?></div>
+                <div class="gp-powered-by"><?= $escaper->escapeHtml(__('Powered by GlobalPayments')); ?></div>
             </div>
         </div>
     </div>

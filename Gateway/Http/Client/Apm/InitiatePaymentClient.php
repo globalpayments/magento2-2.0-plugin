@@ -23,15 +23,18 @@ class InitiatePaymentClient extends AbstractClient
         $blikPayment = $config->apmProvider === AlternativePaymentType::BLIK ? true : false;
         $bankSelectPayment = $config->apmProvider === AlternativePaymentType::OB ? true : false;
 
-        if ($blikPayment || $bankSelectPayment) 
-            $transactionData['TXN_TYPE'] = 'charge';        
+        if ($blikPayment || $bankSelectPayment) {
+            $transactionData['TXN_TYPE'] = 'charge';
+        }
 
         $paymentMethod = new AlternativePaymentMethod($transactionData['PROVIDER_DATA']['provider']);
         $paymentMethod->returnUrl = $transactionData['PROVIDER_DATA']['returnUrl'];
         $paymentMethod->statusUpdateUrl = $transactionData['PROVIDER_DATA']['statusUrl'] ?? '';
         $paymentMethod->cancelUrl = $transactionData['PROVIDER_DATA']['cancelUrl'] ?? '';
         
-        if (!$blikPayment && !$bankSelectPayment) $paymentMethod->descriptor = $transactionData['DESCRIPTOR'];
+        if (!$blikPayment && !$bankSelectPayment) {
+            $paymentMethod->descriptor = $transactionData['DESCRIPTOR'];
+        }
         
         $paymentMethod->country = $transactionData['CUSTOMER_DATA']['country'];
         $paymentMethod->accountHolderName = $transactionData['CUSTOMER_DATA']['accountHolderName'];

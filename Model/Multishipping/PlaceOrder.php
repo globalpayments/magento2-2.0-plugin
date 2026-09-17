@@ -28,8 +28,7 @@ class PlaceOrder implements PlaceOrderInterface
     public function __construct(
         OrderManagementInterface $orderManagement,
         LoggerInterface          $logger
-    )
-    {
+    ) {
         $this->orderManagement = $orderManagement;
         $this->logger = $logger;
     }
@@ -124,8 +123,7 @@ class PlaceOrder implements PlaceOrderInterface
         OrderInterface $order,
         string         $multiUseToken,
         array          $originalDetails
-    ): void
-    {
+    ): void {
         $payment = $order->getPayment();
         if ($payment === null) {
             return;

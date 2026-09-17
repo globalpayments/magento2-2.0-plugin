@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Visa Installments Display Block
- * 
+ *
  * Displays Visa installment payment plan details on the success page
  */
 class VisaInstallments extends Template
@@ -83,7 +83,7 @@ class VisaInstallments extends Template
 
     /**
      * Get the order from checkout session
-     * 
+     *
      * @throws Exception On failure to get order
      * @return \Magento\Sales\Model\Order\Interceptor|null
      */
@@ -135,12 +135,12 @@ class VisaInstallments extends Template
             ]);
         }
         
-        return 'GBP'; 
+        return 'GBP';
     }
 
     /**
      * Formats the installment data for email and success screen
-     * 
+     *
      * @param array Installments Data array
      * @return array Formatted Installments data
      */

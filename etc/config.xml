@@ -441,7 +441,7 @@
                 <fraud_velocity_timeout>10</fraud_velocity_timeout>
             </fraudmanagement>
             <avs_cvv_conditions>
-                <check_avs_cvv>1</check_avs_cvv>
+                <check_avs_cvv>0</check_avs_cvv>
                 <avs_decline_codes>N,S,U,P,R,G,C,I</avs_decline_codes>
                 <cvv_decline_codes>P,?,N</cvv_decline_codes>
             </avs_cvv_conditions>

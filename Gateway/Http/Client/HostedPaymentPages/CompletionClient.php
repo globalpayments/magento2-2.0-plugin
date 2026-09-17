@@ -7,7 +7,7 @@ use Magento\Payment\Gateway\Http\TransferInterface;
 
 /**
  * HPP Completion Client
- * 
+ *
  * This client is used for order completion after successful HPP payment.
  * Since the payment was already processed on the hosted page, this client
  * simply returns a successful response without making any payment requests.
@@ -26,7 +26,7 @@ class CompletionClient implements ClientInterface
 
     /**
      * Places request to gateway. Returns result as ENV array.
-     * 
+     *
      * For HPP, the payment was already processed on the hosted page,
      * so we just return a successful response.
      *

@@ -19,8 +19,7 @@ class StatusUrl extends AbstractUrl
         $diuiApm = false;
 
         try {
-            if (
-                $request->getParam("payment_method") !== null
+            if ($request->getParam("payment_method") !== null
                 && !empty($request->getParam("payment_method")->apm)
                 && (
                     $request->getParam("payment_method")->apm->provider === 'blik'
@@ -35,15 +34,16 @@ class StatusUrl extends AbstractUrl
             $transactionId = $request->getParam('id');
             $gatewayResponse = $this->transactionInfo->getTransactionDetailsByTxnId($transactionId);
 
-            if ($diuiApm)
+            if ($diuiApm) {
                 $gatewayResponse["ORDER_ID"] = str_replace('Magento_Order_', '', $request->getParam('reference'));
+            }
 
             $order = $this->getOrder($gatewayResponse);
             $payment = $order->getPayment();
 
             switch ($request->getParam('status')) {
                 case TransactionStatus::PREAUTHORIZED:
-                    /** 
+                    /**
                      * For async payment methods, the payment is already authorized at the gateway.
                      * Check if payment action is 'Charge' to create a sale transaction (auth + capture + invoice),
                      * otherwise just create an authorization transaction.

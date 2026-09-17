@@ -23,17 +23,17 @@ class InitiatePaymentRequest implements BuilderInterface
     private $utils;
 
     /**
-     * 
+     *
      * @var OrderRepositoryInterface
      */
     private $orderRepository;
     
     /**
      * Initiate Payment Request constructor.
-     * 
-     * @param ConfigFactory $configFactory 
-     * @param Utils $utils 
-     * @param OrderRepositoryInterface $orderRepository 
+     *
+     * @param ConfigFactory $configFactory
+     * @param Utils $utils
+     * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
         ConfigFactory $configFactory,

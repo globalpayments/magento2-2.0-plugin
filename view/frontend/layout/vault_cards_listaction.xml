@@ -4,7 +4,12 @@
     <update handle="customer_account"/>
     <body>
         <referenceContainer name="content">
-            <block class="Magento\Vault\Block\Customer\CreditCards" name="vault.cards.list" cacheable="false" template="GlobalPayments_PaymentGateway::cards_list.phtml" />
+            <block class="GlobalPayments\PaymentGateway\Block\Customer\CreditCards" name="vault.cards.list" cacheable="false" template="GlobalPayments_PaymentGateway::cards_list.phtml" />
+            <block
+                class="GlobalPayments\PaymentGateway\Block\Customer\PayerTokens"
+                name="globalpayments.vault.payer.tokens"
+                cacheable="false"
+                template="GlobalPayments_PaymentGateway::customer_account/payer_tokens.phtml" />
         </referenceContainer>
     </body>
 </page>

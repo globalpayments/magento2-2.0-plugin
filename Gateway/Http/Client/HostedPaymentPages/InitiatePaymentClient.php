@@ -2,26 +2,30 @@
 
 namespace GlobalPayments\PaymentGateway\Gateway\Http\Client\HostedPaymentPages;
 
-use GlobalPayments\PaymentGateway\Gateway\Http\Client\AbstractClient;
-use Magento\Payment\Gateway\Http\ClientException;
-use Magento\Payment\Gateway\Http\TransferInterface;
 use GlobalPayments\Api\Builders\HPPBuilder;
-use GlobalPayments\Api\Entities\PayerDetails;
 use GlobalPayments\Api\Entities\Address;
-use GlobalPayments\Api\Entities\PhoneNumber;
-use GlobalPayments\Api\Entities\GpApi\AccessTokenInfo;
 use GlobalPayments\Api\Entities\Enums\Channel;
 use GlobalPayments\Api\Entities\Enums\CaptureMode;
 use GlobalPayments\Api\Entities\Enums\ChallengeRequestIndicator;
 use GlobalPayments\Api\Entities\Enums\ExemptStatus;
 use GlobalPayments\Api\Entities\Enums\AddressType;
 use GlobalPayments\Api\Entities\Enums\PhoneNumberType;
-use GlobalPayments\Api\ServiceConfigs\Gateways\GpApiConfig;
-use GlobalPayments\Api\ServicesContainer;
 use GlobalPayments\Api\Entities\Enums\Environment;
 use GlobalPayments\Api\Entities\Enums\HPPAllowedPaymentMethods;
+use GlobalPayments\Api\Entities\Enums\HPPStorageModes;
+use GlobalPayments\Api\Entities\GpApi\AccessTokenInfo;
+use GlobalPayments\Api\Entities\PayerDetails;
+use GlobalPayments\Api\Entities\PhoneNumber;
+use GlobalPayments\Api\ServiceConfigs\Gateways\GpApiConfig;
+use GlobalPayments\Api\ServicesContainer;
 use GlobalPayments\Api\Utils\CountryUtils;
 use GlobalPayments\Api\Utils\StringUtils;
+use GlobalPayments\PaymentGateway\Gateway\Http\Client\AbstractClient;
+use GlobalPayments\PaymentGateway\Gateway\Response\VaultDetailsHandler;
+use Magento\Payment\Gateway\Http\ClientException;
+use Magento\Payment\Gateway\Http\TransferInterface;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * HPP Initiate Payment Client
@@ -34,31 +38,63 @@ class InitiatePaymentClient extends AbstractClient
     private $localeResolver;
 
     /**
+     * @var \Magento\Customer\Model\Session
+     */
+    private $customerSession;
+
+    /**
+     * @var VaultDetailsHandler
+     */
+    private $vaultDetailsHandler;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $loggerInterface;
+
+    /**
+     * @var PaymentTokenManagementInterface
+     */
+    private $tokenManagement;
+
+    /**
      * @param \GlobalPayments\PaymentGateway\Model\Helper\GatewayConfigHelper $configHelper
-     * @param \Magento\Payment\Model\Method\Logger $logger  
+     * @param \Magento\Payment\Model\Method\Logger $logger
      * @param \GlobalPayments\PaymentGateway\Helper\Utils $utils
      * @param \Magento\Framework\Locale\Resolver $localeResolver
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param VaultDetailsHandler $vaultDetailsHandler
+     * @param LoggerInterface $loggerInterface PSR-3 logger for debugging
+     * @param PaymentTokenManagementInterface $tokenManagement
      */
     public function __construct(
         \GlobalPayments\PaymentGateway\Model\Helper\GatewayConfigHelper $configHelper,
         \Magento\Payment\Model\Method\Logger $logger,
         \GlobalPayments\PaymentGateway\Helper\Utils $utils,
-        \Magento\Framework\Locale\Resolver $localeResolver
+        \Magento\Framework\Locale\Resolver $localeResolver,
+        \Magento\Customer\Model\Session $customerSession,
+        VaultDetailsHandler $vaultDetailsHandler,
+        LoggerInterface $loggerInterface,
+        PaymentTokenManagementInterface $tokenManagement
     ) {
         parent::__construct($configHelper, $logger, $utils);
         $this->localeResolver = $localeResolver;
+        $this->customerSession = $customerSession;
+        $this->vaultDetailsHandler = $vaultDetailsHandler;
+        $this->loggerInterface = $loggerInterface;
+        $this->tokenManagement = $tokenManagement;
     }
+
     /**
      * Debug log helper - only logs if HPP debug mode is enabled
      * 
-     * @param GlobalPayments\PaymentGateway\Gateway\Config $config
+     * @param \GlobalPayments\PaymentGateway\Gateway\Config $config
      * @param string $message
-     * @param array $context
      */
-    private function debugLog($config, string $message, array $context = []): void
+    private function debugLog(\GlobalPayments\PaymentGateway\Gateway\Config $config, string $message): void
     {
         if ($config->getValue('debug')) {
-            $this->logger->debug(['HPP Debug' => $message], $context);
+            $this->loggerInterface->info('HPP Debug - ' . $message);
         }
     }
 
@@ -88,7 +124,7 @@ class InitiatePaymentClient extends AbstractClient
             }
 
             // Get HPP credentials from config
-            $hppAppId = $config->getCredentialSetting('app_id'); 
+            $hppAppId = $config->getCredentialSetting('app_id');
             $hppAppKey = $config->getCredentialSetting('app_key');
             $hppAppName = $config->getCredentialSetting('app_name');
             $sandboxMode = $config->getValue('sandbox_mode');
@@ -125,14 +161,10 @@ class InitiatePaymentClient extends AbstractClient
             }
             
             // Configure service with unique name to prevent conflicts
-            $serviceName = 'hpp_service_' . uniqid();
-            ServicesContainer::configureService($hppConfig, $serviceName);
+            ServicesContainer::configureService($hppConfig);
 
             // Create payer details
-            $payer = new PayerDetails();
-            $payer->firstName = $transactionData['CUSTOMER_FIRST_NAME'] ?? 'Customer';
-            $payer->lastName = $transactionData['CUSTOMER_LAST_NAME'] ?? 'Customer';
-            $payer->name = trim($payer->firstName . ' ' . $payer->lastName);
+            $payer = $this->initialisePayerDetails($transactionData, $config);
 
             // Validate required customer email
             if (empty($transactionData['CUSTOMER_EMAIL'])) {
@@ -141,13 +173,12 @@ class InitiatePaymentClient extends AbstractClient
             }
 
             $payer->email = $transactionData['CUSTOMER_EMAIL'];
-            $payer->status = 'NEW';
 
             // Set payer language from locale
             $locale = $this->localeResolver->getLocale();
             $payer->language = ($locale) ? strtoupper(strstr($locale, '_', true)) : 'EN';
             // This payer->reference property will be removed in the future 
-            if( property_exists($payer , "reference")){
+            if (property_exists($payer , "reference")) {
                 $payer->reference = uniqid();
             }
             // Get billing and shipping country for validation
@@ -285,6 +316,11 @@ class InitiatePaymentClient extends AbstractClient
                 $hppBuilder->withShippingPhone($payer->shippingPhone);
             }
 
+            // HPPStorageModes::ALWAYS will allow card saving after payment
+            // (for merchants who have enabled 'allow card saving')
+            // without showing the 'save card details' check on the HPP page
+            $hppBuilder->withPaymentMethodConfig(HPPStorageModes::ALWAYS);
+
             // Add digital wallets if configured
             if (!empty($digitalWallets)) {
                 $hppBuilder->withDigitalWallets($digitalWallets);
@@ -300,7 +336,7 @@ class InitiatePaymentClient extends AbstractClient
             $hppBuilder->withInstallments($installmentsFundingMode, $maxInstallments, $installmentsMaxValue);
 
             // Execute the HPP request
-            $payment_request = $hppBuilder->execute($serviceName);
+            $payment_request = $hppBuilder->execute();
 
             // Extract the HPP URL from the response
             $hppUrl = null;
@@ -334,5 +370,68 @@ class InitiatePaymentClient extends AbstractClient
             $this->debugLog($config, 'HPP Creation Failed - ' . $e->getMessage());
             throw new ClientException(__('HPP Creation Failed: %1', $e->getMessage()));
         }
+    }
+
+    /**
+     * Initialise payer details
+     * Also fetch/create payer token for logged in customers
+     *
+     * @param array $transactionData
+     * @param \GlobalPayments\PaymentGateway\Gateway\Config $config
+     *
+     * @return PayerDetails
+     */
+    private function initialisePayerDetails(
+        array $transactionData,
+        \GlobalPayments\PaymentGateway\Gateway\Config $config
+    ): PayerDetails {
+        $connector = ServicesContainer::instance()->getClient('default');
+
+        $payer = new PayerDetails();
+        $payer->firstName = $transactionData['CUSTOMER_FIRST_NAME'] ?? 'Customer';
+        $payer->lastName = $transactionData['CUSTOMER_LAST_NAME'] ?? 'Customer';
+        $payer->name = trim($payer->firstName . ' ' . $payer->lastName);
+        $payer->status = 'NEW';
+
+        $cardSavingRequested = !empty($transactionData['SAVE_CARD_REQUESTED']);
+
+        if ($this->customerSession !== null
+            && $this->customerSession->isLoggedIn()
+            && $config->getValue('allow_card_saving')
+            && $cardSavingRequested
+        ) {
+            $customerId = $this->customerSession->getCustomer()->getId();
+
+            $tokens = $this->tokenManagement->getListByCustomerId($customerId);
+
+            $accountTokens = array_filter($tokens, function($token) {
+                return $token->getPaymentMethodCode() === 'globalpayments_paymentgateway_gpApi' &&
+                    $token->getType() === 'account' &&
+                    $token->getIsActive() &&
+                    $token->getIsVisible();
+            });
+
+            $payerId = (!empty($accountTokens)) ? end($accountTokens)->getGatewayToken() : null;
+
+            if ($payerId !== null && !empty($payerId)) {
+                $payer->id = $payerId;
+            } else {
+                $newPayer = $connector->createPayer(
+                    [
+                        "first_name" => $payer->firstName,
+                        "last_name" => $payer->lastName,
+                    ],
+                    true
+                );
+
+                $this->vaultDetailsHandler->handleActivePayerToken($newPayer->id, 'globalpayments_paymentgateway_gpApi', $customerId);
+
+                $payer->id = $newPayer->id;
+            }
+
+            $payer->status = 'ACTIVE';
+        }
+
+        return $payer;
     }
 }

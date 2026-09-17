@@ -314,3 +314,4 @@ No,Non
 "Select where transactions are processed. This controls the GP API host for sandbox and live transactions.","Sélectionnez l’endroit où les transactions sont traitées. Ceci contrôle l’hôte GP API pour sandbox et live."
 "Global (default)","Global (par défaut)"
 Europe,Europe
+"Refunds for eRaty transactions are not supported via Magento. Please follow your eRaty/acquirer refund process.", "Les remboursements pour les transactions eRaty ne sont pas pris en charge via Magento. Veuillez suivre la procédure de remboursement de votre acquéreur/eRaty."

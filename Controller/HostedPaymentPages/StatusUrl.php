@@ -62,7 +62,7 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
 
     /**
      * HPP StatusUrl Controller Constructor
-     * 
+     *
      * @param Context $context
      * @param ConfigFactory $configFactory
      * @param HppConfig $config
@@ -94,7 +94,7 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
 
     /**
      * Execute status URL webhook processing
-     * 
+     *
      * @return \Magento\Framework\Controller\Result\Raw
      */
     public function execute()
@@ -388,7 +388,7 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
 
     /**
      * Get Magento order from gateway response
-     * 
+     *
      * @param array $gatewayResponse
      * @param array $paymentData
      * @return \Magento\Sales\Api\Data\OrderInterface
@@ -465,7 +465,7 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
 
     /**
      * Allow external HPP status webhook requests
-     * 
+     *
      * @param RequestInterface $request
      * @return bool|null
      */

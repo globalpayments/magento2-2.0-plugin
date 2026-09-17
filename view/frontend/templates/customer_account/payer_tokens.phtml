@@ -1,0 +1,41 @@
+<?php
+
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+
+/** @var \GlobalPayments\PaymentGateway\Block\Customer\PayerTokens $block */
+
+$payerTokens = $block->getPayerTokens();
+$payerToken  = !empty($payerTokens) ? reset($payerTokens) : null;
+
+?>
+<?php if ($payerToken !== null): ?>
+    <div class="my-payment-payer-token">
+        <p class="payer-token-message">
+            <?= $block->escapeHtml(__('You have a saved payer token, which is used to improve your customer experience.')) ?>
+        </p>
+        <form
+            class="form"
+            action="<?= $block->escapeUrl($block->getUrl('globalpayments/customer/deletepayertoken')) ?>"
+            method="post">
+            <?= $block->getBlockHtml('formkey') ?>
+            <input
+                name="<?= /* @noEscape */ PaymentTokenInterface::PUBLIC_HASH ?>"
+                value="<?= /* @noEscape */ $payerToken->getPublicHash() ?>"
+                type="hidden" />
+            <button
+                type="submit"
+                class="action delete"
+                data-mage-init='{
+                    "GlobalPayments_PaymentGateway/js/customer_account/deleteWidget":{
+                        "type": "popup",
+                        "modalClass": "my-credit-cards-popup",
+                        "toggleEvent": "click",
+                        "title": "<?= $block->escapeHtml(__('Delete Payer Token')) ?>",
+                        "content": "<?= $block->escapeHtml(__('Are you sure you want to delete your saved payer token? A new one will be created automatically during your next checkout.')) ?>"
+                    }
+                }'>
+                <span><?= $block->escapeHtml(__('Delete')) ?></span>
+            </button>
+        </form>
+    </div>
+<?php endif; ?>

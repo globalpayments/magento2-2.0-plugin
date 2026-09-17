@@ -6,13 +6,13 @@ use GlobalPayments\PaymentGateway\Controller\AsyncPayment\AbstractInitiatePaymen
 
 /**
  * HPP Initiate Payment Controller
- * 
+ *
  */
 class InitiatePayment extends AbstractInitiatePayment
 {
     /**
      * Execute - follows exact same pattern as other redirect payment methods
-     * 
+     *
      * @inheritDoc
      */
     public function execute()

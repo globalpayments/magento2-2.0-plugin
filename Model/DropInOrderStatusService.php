@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace GlobalPayments\PaymentGateway\Model;
 
-use GlobalPayments\PaymentGateway\Gateway\{
-    Config,
-    ConfigFactory
-};
+use GlobalPayments\PaymentGateway\Gateway\Config;
+use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
 
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Config as SalesOrderConfig;

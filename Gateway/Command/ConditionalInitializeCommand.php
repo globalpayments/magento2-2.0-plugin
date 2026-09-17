@@ -2,14 +2,10 @@
 
 namespace GlobalPayments\PaymentGateway\Gateway\Command;
 
-use GlobalPayments\PaymentGateway\Gateway\{
-    Config,
-    ConfigFactory
-};
-use Magento\Payment\Model\{
-    InfoInterface,
-    MethodInterface
-};
+use GlobalPayments\PaymentGateway\Gateway\Config;
+use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
+use Magento\Payment\Model\InfoInterface;
+use Magento\Payment\Model\MethodInterface;
 
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
@@ -125,8 +121,7 @@ class ConditionalInitializeCommand implements CommandInterface
         Order $order,
         OrderPayment $payment,
         bool $requireTransactionId = false
-    ): void
-    {
+    ): void {
         if (!$order->canInvoice()) {
             return;
         }

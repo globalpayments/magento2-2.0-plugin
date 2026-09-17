@@ -43,6 +43,17 @@
         <div class="globalpayments-hpp-redirect-message">
             <span data-bind="text: getRedirectMessage()"></span>
         </div>
+        <!-- ko if: (isHppCardSavingEnabled())-->
+        <div class="field choice globalpayments-hpp-save-card">
+            <input type="checkbox"
+                   name="hpp_save_card"
+                   class="checkbox"
+                   data-bind="attr: {'id': getCode() + '_hpp_save_card'}, checked: hppSaveCard"/>
+            <label class="label" data-bind="attr: {'for': getCode() + '_hpp_save_card'}">
+                <span><!-- ko i18n: 'Save card details'--><!-- /ko --></span>
+            </label>
+        </div>
+        <!-- /ko -->
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout" type="submit" data-bind="click: placeHppOrder">

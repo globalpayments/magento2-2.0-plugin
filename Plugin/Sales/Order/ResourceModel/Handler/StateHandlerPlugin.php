@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace GlobalPayments\PaymentGateway\Plugin\Sales\Order\ResourceModel\Handler;
 
-use GlobalPayments\PaymentGateway\Gateway\{
-    Config,
-    ConfigFactory
-};
+use GlobalPayments\PaymentGateway\Gateway\Config;
+use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
 use Magento\Sales\Model\Order;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
@@ -102,5 +100,4 @@ class StateHandlerPlugin
 
         return true;
     }
-
 }

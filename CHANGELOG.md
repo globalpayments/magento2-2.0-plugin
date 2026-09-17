@@ -4,6 +4,12 @@
 
 # Changelog
 
+## v2.10.0 (09/17/26)
+### Enhancements
+- GPAPI: Localization for eRaty payments refund added for various languages
+- GPAPI: Active payer support for Hosted Payment Pages
+- Miscellaneous coding standard improvements 
+
 ## v2.9.0 (08/27/26)
 ### Enhancements:
 - GPAPI: Multi-address shipping now supported

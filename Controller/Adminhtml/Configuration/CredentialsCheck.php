@@ -3,7 +3,8 @@
 namespace GlobalPayments\PaymentGateway\Controller\Adminhtml\Configuration;
 
 use Exception;
-use GlobalPayments\Api\Entities\Enums\{DataResidency, Environment};
+use GlobalPayments\Api\Entities\Enums\DataResidency;
+use GlobalPayments\Api\Entities\Enums\Environment;
 use GlobalPayments\PaymentGateway\Gateway\Command\GetAccessTokenCommand;
 use GlobalPayments\PaymentGateway\Gateway\Config;
 use Magento\Backend\App\Action;
@@ -61,18 +62,18 @@ class CredentialsCheck extends Action
         /*
          * If the app key from the request has '*' characters (masked default app key), use the default app key.
          */
-            if (false !== strpos($appKey, '*')) {
-                $appKey = $this->config->getCredentialSetting('app_key', $storeId);
-                if(!$appKey){
+        if (false !== strpos($appKey, '*')) {
+            $appKey = $this->config->getCredentialSetting('app_key', $storeId);
+            if (!$appKey) {
                 
-                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-                    $scopeConfig = $objectManager->get(\Magento\Framework\App\Config\ScopeConfigInterface::class);
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                $scopeConfig = $objectManager->get(\Magento\Framework\App\Config\ScopeConfigInterface::class);
                     
-                    $isSandboxMode = (int) $request->getParam('isSandboxMode') === 1;
-                    $configPath = 'payment/globalpayments_paymentgateway_gpApi/' . ($isSandboxMode ? 'sandbox_app_key' : 'app_key');
-                    $appKey = $scopeConfig->getValue($configPath, ScopeInterface::SCOPE_STORE, $storeId);
-                }
+                $isSandboxMode = (int) $request->getParam('isSandboxMode') === 1;
+                $configPath = 'payment/globalpayments_paymentgateway_gpApi/' . ($isSandboxMode ? 'sandbox_app_key' : 'app_key');
+                $appKey = $scopeConfig->getValue($configPath, ScopeInterface::SCOPE_STORE, $storeId);
             }
+        }
 
         $configData = [
             'environment' => $environment,

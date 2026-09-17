@@ -22,11 +22,11 @@ class PreventAPMRefund
     ) {
         $payment = $order->getPayment();
 
-        if ($payment 
-        && $payment->getMethod() === Config::CODE_GPAPI 
+        if ($payment
+        && $payment->getMethod() === Config::CODE_GPAPI
         && $payment->getAdditionalInformation('_HPP_ERATY_PAYMENT') === true) {
             throw new LocalizedException(
-                __('Eraty HPP payments cannot be refunded via the admin panel')
+                __('Refunds for eRaty transactions are not supported via Magento. Please follow your eRaty/acquirer refund process.')
             );
         }
 

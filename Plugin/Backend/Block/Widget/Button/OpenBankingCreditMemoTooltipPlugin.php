@@ -39,8 +39,7 @@ class OpenBankingCreditMemoTooltipPlugin
         RequestInterface $request,
         OrderRepositoryInterface $orderRepository,
         InvoiceRepositoryInterface $invoiceRepository
-    )
-    {
+    ) {
         $this->request = $request;
         $this->orderRepository = $orderRepository;
         $this->invoiceRepository = $invoiceRepository;

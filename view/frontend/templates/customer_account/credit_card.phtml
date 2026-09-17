@@ -6,25 +6,25 @@ use Magento\Vault\Block\CardRendererInterface;
 
 /** @var CardRendererInterface|Template $block */
 
-$ccNumberView = $block->escapeHtml($block->getNumberLast4Digits());
+$ccNumberView = $escaper->escapeHtml($block->getNumberLast4Digits());
 ?>
 <tr>
-    <td data-th="<?= $block->escapeHtml(__('Card Number')) ?>" class="col card-number">
-        <span><?= $block->escapeHtml(__('ending')) ?></span> <?= /* @noEscape */ $ccNumberView ?>
+    <td data-th="<?= $escaper->escapeHtmlAttr(__('Card Number')) ?>" class="col card-number">
+        <span><?= $escaper->escapeHtml(__('ending')) ?></span> <?= /* @noEscape */ $ccNumberView ?>
     </td>
-    <td data-th="<?= $block->escapeHtml(__('Expiration Date')) ?>" class="col card-expire">
-        <?= $block->escapeHtml($block->getExpDate()) ?>
+    <td data-th="<?= $escaper->escapeHtmlAttr(__('Expiration Date')) ?>" class="col card-expire">
+        <?= $escaper->escapeHtml($block->getExpDate()) ?>
     </td>
-    <td data-th="<?= $block->escapeHtml(__('Type')) ?>" class="col card-type">
+    <td data-th="<?= $escaper->escapeHtmlAttr(__('Type')) ?>" class="col card-type">
         <img src="<?= /* @noEscape */ $block->getIconUrl() ?>"
              width="<?= /* @noEscape */ $block->getIconWidth() ?>"
              height="<?= /* @noEscape */ $block->getIconHeight() ?>"
         >
     </td>
-    <td data-th="<?= $block->escapeHtml(__('Actions')) ?>" class="col actions">
+    <td data-th="<?= $escaper->escapeHtmlAttr(__('Actions')) ?>" class="col actions">
         <form
             class="form"
-            action="<?= $block->escapeUrl($block->getUrl('vault/cards/deleteaction')) ?>"
+            action="<?= $escaper->escapeUrl($block->getUrl('vault/cards/deleteaction')) ?>"
             method="post"
             >
             <?= $block->getBlockHtml('formkey') ?>
@@ -39,13 +39,13 @@ $ccNumberView = $block->escapeHtml($block->getNumberLast4Digits());
                                         "type": "popup",
                                         "modalClass": "my-credit-cards-popup",
                                         "toggleEvent": "click",
-                                        "title": "<?= $block->escapeHtml(__('Delete')) ?>",
+                                        "title": "<?= $escaper->escapeHtml(__('Delete')) ?>",
                                         "content": "Are you sure you want to delete the card ending with: <?=
                                             /* @noEscape */ $ccNumberView
                                         ?>?"
                                     }
                                 }'>
-                <span><?= $block->escapeHtml(__('Delete')) ?></span>
+                <span><?= $escaper->escapeHtml(__('Delete')) ?></span>
             </button>
         </form>
     </td>
