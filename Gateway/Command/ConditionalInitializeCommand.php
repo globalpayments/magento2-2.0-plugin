@@ -78,11 +78,6 @@ class ConditionalInitializeCommand implements CommandInterface
 
             $this->createInvoiceForOrder($order, $payment);
         } else {
-            $payment->setAdditionalInformation(
-                DropInOrderStatusService::DROPIN_STATUS_PHASE_KEY,
-                DropInOrderStatusService::DROPIN_PHASE_INITIALIZING
-            );
-
             if ($config->getValue("payment_action") === MethodInterface::ACTION_AUTHORIZE) {
                 // Authorize mode: execute authorize command during initialize
                 $this->commandPool->get("authorize")->execute($commandSubject);
@@ -102,10 +97,18 @@ class ConditionalInitializeCommand implements CommandInterface
                 // as a related object to be saved when the order is saved
                 $this->createInvoiceForOrder($order, $payment, true);
             }
+
+            $payment->setAdditionalInformation(
+                DropInOrderStatusService::DROPIN_STATUS_PHASE_KEY,
+                DropInOrderStatusService::DROPIN_PHASE_INITIALIZING
+            );
         }
 
+        // Drop-in orders should always remain in processing during initialize.
+        // Final configured status is applied after placement.
         $stateObject->setState(Order::STATE_PROCESSING);
         $stateObject->setStatus(Order::STATE_PROCESSING);
+
         $stateObject->setIsNotified(false);
     }
 

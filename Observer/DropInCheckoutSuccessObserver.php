@@ -63,6 +63,25 @@ class DropInCheckoutSuccessObserver implements ObserverInterface
         }
 
         $payment = $order->getPayment();
+
+        // Set invoice as paid for successful embedded Drop-in charge orders.
+        if ($payment instanceof OrderPayment
+            && $payment->getMethod() === Config::CODE_GPAPI
+            && !$this->dropInOrderStatusService->hasFraudOverride($payment)
+            && $this->dropInOrderStatusService->getConfiguredEmbeddedOrderStatus($payment) !== null
+            && $this->dropInOrderStatusService->normalizeStatus(
+                (string)$payment->getAdditionalInformation(DropInOrderStatusService::DROPIN_STATUS_PHASE_KEY)
+            ) !== DropInOrderStatusService::DROPIN_PHASE_FINALIZED
+        ) {
+            foreach ($order->getInvoiceCollection() as $invoice) {
+                if ((int)$invoice->getState() !== \Magento\Sales\Model\Order\Invoice::STATE_PAID) {
+                    $invoice->pay();
+                }
+                $order->addRelatedObject($invoice);
+                break;
+            }
+        }
+
         if (!$payment instanceof OrderPayment || $payment->getMethod() !== Config::CODE_GPAPI) {
             return;
         }

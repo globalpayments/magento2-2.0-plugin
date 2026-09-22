@@ -23,6 +23,7 @@ use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order as OrderModel;
+use Magento\Sales\Model\Order\Invoice;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -194,7 +195,6 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
             
             // Extract ORDER_ID from HPP payment data and add to gateway response
             $identifierData = $this->extractQuoteIdentifier($paymentData);
-
             if (!$identifierData['is_quote_reference']) {
                 // Direct order ID reference
                 $gatewayResponse['ORDER_ID'] = $identifierData['identifier'];
@@ -207,10 +207,8 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
             $order = $this->getOrder($gatewayResponse);
             $payment = $order->getPayment();
 
-            $transactionStatus = $gatewayResponse['TRANSACTION_STATUS'];
-
             // Process payment based on transaction status with custom HPP branded pages
-            switch ($transactionStatus) {
+            switch ($gatewayResponse['TRANSACTION_STATUS']) {
                 case TransactionStatus::INITIATED:
                 case TransactionStatus::PREAUTHORIZED:
                 case TransactionStatus::CAPTURED:
@@ -224,8 +222,10 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
                     foreach ($order->getInvoiceCollection() as $invoice) {
                         $invoice->setTransactionId($transactionId);
 
-                        // If payment action is authorize_capture, automatically mark invoice as paid
-                        if ($paymentActionConfig->getValue('payment_action') === 'authorize_capture') {
+                        // Only auto-pay invoices still pending, so we don't override a canceled/paid invoice
+                        if ($paymentActionConfig->getValue('payment_action') === 'authorize_capture'
+                            && (int) $invoice->getState() === Invoice::STATE_OPEN
+                        ) {
                             $invoice->pay();
                         }
 
@@ -237,10 +237,10 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
                     $this->hppTransactionHelper->completePayment($order, $paymentData);
                     $this->orderRepository->save($order);
                     $this->checkoutHelper->clearQuoteAndFireEvents($order);
-
+                    
                     // Return custom branded success page
                     return $this->createSuccessResponse($order);
-
+                    
                 case TransactionStatus::DECLINED:
                 case 'FAILED':
                     if ($this->config->isDebugEnabled()) {
@@ -889,16 +889,16 @@ setTimeout(function() {
     {
         $payment = $order->getPayment();
 
-        /** Set order's status to 'Canceled' */
-        $order->setState(OrderModel::STATE_CANCELED);
-        $order->setStatus(OrderModel::STATE_CANCELED);
-
         $order->addCommentToStatusHistory(
             sprintf(
                 __('HPP Payment declined/failed. Transaction ID: "%1$s"'),
                 $payment->getLastTransId()
             )
         );
+
+        /** Set order's status to 'Canceled' */
+        $order->setState(OrderModel::STATE_CANCELED);
+        $order->setStatus(OrderModel::STATE_CANCELED);
 
         $this->orderRepository->save($order);
     }
