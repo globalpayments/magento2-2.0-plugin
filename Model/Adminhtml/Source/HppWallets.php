@@ -21,6 +21,10 @@ class HppWallets implements OptionSourceInterface
                 'label' => 'Google Pay'
             ],
             [
+                'value' => 'click_to_pay',
+                'label' => 'Click to Pay'
+            ],
+            [
                 'value' => 'blik',
                 'label' => 'Blik'
             ],

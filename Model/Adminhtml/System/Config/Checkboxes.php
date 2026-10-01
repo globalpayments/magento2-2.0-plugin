@@ -16,7 +16,11 @@ class Checkboxes extends Value
         $value = $this->getValue();
 
         if (is_array($value)) {
-            $this->setValue(implode(',', $value));
+            $value = array_values(array_filter($value, static function ($entry): bool {
+                return trim((string)$entry) !== '';
+            }));
+
+            $this->setValue($value ? implode(',', $value) : '');
         }
 
         return $this;

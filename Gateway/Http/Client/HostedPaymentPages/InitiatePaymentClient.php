@@ -270,6 +270,8 @@ class InitiatePaymentClient extends AbstractClient
                         $digitalWallets[] = 'applepay';
                     } else if ($wallet === 'google_pay') {
                         $digitalWallets[] = 'googlepay';
+                    } else if ($wallet === 'click_to_pay') {
+                        $digitalWallets[] = 'CLICK_TO_PAY';
                     } else if ($wallet === 'blik') {
                         $allowedPaymentMethods[] = HPPAllowedPaymentMethods::BLIK;
                     } else if ($wallet === 'payu') {

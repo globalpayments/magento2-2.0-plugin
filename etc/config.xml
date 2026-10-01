@@ -108,7 +108,7 @@
                 <max_amount>0</max_amount>
                 <max_amount_diui>0</max_amount_diui>
                 <redirect_text>You Will Be Redirected To Complete Payment.</redirect_text>
-                <hpp_wallets>google_pay,apple_pay,blik,payu,bank_payment</hpp_wallets>
+                <hpp_wallets>google_pay,apple_pay,click_to_pay,blik,payu,bank_payment</hpp_wallets>
             </globalpayments_paymentgateway_gpApi>
             <globalpayments_paymentgateway_googlePay>
                 <code>globalpayments_paymentgateway_googlePay</code>

@@ -4,6 +4,10 @@
 
 # Changelog
 
+## v2.11.0 (10/01/26)
+### Enhancements
+- GPAPI: Added support for Click to Pay via HPP
+
 ## v2.10.1 (09/22/26)
 ### Bug fixes:
 - GPAPI: Fixed invoices sometimes fail to generate

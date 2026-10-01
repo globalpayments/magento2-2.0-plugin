@@ -20,7 +20,14 @@ class Checkboxes extends BaseCheckboxes
             return '';
         }
 
-        $html = '<div class="nested ' . $validators . '">';
+        if (!$this->endsWith($this->getName(), '[]')) {
+            $this->setName($this->getName() . '[]');
+        }
+
+        // Always submit at least one value so "all unchecked" can be persisted.
+        $escapedName = htmlspecialchars((string)$this->getName(), ENT_QUOTES, 'UTF-8');
+        $html = '<input type="hidden" name="' . $escapedName . '" value="" />';
+        $html .= '<div class="nested ' . $validators . '">';
         foreach ($values as $value) {
             $html .= $this->_optionToHtml($value);
         }
