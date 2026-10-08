@@ -236,7 +236,7 @@ class Config extends AbstractPaymentMethod
      */
     public function getOrderStatus(?string $storeId = null): string
     {
-        return $this->getValue('order_status', $storeId) ?: 'processing';
+        return 'processing';
     }
 
     /**

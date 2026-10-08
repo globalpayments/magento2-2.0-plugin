@@ -72,7 +72,6 @@
                 <sandbox_mode>1</sandbox_mode>
                 <region>global</region>
                 <allow_card_saving>1</allow_card_saving>
-                <order_status>processing</order_status>
                 <payment_action>authorize</payment_action>
                 <title>Credit Card</title>
                 <merchant_contact_url>https://www.example.com</merchant_contact_url>

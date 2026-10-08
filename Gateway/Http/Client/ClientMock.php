@@ -396,9 +396,20 @@ class ClientMock implements ClientInterface
                 && !empty($this->transactionData['SERVICES_CONFIG']['checkAvsCvv'])
                 && (!empty($gatewayResponse->avsResponseCode) || !empty($gatewayResponse->cvnResponseCode))
             ) {
+                // 3DS supersedes AVS on GP API, so skip AVS decline codes when both are active
+                $avsSupersededBy3ds = $gatewayMethodCode === Config::CODE_GPAPI && $this->threeDSecureIsEnabled();
+                $avsDeclined = !$avsSupersededBy3ds
+                    && in_array(
+                        $gatewayResponse->avsResponseCode,
+                        explode(',', $this->transactionData['SERVICES_CONFIG']['avsDeclineCodes'])
+                    );
+                $cvvDeclined = in_array(
+                    $gatewayResponse->cvnResponseCode,
+                    explode(',', $this->transactionData['SERVICES_CONFIG']['cvvDeclineCodes'])
+                );
+
                 //check admin selected decline condtions
-                if (in_array($gatewayResponse->avsResponseCode, explode(',', $this->transactionData['SERVICES_CONFIG']['avsDeclineCodes']))
-                    || in_array($gatewayResponse->cvnResponseCode, explode(',', $this->transactionData['SERVICES_CONFIG']['cvvDeclineCodes']))) {
+                if ($avsDeclined || $cvvDeclined) {
                     Transaction::fromId($gatewayResponse->transactionId)
                     ->reverse($this->transactionData['AMOUNT'])
                     ->execute();

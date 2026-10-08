@@ -41,26 +41,6 @@ class DropInOrderStatusService
 
     /**
      * @param OrderPayment $payment
-     * @return string|null
-     */
-    public function getConfiguredEmbeddedOrderStatus(OrderPayment $payment): ?string
-    {
-        if ($payment->getMethod() !== Config::CODE_GPAPI) {
-            return null;
-        }
-
-        $config = $this->configFactory->create($payment->getMethod());
-        if ((string)$config->getValue('payment_method') !== 'embedded') {
-            return null;
-        }
-
-        $configuredStatus = (string)($config->getValue('order_status') ?: Order::STATE_PROCESSING);
-
-        return $configuredStatus === '' ? null : $configuredStatus;
-    }
-
-    /**
-     * @param OrderPayment $payment
      * @return bool
      */
     public function hasFraudOverride(OrderPayment $payment): bool
@@ -120,30 +100,6 @@ class DropInOrderStatusService
     public function normalizeStatus(string $status): string
     {
         return strtolower(trim($status));
-    }
-
-    /**
-     * @param Order $order
-     * @param OrderPayment $payment
-     * @param string $configuredStatus
-     * @param string $configuredState
-     * @return bool
-     */
-    public function isOrderAlreadyFinalized(
-        Order $order,
-        OrderPayment $payment,
-        string $configuredStatus,
-        string $configuredState
-    ): bool {
-        $normalizedConfiguredStatus = $this->normalizeStatus($configuredStatus);
-        $normalizedCurrentStatus = $this->normalizeStatus((string)$order->getStatus());
-        $currentPhase = $this->normalizeStatus(
-            (string)$payment->getAdditionalInformation(self::DROPIN_STATUS_PHASE_KEY)
-        );
-
-        return $normalizedConfiguredStatus === $normalizedCurrentStatus
-            && $order->getState() === $configuredState
-            && $currentPhase === self::DROPIN_PHASE_FINALIZED;
     }
 
     /**

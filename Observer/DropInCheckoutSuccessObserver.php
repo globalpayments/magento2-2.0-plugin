@@ -7,6 +7,7 @@ namespace GlobalPayments\PaymentGateway\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use GlobalPayments\PaymentGateway\Gateway\Config;
+use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
 use GlobalPayments\PaymentGateway\Model\DropInOrderStatusService;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -31,18 +32,26 @@ class DropInCheckoutSuccessObserver implements ObserverInterface
     private $dropInOrderStatusService;
 
     /**
+     * @var ConfigFactory
+     */
+    private $configFactory;
+
+    /**
      * @param OrderRepositoryInterface $orderRepository
      * @param CheckoutSession $checkoutSession
      * @param DropInOrderStatusService $dropInOrderStatusService
+     * @param ConfigFactory $configFactory
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         CheckoutSession $checkoutSession,
-        DropInOrderStatusService $dropInOrderStatusService
+        DropInOrderStatusService $dropInOrderStatusService,
+        ConfigFactory $configFactory
     ) {
         $this->orderRepository = $orderRepository;
         $this->checkoutSession = $checkoutSession;
         $this->dropInOrderStatusService = $dropInOrderStatusService;
+        $this->configFactory = $configFactory;
     }
 
     /**
@@ -68,7 +77,6 @@ class DropInCheckoutSuccessObserver implements ObserverInterface
         if ($payment instanceof OrderPayment
             && $payment->getMethod() === Config::CODE_GPAPI
             && !$this->dropInOrderStatusService->hasFraudOverride($payment)
-            && $this->dropInOrderStatusService->getConfiguredEmbeddedOrderStatus($payment) !== null
             && $this->dropInOrderStatusService->normalizeStatus(
                 (string)$payment->getAdditionalInformation(DropInOrderStatusService::DROPIN_STATUS_PHASE_KEY)
             ) !== DropInOrderStatusService::DROPIN_PHASE_FINALIZED
@@ -86,24 +94,29 @@ class DropInCheckoutSuccessObserver implements ObserverInterface
             return;
         }
 
+        // GPAPI covers both Drop-in (embedded) and HPP (hosted) modes; only Drop-in finalizes status here
+        $config = $this->configFactory->create($payment->getMethod());
+        if ((string)$config->getValue('payment_method') !== 'embedded') {
+            return;
+        }
+
         if ($this->dropInOrderStatusService->hasFraudOverride($payment)) {
             return;
         }
 
-        $configuredStatus = $this->dropInOrderStatusService->getConfiguredEmbeddedOrderStatus($payment);
-        if ($configuredStatus === null) {
-            return;
-        }
+        // Initial order status is always 'pending payment' until a successful transaction is authorized/captured
+        $successfulTransactionStatus = Order::STATE_PROCESSING;
 
-        $configuredState = $this->dropInOrderStatusService->resolveStateForStatus($configuredStatus);
-        if ($this->dropInOrderStatusService->isOrderAlreadyFinalized($order, $payment, $configuredStatus, $configuredState)) {
-            return;
-        }
-
-        $this->dropInOrderStatusService->finalizeOrderStatus($order, $payment, $configuredStatus, $configuredState);
+        $configuredState = $this->dropInOrderStatusService->resolveStateForStatus($successfulTransactionStatus);
+        $this->dropInOrderStatusService->finalizeOrderStatus(
+            $order,
+            $payment,
+            $successfulTransactionStatus,
+            $configuredState
+        );
         $order->addCommentToStatusHistory(
-            __('Drop-in UI: order status finalized to %1.', $configuredStatus),
-            $configuredStatus
+            __('Drop-in UI: order status finalized to %1.', $successfulTransactionStatus),
+            $successfulTransactionStatus
         );
         $this->orderRepository->save($order);
     }

@@ -6,6 +6,7 @@ use GlobalPayments\PaymentGateway\Gateway\Config;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Api\Data\PaymentTokenFactoryInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory;

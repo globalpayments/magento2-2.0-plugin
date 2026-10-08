@@ -4,6 +4,12 @@
 
 # Changelog
 
+## v2.11.1 (10/08/26)
+### Enhancements
+- GPAPI: Orders made with the Unified payments gateway now follow standard Magento order flows 
+### Bug fixes:
+- GPAPI: AVS reversals no longer fire when 3DS liability shift is achieved
+
 ## v2.11.0 (10/01/26)
 ### Enhancements
 - GPAPI: Added support for Click to Pay via HPP

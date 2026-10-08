@@ -104,11 +104,9 @@ class ConditionalInitializeCommand implements CommandInterface
             );
         }
 
-        // Drop-in orders should always remain in processing during initialize.
-        // Final configured status is applied after placement.
-        $stateObject->setState(Order::STATE_PROCESSING);
-        $stateObject->setStatus(Order::STATE_PROCESSING);
-
+        // Set the initial state and status for the order to pending payment
+        $stateObject->setState(Order::STATE_PENDING_PAYMENT);
+        $stateObject->setStatus(Order::STATE_PENDING_PAYMENT);
         $stateObject->setIsNotified(false);
     }
 

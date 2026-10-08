@@ -52,7 +52,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
 
-    public const PLUGIN_VERSION = '2.11.0';
+    public const PLUGIN_VERSION = '2.11.1';
 
     /**
      * @var string[]

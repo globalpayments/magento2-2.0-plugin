@@ -62,10 +62,8 @@ class StateHandlerPlugin
             (string)$payment->getAdditionalInformation(DropInOrderStatusService::DROPIN_STATUS_PHASE_KEY)
         );
         if ($phase === DropInOrderStatusService::DROPIN_PHASE_FINALIZED) {
-            $config = $this->configFactory->create($payment->getMethod());
-            $configuredStatus = (string)($config->getValue('order_status') ?: Order::STATE_PROCESSING);
-            $order->setState($this->dropInOrderStatusService->resolveStateForStatus($configuredStatus));
-            $order->setStatus($configuredStatus);
+            $order->setState($this->dropInOrderStatusService->resolveStateForStatus(Order::STATE_PROCESSING));
+            $order->setStatus(Order::STATE_PROCESSING);
             $order->setIsInProcess(false);
 
             return $result;
