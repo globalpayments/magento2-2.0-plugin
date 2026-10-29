@@ -52,7 +52,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
 
-    public const PLUGIN_VERSION = '2.11.1';
+    public const PLUGIN_VERSION = '2.11.2';
 
     /**
      * @var string[]
@@ -471,11 +471,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     private function securePaymentFieldsAssetBaseUrl()
     {
-        if ($this->getValue('sandbox_mode') === 0) {
             return 'https://js.globalpay.com/v1';
-        }
-
-        return 'https://js-cert.globalpay.com/v1';
     }
 
     /**

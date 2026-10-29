@@ -4,6 +4,10 @@
 
 # Changelog
 
+## v2.11.2 (10/29/26)
+### Bug Fixes:
+- GPAPI: HPP orders now sent confirmation emails after successful transaction
+
 ## v2.11.1 (10/08/26)
 ### Enhancements
 - GPAPI: Orders made with the Unified payments gateway now follow standard Magento order flows 

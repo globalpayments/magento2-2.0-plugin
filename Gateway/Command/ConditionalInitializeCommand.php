@@ -76,6 +76,9 @@ class ConditionalInitializeCommand implements CommandInterface
                 true
             );
 
+            // Emails are sent by HppTransaction::completePayment() once the HPP payment succeeds.
+            $order->setCanSendNewEmailFlag(false);
+
             $this->createInvoiceForOrder($order, $payment);
         } else {
             if ($config->getValue("payment_action") === MethodInterface::ACTION_AUTHORIZE) {

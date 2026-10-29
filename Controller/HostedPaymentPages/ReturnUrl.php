@@ -889,16 +889,16 @@ setTimeout(function() {
     {
         $payment = $order->getPayment();
 
+        // Invoice::cancel() forces the order to processing, so set canceled before the comment captures the status.
+        $order->setState(OrderModel::STATE_CANCELED);
+        $order->setStatus(OrderModel::STATE_CANCELED);
+
         $order->addCommentToStatusHistory(
             sprintf(
                 __('HPP Payment declined/failed. Transaction ID: "%1$s"'),
                 $payment->getLastTransId()
             )
         );
-
-        /** Set order's status to 'Canceled' */
-        $order->setState(OrderModel::STATE_CANCELED);
-        $order->setStatus(OrderModel::STATE_CANCELED);
 
         $this->orderRepository->save($order);
     }

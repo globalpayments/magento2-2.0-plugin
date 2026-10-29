@@ -5,6 +5,8 @@ namespace GlobalPayments\PaymentGateway\Helper;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\InvoiceRepository;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use GlobalPayments\PaymentGateway\Gateway\ConfigFactory;
@@ -34,21 +36,37 @@ class HppTransaction
     private $logger;
 
     /**
+     * @var OrderSender
+     */
+    private $orderSender;
+
+    /**
+     * @var InvoiceSender
+     */
+    private $invoiceSender;
+
+    /**
      * @param OrderRepositoryInterface $orderRepository
      * @param InvoiceRepository $invoiceRepository
      * @param ConfigFactory $configFactory
      * @param LoggerInterface $logger
+     * @param OrderSender $orderSender
+     * @param InvoiceSender $invoiceSender
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         InvoiceRepository $invoiceRepository,
         ConfigFactory $configFactory,
         LoggerInterface $logger,
+        OrderSender $orderSender,
+        InvoiceSender $invoiceSender
     ) {
         $this->orderRepository = $orderRepository;
         $this->invoiceRepository = $invoiceRepository;
         $this->configFactory = $configFactory;
         $this->logger = $logger;
+        $this->orderSender = $orderSender;
+        $this->invoiceSender = $invoiceSender;
     }
 
     /**
@@ -88,9 +106,6 @@ class HppTransaction
             //Always set the order to processing for successful HPP payments
             $order->setState(Order::STATE_PROCESSING);
             $order->setStatus(Order::STATE_PROCESSING);
-            
-            // Re-enable email notifications (disabled by InitializeCommand)
-            $order->setCanSendNewEmailFlag(true);
 
             // Add payment success comment
             $order->addCommentToStatusHistory(
@@ -102,6 +117,8 @@ class HppTransaction
 
             // Save order
             $this->orderRepository->save($order);
+
+            $this->sendConfirmationEmails($order);
         } catch (\Exception $e) {
             $this->logger->error('HPP Payment completion failed', [
                 'this_line' => $e->getLine(),
@@ -110,6 +127,29 @@ class HppTransaction
             ]);
 
             throw $e;
+        }
+    }
+
+    /**
+     * Send the order and invoice emails withheld at placement.
+     *
+     * @param OrderInterface $order
+     * @return void
+     */
+    private function sendConfirmationEmails(OrderInterface $order): void
+    {
+        try {
+            // Guards against duplicates if the return URL is hit more than once.
+            if (!$order->getEmailSent()) {
+                $this->orderSender->send($order);
+            }
+
+            $invoice = current($order->getInvoiceCollection()->getItems());
+            if ($invoice && !$invoice->getEmailSent()) {
+                $this->invoiceSender->send($invoice);
+            }
+        } catch (\Throwable $e) {
+            $this->logger->critical($e);
         }
     }
 
