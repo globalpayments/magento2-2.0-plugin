@@ -4,6 +4,11 @@
 
 # Changelog
 
+## v2.12.0 (11/05/26)
+### Enhancements
+- Add German Support to Adobe Commerce Plugin Admin UI
+- Add Czech Support to Adobe Commerce Plugin Admin UI
+
 ## v2.11.2 (10/29/26)
 ### Bug Fixes:
 - GPAPI: HPP orders now sent confirmation emails after successful transaction
