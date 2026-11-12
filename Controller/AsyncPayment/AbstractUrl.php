@@ -209,21 +209,133 @@ abstract class AbstractUrl extends Action implements CsrfAwareActionInterface
                 if (empty($xgpSignature)) {
                     $xgpSignature = $request->getHeader('x-gp-signature');
                 }
-                $toHash = $request->getParam('rawContent');
+                // Hash the exact bytes received
+                $toHash = $this->getRawRequestContent($request);
 
                 break;
             default:
                 throw new LogicException(__('This request method is not supported.'));
         }
 
-        $appKey = $this->config->getCredentialSetting('app_key');
-        $genSignature = GenerationUtils::generateXGPSignature($toHash, $appKey);
+        $this->assertSignature((string) $toHash, (string) $xgpSignature);
 
-        if ($xgpSignature !== $genSignature) {
+        return true;
+    }
+
+    /**
+     * Validate the signature of a POST notification (e.g. statusUrl) against its raw body.
+     *
+     * Only POST is accepted so that signed redirect query strings cannot be replayed against
+     * notification endpoints with forged, unsigned parameters.
+     *
+     * @param RequestInterface $request
+     * @return bool
+     * @throws LogicException
+     */
+    protected function validateNotificationRequest($request): bool
+    {
+        if ($request->getServer('REQUEST_METHOD') !== 'POST') {
+            throw new LogicException(__('This request method is not supported.'));
+        }
+
+        return $this->validateRequest($request);
+    }
+
+    /**
+     * Validate a GET redirect whose X-GP-Signature signs the rest of the raw query string.
+     *
+     * @param RequestInterface $request
+     * @return bool
+     * @throws LogicException
+     */
+    protected function validateReturnQueryString($request): bool
+    {
+        if ($request->getServer('REQUEST_METHOD') !== 'GET') {
+            throw new LogicException(__('This request method is not supported.'));
+        }
+
+        $queryString = (string) $request->getServer('QUERY_STRING');
+        $signature = '';
+        $signedPairs = [];
+
+        foreach (explode('&', $queryString) as $pair) {
+            if (strpos($pair, 'X-GP-Signature=') === 0) {
+                $signature = rawurldecode(substr($pair, strlen('X-GP-Signature=')));
+                continue;
+            }
+            if ($pair !== '') {
+                $signedPairs[] = $pair;
+            }
+        }
+
+        $this->assertSignature(implode('&', $signedPairs), $signature);
+
+        return true;
+    }
+
+    /**
+     * Handle a return redirect that failed verification without touching the checkout session.
+     *
+     * Unverified requests must not clear the shopper's quote or fire checkout success events.
+     *
+     * @param Exception $exception
+     * @param RequestInterface $request
+     * @param \Magento\Framework\Controller\Result\Redirect $resultRedirect
+     * @return \Magento\Framework\Controller\Result\Redirect
+     */
+    protected function rejectUnverifiedReturn(Exception $exception, $request, $resultRedirect)
+    {
+        $this->logger->critical(
+            sprintf('Rejected unverified payment return. %1$s', $exception->getMessage())
+        );
+
+        $this->messageManager->addErrorMessage(
+            __('We could not verify the payment response. If you completed the payment, please contact us.')
+        );
+
+        return $resultRedirect->setPath($this->checkoutHelper->getCartPageUrl(), ['_secure' => true]);
+    }
+
+    /**
+     * Compare the received X-GP-Signature with the one generated from the given payload.
+     *
+     * @param string $toHash
+     * @param string $xgpSignature
+     * @return void
+     * @throws LogicException
+     */
+    private function assertSignature(string $toHash, string $xgpSignature): void
+    {
+        $appKey = (string) $this->config->getCredentialSetting('app_key');
+
+        if ($xgpSignature === '' || $appKey === '') {
             throw new LogicException(__('Invalid request signature.'));
         }
 
-        return true;
+        $genSignature = GenerationUtils::generateXGPSignature($toHash, $appKey);
+
+        if (!hash_equals($genSignature, $xgpSignature)) {
+            throw new LogicException(__('Invalid request signature.'));
+        }
+    }
+
+    /**
+     * Get the raw request body, decompressed if it was sent gzip-encoded.
+     *
+     * @param RequestInterface $request
+     * @return string
+     */
+    protected function getRawRequestContent($request): string
+    {
+        $rawContent = (string) $request->getContent();
+        $contentEncoding = strtolower((string) $request->getHeader('Content-Encoding'));
+
+        if ($rawContent !== '' && strpos($contentEncoding, 'gzip') !== false) {
+            $decoded = gzdecode($rawContent);
+            $rawContent = $decoded === false ? '' : $decoded;
+        }
+
+        return $rawContent;
     }
 
     /**
@@ -231,23 +343,23 @@ abstract class AbstractUrl extends Action implements CsrfAwareActionInterface
      *
      * @return RequestInterface
      */
-    protected function getRequestDetails()
+    protected function getRequestDetails(): RequestInterface
     {
         $request = $this->getRequest();
         $headers = array_change_key_case($request->getHeaders()->toArray());
-        $rawContent = $request->getContent();
+        $rawContent = $this->getRawRequestContent($request);
+        $bodyParams = [];
 
-        if (isset($headers['content-encoding']) && strpos($headers['content-encoding'], 'gzip') !== false) {
-            $rawContent = gzdecode($rawContent);
+        if (
+            $request->getServer('REQUEST_METHOD') === 'POST'
+            && isset($headers['content-type'])
+            && $headers['content-type'] === 'application/json'
+        ) {
+            $bodyParams = (array) json_decode($rawContent);
         }
 
-        $request->setParams(['rawContent' => $rawContent]);
-
-        if (isset($headers['content-type']) && $headers['content-type'] === 'application/json') {
-            $rawContent = json_decode($rawContent);
-        }
-
-        $requestParams = array_merge($request->getParams(), (array) $rawContent);
+        $requestParams = array_merge($request->getParams(), $bodyParams);
+        $requestParams['rawContent'] = $rawContent;
         $request->setParams($requestParams);
 
         return $request;

@@ -18,34 +18,15 @@ class MethodNotification extends AbstractAuthentications
 
         $this->setNotificationEndpointCookies();
 
-        $response = [];
-        try {
-            $convertedThreeDSMethodData = json_decode(
-                base64_decode($this->getRequest()->getParam('threeDSMethodData'))
-            );
-            $response = [
-                'threeDSServerTransID' => $convertedThreeDSMethodData->threeDSServerTransID,
-            ];
-        } catch (\Exception $e) {
-            $response = [
-                'error' => true,
-                'message' => $e->getMessage(),
-            ];
-        }
+        $convertedThreeDSMethodData = $this->decodeNotificationPayload(
+            $this->getRequest()->getParam('threeDSMethodData')
+        );
+        $transId = $convertedThreeDSMethodData['threeDSServerTransID'] ?? null;
 
-        $responseJson = json_encode($response, JSON_UNESCAPED_SLASHES);
-        $script = <<<EOT
-<!DOCTYPE html>
-<html>
-<body>
-<script>
-    if (window.parent !== window) {
-        window.parent.postMessage({ data: $responseJson, event: 'methodNotification' }, window.location.origin);
-    }
-</script>
-</body>
-</html>
-EOT;
-        $this->sendResponse($script, 'text/html');
+        $response = $this->isValidThreeDSServerTransId($transId)
+            ? ['threeDSServerTransID' => $transId]
+            : $this->getInvalidNotificationResponse();
+
+        $this->sendNotificationResponse('methodNotification', $response);
     }
 }

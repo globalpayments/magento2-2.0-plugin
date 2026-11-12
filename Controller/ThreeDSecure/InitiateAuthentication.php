@@ -77,7 +77,7 @@ class InitiateAuthentication extends AbstractAuthentications
     public function execute()
     {
         // Validate security token to prevent carding attacks
-        $securityValidation = $this->validateSecurityToken();
+        $securityValidation = $this->validateSecurityToken(ThreeDSecureSecurity::SCOPE_INITIATE_AUTH);
         if (!$securityValidation['valid']) {
             $this->sendSecurityErrorResponse($securityValidation['error']);
             return;
@@ -109,8 +109,8 @@ class InitiateAuthentication extends AbstractAuthentications
             $addressMatchIndicator = $shippingAddress == $billingAddress;
 
             $threeDSecureData = Secure3dService::initiateAuthentication($paymentMethod, $threeDSecureData)
-                ->withAmount($requestData->order->amount)
-                ->withCurrency($requestData->order->currency)
+                ->withAmount($this->getValidatedAmount())
+                ->withCurrency($this->getValidatedCurrency())
                 ->withOrderCreateDate(date('Y-m-d H:i:s'))
                 ->withAddress($billingAddress, AddressType::BILLING)
                 ->withAddress($shippingAddress, AddressType::SHIPPING)

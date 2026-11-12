@@ -17,6 +17,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Encryption\EncryptorInterface;
@@ -99,6 +100,11 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
     private $encryptor;
 
     /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * HPP Return Controller Constructor
      *
      * @param Context $context Magento action context
@@ -114,6 +120,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
      * @param Repository $assetRepository Asset repository for logos
      * @param TransactionInfo $transactionInfo Transaction details service
      * @param EncryptorInterface $encryptor Encryptor for generating secure URL tokens
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         Context $context,
@@ -128,7 +135,8 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
         ScopeConfigInterface $scopeConfig,
         Repository $assetRepository,
         TransactionInfo $transactionInfo,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         parent::__construct($context);
         $this->configFactory = $configFactory;
@@ -143,6 +151,7 @@ class ReturnUrl extends Action implements CsrfAwareActionInterface
         $this->assetRepository = $assetRepository;
         $this->transactionInfo = $transactionInfo;
         $this->encryptor = $encryptor;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -869,14 +878,43 @@ setTimeout(function() {
         }
 
         try {
-            $order = $this->orderRepository->get($orderId);
-
-            return $order;
+            return $this->getOrderByIncrementId((string) $orderId);
         } catch (Exception $e) {
             throw new Exception(
-                sprintf('Order ID: %d. Order not found', $orderId)
+                sprintf('Order ID: %s. Order not found', $orderId)
             );
         }
+    }
+
+    /**
+     * Load an order by its customer-facing increment ID
+     *
+     * @param string $incrementId
+     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @throws Exception
+     */
+    private function getOrderByIncrementId(string $incrementId): \Magento\Sales\Api\Data\OrderInterface
+    {
+        $incrementId = ltrim($incrementId, '0');
+        // References are sent without zero padding, so match any padded length (column is varchar(32))
+        $candidates = [];
+        for ($length = strlen($incrementId); $length <= 32; $length++) {
+            $candidates[] = str_pad($incrementId, $length, '0', STR_PAD_LEFT);
+        }
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(\Magento\Sales\Api\Data\OrderInterface::INCREMENT_ID, $candidates, 'in')
+            ->create();
+        $orders = $this->orderRepository->getList($searchCriteria)->getItems();
+
+        // Increment IDs are only unique per store, so refuse to guess between matches
+        if (count($orders) !== 1) {
+            throw new Exception(
+                sprintf('Expected one order with increment ID %s, found %d.', $incrementId, count($orders))
+            );
+        }
+
+        return reset($orders);
     }
 
     /**

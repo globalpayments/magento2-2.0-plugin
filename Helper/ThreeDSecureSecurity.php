@@ -2,24 +2,32 @@
 
 namespace GlobalPayments\PaymentGateway\Helper;
 
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\Lock\LockManagerInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Api\Data\CartInterface;
 use Magento\Store\Model\ScopeInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * 3DS Security Helper - Prevents carding attacks on 3DS enrollment endpoints
+ * 3DS Security Helper - prevents the 3DS endpoints being used as a carding oracle outside checkout.
+ *
+ * Each 3DS token is bound to the shopper's real cart (quote) when the checkout config is rendered,
+ * so a 3DS call is only accepted when it belongs to a genuine, active checkout. The limits are
+ * counted per cart, not per client.
  *
  * Security measures:
- * 1. Cryptographically signed tokens (HMAC-SHA256)
- * 2. Token bound to client IP address
+ * 1. Cryptographically signed tokens (HMAC-SHA256) carrying the quote id
+ * 2. The signed quote must be active and non-empty at validation time
  * 3. Token expiration (5 minutes)
- * 4. Token usage limits (max 2 uses per token)
- * 5. Rate limiting (2 requests per minute per IP)
- * 6. Hourly limits (10 requests per hour per IP)
+ * 4. Token usage limits (max 2 uses per token, scoped per 3DS endpoint)
+ * 5. Rate limiting (5 requests per minute per cart)
+ * 6. Hourly limits (10 requests per hour per cart)
  */
 class ThreeDSecureSecurity
 {
@@ -29,17 +37,22 @@ class ThreeDSecureSecurity
     private const TOKEN_EXPIRY_SECONDS = 300;
 
     /**
-     * Maximum uses per token
+     * Maximum uses per token, per endpoint scope.
+     *
+     * The counter is scoped per 3DS endpoint (see SCOPE_* constants), so this is the
+     * budget for a single endpoint rather than the whole flow. The happy path calls
+     * each endpoint once, so a cap of 2 leaves exactly one retry of headroom per
+     * endpoint (covers double-submit / challenge re-entry).
      */
     private const MAX_TOKEN_USES = 2;
 
     /**
-     * Rate limit: requests per minute
+     * Rate limit: validations per minute per cart.
      */
-    private const RATE_LIMIT_PER_MINUTE = 2;
+    private const RATE_LIMIT_PER_MINUTE = 5;
 
     /**
-     * Hourly limit: requests per hour
+     * Hourly limit: validations per hour per cart.
      */
     private const HOURLY_LIMIT = 10;
 
@@ -62,6 +75,22 @@ class ThreeDSecureSecurity
      * Cache tag for 3DS security data
      */
     private const CACHE_TAG = 'GP_3DS_SECURITY';
+
+    /**
+     * Prefix of the HMAC-signed payload. Distinct from the retired IP-bound format so a token
+     * of the old shape can never verify.
+     */
+    private const SIGNED_DATA_PREFIX = 'gp3ds_q_';
+
+    /**
+     * Token-use counter scopes (one per 3DS endpoint).
+     *
+     * Because the checkout config builds both endpoint URLs back-to-back with a time()-based
+     * token, both endpoints usually receive the identical token; scoping the counter per
+     * endpoint stops the two legitimate validations (plus a retry) from sharing one bucket.
+     */
+    public const SCOPE_CHECK_ENROLLMENT = 'checkEnrollment';
+    public const SCOPE_INITIATE_AUTH = 'initiateAuthentication';
 
     /**
      * Config path for GPAPI sandbox mode
@@ -109,9 +138,21 @@ class ThreeDSecureSecurity
     private $lockManager;
 
     /**
+     * Used for masked diagnostic log context only — never for a security decision.
+     *
      * @var RemoteAddress
      */
     private $remoteAddress;
+
+    /**
+     * @var CartRepositoryInterface
+     */
+    private $cartRepository;
+
+    /**
+     * @var CheckoutSession
+     */
+    private $checkoutSession;
 
     /**
      * @param RequestInterface $request
@@ -120,6 +161,8 @@ class ThreeDSecureSecurity
      * @param CacheInterface $cache
      * @param LockManagerInterface $lockManager
      * @param RemoteAddress $remoteAddress
+     * @param CartRepositoryInterface $cartRepository
+     * @param CheckoutSession $checkoutSession
      */
     public function __construct(
         RequestInterface $request,
@@ -127,7 +170,9 @@ class ThreeDSecureSecurity
         ScopeConfigInterface $scopeConfig,
         CacheInterface $cache,
         LockManagerInterface $lockManager,
-        RemoteAddress $remoteAddress
+        RemoteAddress $remoteAddress,
+        CartRepositoryInterface $cartRepository,
+        CheckoutSession $checkoutSession
     ) {
         $this->request = $request;
         $this->logger = $logger;
@@ -135,33 +180,44 @@ class ThreeDSecureSecurity
         $this->cache = $cache;
         $this->lockManager = $lockManager;
         $this->remoteAddress = $remoteAddress;
+        $this->cartRepository = $cartRepository;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
-     * Generate a cryptographically signed security token bound to the client IP.
+     * Generate a signed security token bound to a cart.
      *
-     * Token format: timestamp:ip_hash:signature
+     * Token format: timestamp:quote_id:signature
      *
+     * @param int|null $quoteId Cart to bind; defaults to the current checkout-session quote.
      * @return string
+     * @throws \RuntimeException When no app_key is configured or there is no cart to bind to.
      */
-    public function generateSecurityToken(): string
+    public function generateSecurityToken(?int $quoteId = null): string
     {
+        $secretKey = $this->getSecretKey();
+
+        $quoteId = $quoteId ?? $this->getSessionQuoteId();
+        if (!$quoteId) {
+            // Expected outside checkout (e.g. config rendered by a 3DS endpoint or order
+            // placement); the caller falls back to an untokenized URL, so no log noise here.
+            throw new \RuntimeException('3DS Security: No active cart to bind the security token to');
+        }
+
         $timestamp = time();
-        $clientIp = $this->getClientIp();
-        $ipHash = substr(hash_hmac('sha256', $clientIp, $this->getSecretKey()), 0, 16);
+        $signature = hash_hmac('sha256', $this->signedData($timestamp, $quoteId), $secretKey);
 
-        $data = 'gp3ds_' . $timestamp . '_' . $ipHash;
-        $signature = hash_hmac('sha256', $data, $this->getSecretKey());
-
-        return $timestamp . ':' . $ipHash . ':' . $signature;
+        return $timestamp . ':' . $quoteId . ':' . $signature;
     }
 
     /**
      * Validate the security token from the request.
      *
-     * @return array ['valid' => bool, 'error' => string|null]
+     * @param string $scope Per-endpoint scope for the token-use counter (see SCOPE_*).
+     * @return array{valid: bool, error: mixed, quote?: CartInterface}
+     *         On success 'quote' holds the verified cart the 3DS call must be performed for.
      */
-    public function validateSecurityToken(): array
+    public function validateSecurityToken(string $scope = ''): array
     {
         $token = $this->request->getParam('gp3ds_token');
 
@@ -172,9 +228,15 @@ class ThreeDSecureSecurity
             ];
         }
 
-        // Parse token format: timestamp:ip_hash:signature
-        $parts = explode(':', $token);
-        if (count($parts) !== 3) {
+        // Parse token format: timestamp:quote_id:signature. Only the canonical form we mint is
+        // accepted (no leading zeros, signs or whitespace; lowercase hex signature), so one signed
+        // token cannot be re-encoded into variants that would each get a fresh usage budget.
+        $parts = explode(':', (string) $token);
+        if (count($parts) !== 3
+            || !preg_match('/^[1-9][0-9]*$/', $parts[0])
+            || !preg_match('/^[1-9][0-9]*$/', $parts[1])
+            || !preg_match('/^[0-9a-f]{64}$/', $parts[2])
+        ) {
             $this->logger->warning('3DS Security: Invalid token format', ['token_parts' => count($parts)]);
             return [
                 'valid' => false,
@@ -183,30 +245,13 @@ class ThreeDSecureSecurity
         }
 
         $timestamp = (int) $parts[0];
-        $tokenIpHash = $parts[1];
+        $quoteId = (int) $parts[1];
         $providedSignature = $parts[2];
 
-        // Verify the request comes from the same IP that generated the token
-        $clientIp = $this->getClientIp();
-        $currentIpHash = substr(hash_hmac('sha256', $clientIp, $this->getSecretKey()), 0, 16);
-
-        if (!hash_equals($tokenIpHash, $currentIpHash)) {
-            $this->logger->warning('3DS Security: IP mismatch', [
-                'expected_hash' => $tokenIpHash,
-                'current_hash' => $currentIpHash
-            ]);
-            return [
-                'valid' => false,
-                'error' => __('Security verification failed. Please refresh the page and try again.')
-            ];
-        }
-
-        // Verify the HMAC signature (proves token wasn't forged)
-        $expectedData = 'gp3ds_' . $timestamp . '_' . $tokenIpHash;
-        $expectedSignature = hash_hmac('sha256', $expectedData, $this->getSecretKey());
-
+        // Verify the HMAC signature (proves the token, and the cart it names, were issued by us)
+        $expectedSignature = hash_hmac('sha256', $this->signedData($timestamp, $quoteId), $this->getSecretKey());
         if (!hash_equals($expectedSignature, $providedSignature)) {
-            $this->logger->warning('3DS Security: Invalid signature');
+            $this->logger->warning('3DS Security: Invalid signature', ['ip' => $this->maskedIp()]);
             return [
                 'valid' => false,
                 'error' => __('Security verification failed. Please refresh the page and try again.')
@@ -223,27 +268,51 @@ class ThreeDSecureSecurity
             ];
         }
 
-        // Check token usage limit (atomic: lock prevents concurrent bypasses)
-        $usageKey = self::CACHE_PREFIX_TOKEN . hash('sha256', $token);
+        // The signed cart must still be a live checkout: active (not yet ordered) and non-empty.
+        $quote = $this->loadEligibleQuote($quoteId, $this->tokenReference($token));
+        if ($quote === null) {
+            return [
+                'valid' => false,
+                'error' => __('Your cart could not be verified. Please refresh the page and try again.')
+            ];
+        }
+
+        // Token usage limit (atomic), scoped per endpoint so both legs keep their own budget. Keyed
+        // on the parsed fields rather than the raw request text.
+        $usageKey = self::CACHE_PREFIX_TOKEN
+            . hash('sha256', $timestamp . ':' . $quoteId . ':' . $providedSignature . '|' . $scope);
         $remainingTtl = max(1, self::TOKEN_EXPIRY_SECONDS - $tokenAge);
         $usageResult = $this->checkAndIncrementCounter($usageKey, self::MAX_TOKEN_USES, $remainingTtl);
 
         if ($usageResult['exceeded']) {
-            $this->logger->warning('3DS Security: Token usage exhausted', ['uses' => $usageResult['count']]);
+            $this->logger->warning('3DS Security: Token usage exhausted', [
+                'uses' => $usageResult['count'],
+                'scope' => $scope,
+                'token_ref' => $this->tokenReference($token),
+                'quote_id' => $quoteId,
+                'ip' => $this->maskedIp()
+            ]);
             return [
                 'valid' => false,
                 'error' => __('Security token exhausted. Please refresh the page and try again.')
             ];
         }
 
-        // Rate limiting: max requests per minute per IP (atomic)
-        $rateLimitKey = self::CACHE_PREFIX_RATE . hash('sha256', $clientIp);
-        $rateLimitResult = $this->checkAndIncrementCounter($rateLimitKey, self::RATE_LIMIT_PER_MINUTE, 60);
+        // Rate/hourly limits are counted per cart. A cart is never shared between shoppers and
+        // cannot be forged (it is inside the signed token), so these buckets need no client
+        // identity: CDN edges, forwarded headers and cookie-less requests are all irrelevant.
+        $cartKey = hash('sha256', 'quote|' . $quoteId);
 
+        $rateLimitResult = $this->checkAndIncrementCounter(
+            self::CACHE_PREFIX_RATE . $cartKey,
+            self::RATE_LIMIT_PER_MINUTE,
+            60
+        );
         if ($rateLimitResult['exceeded']) {
             $this->logger->warning('3DS Security: Rate limit exceeded', [
-                'ip' => $this->maskIp($clientIp),
-                'count' => $rateLimitResult['count']
+                'quote_id' => $quoteId,
+                'count' => $rateLimitResult['count'],
+                'ip' => $this->maskedIp()
             ]);
             return [
                 'valid' => false,
@@ -251,14 +320,16 @@ class ThreeDSecureSecurity
             ];
         }
 
-        // Hourly limit: max requests per hour per IP (atomic)
-        $hourlyKey = self::CACHE_PREFIX_HOURLY . hash('sha256', $clientIp);
-        $hourlyResult = $this->checkAndIncrementCounter($hourlyKey, self::HOURLY_LIMIT, 3600);
-
+        $hourlyResult = $this->checkAndIncrementCounter(
+            self::CACHE_PREFIX_HOURLY . $cartKey,
+            self::HOURLY_LIMIT,
+            3600
+        );
         if ($hourlyResult['exceeded']) {
             $this->logger->warning('3DS Security: Hourly limit exceeded', [
-                'ip' => $this->maskIp($clientIp),
-                'count' => $hourlyResult['count']
+                'quote_id' => $quoteId,
+                'count' => $hourlyResult['count'],
+                'ip' => $this->maskedIp()
             ]);
             return [
                 'valid' => false,
@@ -266,7 +337,39 @@ class ThreeDSecureSecurity
             ];
         }
 
-        return ['valid' => true, 'error' => null];
+        return ['valid' => true, 'error' => null, 'quote' => $quote];
+    }
+
+    /**
+     * Load the signed cart if it is still an eligible, live checkout.
+     *
+     * @param int $quoteId
+     * @param string $tokenRef
+     * @return CartInterface|null
+     */
+    private function loadEligibleQuote(int $quoteId, string $tokenRef): ?CartInterface
+    {
+        try {
+            $quote = $this->cartRepository->getActive($quoteId);
+        } catch (NoSuchEntityException $e) {
+            $this->logger->warning('3DS Security: Cart not active or not found', [
+                'quote_id' => $quoteId,
+                'token_ref' => $tokenRef,
+                'ip' => $this->maskedIp()
+            ]);
+            return null;
+        }
+
+        if (!$quote->getIsActive() || (int) $quote->getItemsCount() < 1) {
+            $this->logger->warning('3DS Security: Cart not eligible for 3DS', [
+                'quote_id' => $quoteId,
+                'token_ref' => $tokenRef,
+                'ip' => $this->maskedIp()
+            ]);
+            return null;
+        }
+
+        return $quote;
     }
 
     /**
@@ -310,16 +413,31 @@ class ThreeDSecureSecurity
     }
 
     /**
-     * Get the client IP address.
+     * Build the HMAC-signed payload for a token.
      *
-     * Uses Magento's RemoteAddress which handles proxy headers
-     * and respects trusted proxy configuration.
-     *
+     * @param int $timestamp
+     * @param int $quoteId
      * @return string
      */
-    public function getClientIp(): string
+    private function signedData(int $timestamp, int $quoteId): string
     {
-        return $this->remoteAddress->getRemoteAddress() ?: '0.0.0.0';
+        return self::SIGNED_DATA_PREFIX . $timestamp . '_' . $quoteId;
+    }
+
+    /**
+     * Current checkout-session quote id, or null when there is no checkout cart.
+     *
+     * @return int|null
+     */
+    private function getSessionQuoteId(): ?int
+    {
+        try {
+            $quoteId = (int) $this->checkoutSession->getQuoteId();
+        } catch (\Throwable $e) {
+            return null;
+        }
+
+        return $quoteId > 0 ? $quoteId : null;
     }
 
     /**
@@ -362,13 +480,29 @@ class ThreeDSecureSecurity
     }
 
     /**
-     * Mask IP address for logging (privacy).
+     * Derive a short, non-reversible reference for a security token.
      *
-     * @param string $ip
+     * Used only for log correlation: the same token always yields the same reference, so the
+     * two validation legs that share a token can be tied together, and a failing log line can be
+     * matched to the full `gp3ds_token` in web-server access logs — without logging the token.
+     *
+     * @param string $token
      * @return string
      */
-    private function maskIp(string $ip): string
+    private function tokenReference(string $token): string
     {
+        return substr(hash('sha256', $token), 0, 12);
+    }
+
+    /**
+     * Masked client IP for diagnostic log context only.
+     *
+     * @return string
+     */
+    private function maskedIp(): string
+    {
+        $ip = (string) $this->remoteAddress->getRemoteAddress();
+
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             $parts = explode('.', $ip);
             return $parts[0] . '.' . $parts[1] . '.xxx.xxx';

@@ -152,12 +152,12 @@ abstract class AbstractInitiatePayment extends Action
         try {
             $this->checkoutSession->restoreQuote();
             $paymentData = $this->paymentDataObjectFactory->create($payment);
-            $request = $this->request->build(['payment' => $paymentData]);
-            $response = $this->client->placeRequest($this->transferFactory->create($request));
             $request = $this->request->build([
                 'payment' => $paymentData,
                 'request_data' => $this->getDecodedRequestBody(),
             ]);
+            $response = $this->client->placeRequest($this->transferFactory->create($request));
+            $this->handler->handle(['payment' => $paymentData], $response);
 
             $order->addCommentToStatusHistory(
                 sprintf(

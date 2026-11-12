@@ -52,7 +52,7 @@ class Config extends ConfigBase implements ConfigInterface
      */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
 
-    public const PLUGIN_VERSION = '2.12.0';
+    public const PLUGIN_VERSION = '2.12.1';
 
     /**
      * @var string[]
@@ -348,13 +348,14 @@ class Config extends ConfigBase implements ConfigInterface
      * Gets a secured 3DS endpoint URL with security token.
      *
      * The security token prevents carding attacks by:
-     * - Binding the request to the client IP
+     * - Binding the request to the shopper's active cart (signed quote id)
      * - Expiring after 5 minutes
      * - Limiting usage count
      *
      * Falls back to the plain endpoint URL when token generation is not possible
-     * (e.g., GPAPI app_key not yet configured on fresh installs), so that
-     * rendering the checkout config does not hard-fail.
+     * (e.g., GPAPI app_key not yet configured on fresh installs, or no checkout cart in the
+     * current context), so that rendering the config does not hard-fail. The 3DS endpoints
+     * reject untokenized calls.
      *
      * @param string $path
      * @return string
@@ -368,9 +369,7 @@ class Config extends ConfigBase implements ConfigInterface
             $separator = (strpos($baseUrl, '?') !== false) ? '&' : '?';
             return $baseUrl . $separator . 'gp3ds_token=' . urlencode($securityToken);
         } catch (\RuntimeException $e) {
-            // ThreeDSecureSecurity::getSecretKey() already logs a warning before throwing.
-            // Return the plain URL so that checkout config rendering does not hard-fail
-            // on fresh installs or stores that do not use the GPAPI gateway.
+            // Missing app_key (already logged by ThreeDSecureSecurity) or no cart to bind to.
             return $baseUrl;
         }
     }

@@ -62,6 +62,13 @@ abstract class AbstractAuthentications extends Action implements CsrfAwareAction
     protected $threeDSecureSecurity;
 
     /**
+     * Cart verified by the 3DS security token for the current request.
+     *
+     * @var \Magento\Quote\Model\Quote|null
+     */
+    private $validatedQuote = null;
+
+    /**
      * AbstractAuthentications constructor.
      *
      * @param Context $context
@@ -99,11 +106,56 @@ abstract class AbstractAuthentications extends Action implements CsrfAwareAction
     /**
      * Validate the 3DS security token to prevent carding attacks.
      *
+     * On success the verified cart is kept so the 3DS call is performed for that cart's real
+     * amount/currency/customer rather than values supplied by the client.
+     *
+     * @param string $scope Per-endpoint token-use scope (see ThreeDSecureSecurity::SCOPE_*),
+     *                      so each 3DS endpoint keeps its own token reuse budget.
      * @return array ['valid' => bool, 'error' => string|null]
      */
-    protected function validateSecurityToken(): array
+    protected function validateSecurityToken(string $scope = ''): array
     {
-        return $this->threeDSecureSecurity->validateSecurityToken();
+        $result = $this->threeDSecureSecurity->validateSecurityToken($scope);
+        $this->validatedQuote = $result['valid'] ? ($result['quote'] ?? null) : null;
+
+        return $result;
+    }
+
+    /**
+     * Base grand total of the verified cart.
+     *
+     * @return float
+     * @throws \Exception
+     */
+    protected function getValidatedAmount(): float
+    {
+        return (float) $this->requireValidatedQuote()->getBaseGrandTotal();
+    }
+
+    /**
+     * Base currency code of the verified cart.
+     *
+     * @return string
+     * @throws \Exception
+     */
+    protected function getValidatedCurrency(): string
+    {
+        return (string) $this->requireValidatedQuote()->getBaseCurrencyCode();
+    }
+
+    /**
+     * The cart verified by validateSecurityToken().
+     *
+     * @return \Magento\Quote\Model\Quote
+     * @throws \Exception
+     */
+    private function requireValidatedQuote(): Quote
+    {
+        if ($this->validatedQuote === null) {
+            throw new \Exception(__('Not enough data to perform 3DS. Unable to retrieve cart.'));
+        }
+
+        return $this->validatedQuote;
     }
 
     /**
@@ -136,10 +188,9 @@ abstract class AbstractAuthentications extends Action implements CsrfAwareAction
         }
 
         if (isset($requestData->vaultToken)) {
-            $quote = $this->quote->loadByIdWithoutStore($requestData->quoteId);
-            if (empty($quote)) {
-                throw new \Exception(__('Not enough data to perform 3DS. Unable to retrieve token.'));
-            }
+            // Use the cart from the signed token, not the client-supplied quoteId, so a saved card
+            // can only be resolved for the customer who owns the verified cart.
+            $quote = $this->requireValidatedQuote();
 
             return $this->tokenManagement->getByPublicHash($requestData->vaultToken, $quote->getCustomerId())
                 ->getGatewayToken();
@@ -219,7 +270,84 @@ abstract class AbstractAuthentications extends Action implements CsrfAwareAction
      */
     protected function setNotificationEndpointCookies()
     {
-        header('Set-Cookie: PHPSESSID= ' . $this->sessionManager->getSessionId() . '; SameSite=None; Secure');
+        header(
+            'Set-Cookie: PHPSESSID=' . $this->sessionManager->getSessionId() . '; SameSite=None; Secure; HttpOnly'
+        );
+    }
+
+    /**
+     * Decode a base64/base64url-encoded JSON 3DS notification payload (CRes / threeDSMethodData).
+     *
+     * @param mixed $encoded
+     * @return array|null Decoded object as an array, or null if it is not valid JSON.
+     */
+    protected function decodeNotificationPayload($encoded): ?array
+    {
+        if (!is_string($encoded) || $encoded === '') {
+            return null;
+        }
+
+        // EMV 3DS uses base64url without padding; normalise to standard base64 before decoding.
+        $decoded = base64_decode(strtr($encoded, '-_', '+/'));
+        $data = is_string($decoded) ? json_decode($decoded, true) : null;
+
+        return is_array($data) ? $data : null;
+    }
+
+    /**
+     * Whether the value is a valid EMV 3DS threeDSServerTransID.
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    protected function isValidThreeDSServerTransId($value): bool
+    {
+        return is_string($value)
+            && preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $value) === 1;
+    }
+
+    /**
+     * Handle error payload for notifications that fail validation.
+     *
+     * @return array
+     */
+    protected function getInvalidNotificationResponse(): array
+    {
+        return [
+            'error' => true,
+            'message' => (string) __('Invalid 3DS notification data.'),
+        ];
+    }
+
+    /**
+     * Render the HTML page that posts the notification result to the parent (checkout) window.
+     *
+     * The payload is embedded in an inline script, so it must be encoded to be safe in an HTML
+     * context: JSON_HEX_* prevents "</script>" and quote characters from breaking out.
+     *
+     * @param string $event
+     * @param array $response
+     * @return void
+     */
+    protected function sendNotificationResponse(string $event, array $response): void
+    {
+        $flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+        $responseJson = json_encode($response, $flags);
+        $eventJson = json_encode($event, $flags);
+
+        $html = <<<EOT
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+    if (window.parent !== window) {
+        window.parent.postMessage({ data: $responseJson, event: $eventJson }, window.location.origin);
+    }
+</script>
+</body>
+</html>
+EOT;
+        $this->sendResponse($html, 'text/html');
     }
 
     /**

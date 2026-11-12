@@ -7,6 +7,7 @@ use GlobalPayments\Api\Entities\Enums\Secure3dStatus;
 use GlobalPayments\Api\Entities\Exceptions\ApiException;
 use GlobalPayments\Api\PaymentMethods\CreditCardData;
 use GlobalPayments\Api\Services\Secure3dService;
+use GlobalPayments\PaymentGateway\Helper\ThreeDSecureSecurity;
 
 class CheckEnrollment extends AbstractAuthentications
 {
@@ -18,7 +19,7 @@ class CheckEnrollment extends AbstractAuthentications
     public function execute()
     {
         // Validate security token to prevent carding attacks
-        $securityValidation = $this->validateSecurityToken();
+        $securityValidation = $this->validateSecurityToken(ThreeDSecureSecurity::SCOPE_CHECK_ENROLLMENT);
         if (!$securityValidation['valid']) {
             $this->sendSecurityErrorResponse($securityValidation['error']);
             return;
@@ -34,8 +35,8 @@ class CheckEnrollment extends AbstractAuthentications
             $paymentMethod->token = $this->getToken($requestData);
 
             $threeDSecureData = Secure3dService::checkEnrollment($paymentMethod)
-                ->withAmount($requestData->amount)
-                ->withCurrency($requestData->currency)
+                ->withAmount($this->getValidatedAmount())
+                ->withCurrency($this->getValidatedCurrency())
                 ->execute();
 
             $response['enrolled'] = $threeDSecureData->enrolled ?? Secure3dStatus::NOT_ENROLLED;

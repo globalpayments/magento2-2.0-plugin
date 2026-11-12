@@ -19,29 +19,45 @@ class StatusUrl extends AbstractUrl
         $diuiApm = false;
 
         try {
-            if ($request->getParam("payment_method") !== null
-                && !empty($request->getParam("payment_method")->apm)
-                && (
-                    $request->getParam("payment_method")->apm->provider === 'blik'
-                    || $request->getParam("payment_method")->apm->provider === 'bank_select'
-                )
-            ) {
-                $diuiApm = true;
-            } else {
-                $this->validateRequest($request);
+            $this->validateNotificationRequest($request);
+        } catch (Exception $e) {
+            // Never log the payload of an unverified request.
+            $this->logger->critical(
+                sprintf('Rejected unverified status notification. %1$s', $e->getMessage())
+            );
+
+            return;
+        }
+
+        try {
+            // Only trust fields from the signed body; never fall back to (unsigned) query params.
+            $notification = json_decode($this->getRawRequestContent($request), true);
+            if (!is_array($notification) || empty($notification['id']) || !is_string($notification['id'])) {
+                throw new LogicException(__('Invalid notification payload.'));
             }
 
-            $transactionId = $request->getParam('id');
+            $provider = $notification['payment_method']['apm']['provider'] ?? null;
+            if ($provider === 'blik' || $provider === 'bank_select') {
+                $diuiApm = true;
+            }
+
+            $transactionId = $notification['id'];
             $gatewayResponse = $this->transactionInfo->getTransactionDetailsByTxnId($transactionId);
 
             if ($diuiApm) {
-                $gatewayResponse["ORDER_ID"] = str_replace('Magento_Order_', '', $request->getParam('reference'));
+                $gatewayResponse["ORDER_ID"] = str_replace(
+                    'Magento_Order_',
+                    '',
+                    (string) ($notification['reference'] ?? '')
+                );
             }
 
             $order = $this->getOrder($gatewayResponse);
             $payment = $order->getPayment();
 
-            switch ($request->getParam('status')) {
+            $transactionStatus = $gatewayResponse['TRANSACTION_STATUS'] ?? null;
+
+            switch ($transactionStatus) {
                 case TransactionStatus::PREAUTHORIZED:
                     /**
                      * For async payment methods, the payment is already authorized at the gateway.
@@ -78,7 +94,7 @@ class StatusUrl extends AbstractUrl
                         sprintf(
                             __('Order ID: %1$d. Unexpected transaction status on statusUrl: %2$s'),
                             $gatewayResponse['ORDER_ID'],
-                            $request->getParam('status')
+                            $transactionStatus
                         )
                     );
             }

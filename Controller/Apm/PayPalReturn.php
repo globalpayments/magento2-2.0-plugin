@@ -23,7 +23,11 @@ class PayPalReturn extends AbstractUrl
 
         try {
             $this->validateRequest($request);
+        } catch (\Exception $e) {
+            return $this->rejectUnverifiedReturn($e, $request, $resultRedirect);
+        }
 
+        try {
             $transactionId = $request->getParam('id');
             $gatewayResponse = $this->transactionInfo->getTransactionDetailsByTxnId($transactionId);
             $order = $this->getOrder($gatewayResponse);

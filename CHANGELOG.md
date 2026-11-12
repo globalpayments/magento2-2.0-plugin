@@ -4,6 +4,13 @@
 
 # Changelog
 
+## v2.12.1 (11/12/26)
+### Bug Fixes:
+- GPAPI: HPP transaction IDs now match IDs in realcontrol
+- GPAPI: Dropped IP-based 3DS security and replaced with Adobe Commerce checkout-based security for 3DS handling
+- GPAPI: DiUI - Security remediations for APM endpoints
+- GPAPI: DiUI - Patched XSS vulnerability in 3DS flow
+
 ## v2.12.0 (11/05/26)
 ### Enhancements
 - Add German Support to Adobe Commerce Plugin Admin UI
@@ -18,6 +25,7 @@
 - GPAPI: Orders made with the Unified payments gateway now follow standard Magento order flows 
 ### Bug fixes:
 - GPAPI: AVS reversals no longer fire when 3DS liability shift is achieved
+- GPAPI: 3DS enrollment no longer intermittently returns SECURITY_ERROR behind CDNs/proxies (e.g. Cloudflare + Fastly). The 3DS anti-carding token is now bound to the shopper's cart instead of their IP address.
 
 ## v2.11.0 (10/01/26)
 ### Enhancements

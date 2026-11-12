@@ -14,6 +14,7 @@ use GlobalPayments\PaymentGateway\Helper\Transaction as TransactionHelper;
 use GlobalPayments\PaymentGateway\Model\HostedPaymentPages\Config as HppConfig;
 use GlobalPayments\PaymentGateway\Model\TransactionInfo;
 use Magento\Framework\App\Action\Action;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
@@ -61,6 +62,11 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
     private $transactionInfo;
 
     /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * HPP StatusUrl Controller Constructor
      *
      * @param Context $context
@@ -71,6 +77,7 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
      * @param OrderRepositoryInterface $orderRepository
      * @param TransactionHelper $transactionHelper
      * @param TransactionInfo $transactionInfo
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         Context $context,
@@ -80,7 +87,8 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
         LoggerInterface $logger,
         OrderRepositoryInterface $orderRepository,
         TransactionHelper $transactionHelper,
-        TransactionInfo $transactionInfo
+        TransactionInfo $transactionInfo,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         parent::__construct($context);
         $this->configFactory = $configFactory;
@@ -90,6 +98,7 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
         $this->orderRepository = $orderRepository;
         $this->transactionHelper = $transactionHelper;
         $this->transactionInfo = $transactionInfo;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -403,7 +412,7 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
         }
 
         try {
-            $order = $this->orderRepository->get($orderId);
+            $order = $this->getOrderByIncrementId((string) $orderId);
 
             // When generating the HPP url, a link data ID is set as the transaction ID
             // on the order object rather than a transaction ID from the gateway.
@@ -426,6 +435,37 @@ class StatusUrl extends Action implements CsrfAwareActionInterface
                 sprintf('Order ID: %d. Order not found or error occurred: %s', $orderId, $e->getMessage())
             );
         }
+    }
+
+    /**
+     * Load an order by its customer-facing increment ID
+     *
+     * @param string $incrementId
+     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @throws Exception
+     */
+    private function getOrderByIncrementId(string $incrementId): \Magento\Sales\Api\Data\OrderInterface
+    {
+        $incrementId = ltrim($incrementId, '0');
+        // References are sent without zero padding, so match any padded length (column is varchar(32))
+        $candidates = [];
+        for ($length = strlen($incrementId); $length <= 32; $length++) {
+            $candidates[] = str_pad($incrementId, $length, '0', STR_PAD_LEFT);
+        }
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(\Magento\Sales\Api\Data\OrderInterface::INCREMENT_ID, $candidates, 'in')
+            ->create();
+        $orders = $this->orderRepository->getList($searchCriteria)->getItems();
+
+        // Increment IDs are only unique per store, so refuse to guess between matches
+        if (count($orders) !== 1) {
+            throw new Exception(
+                sprintf('Expected one order with increment ID %s, found %d.', $incrementId, count($orders))
+            );
+        }
+
+        return reset($orders);
     }
 
     /**

@@ -23,6 +23,12 @@ class BlikReturn extends AbstractUrl
         $successPageUrl = $this->checkoutHelper->getSuccessPageUrl();
 
         try {
+            $this->validateReturnQueryString($request);
+        } catch (Exception $e) {
+            return $this->rejectUnverifiedReturn($e, $request, $resultRedirect);
+        }
+
+        try {
             $transactionId = $request->getParam('id');
             $gatewayResponse = $this->transactionInfo->getTransactionDetailsByTxnId($transactionId);
             $gatewayResponse["ORDER_ID"] = str_replace('Magento_Order_', '', $request->getParam('reference'));

@@ -66,13 +66,10 @@ class InitiatePaymentRequest implements BuilderInterface
             // Get amount directly from order like other async payment methods
             $amount = $order->getGrandTotal();
 
-            // Get the actual order entity ID from payment object for database lookup
-            $orderEntityId = $payment->getOrder()->getId();
-
             $requestData = [
                 'TXN_TYPE' => 'sale',
                 'ORDER_ID' => $order->getId(),
-                'ORDER_ENTITY_ID' => $orderEntityId,
+                'ORDER_INCREMENT_ID' => $order->getIncrementId(),
                 'AMOUNT' => $amount,
                 'CURRENCY' => $order->getOrderCurrencyCode(),
                 'CONFIG' => $config,

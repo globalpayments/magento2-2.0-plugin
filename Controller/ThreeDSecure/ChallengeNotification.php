@@ -5,6 +5,11 @@ namespace GlobalPayments\PaymentGateway\Controller\ThreeDSecure;
 class ChallengeNotification extends AbstractAuthentications
 {
     /**
+     * Valid EMV 3DS transStatus values.
+     */
+    private const VALID_TRANS_STATUSES = ['Y', 'N', 'U', 'A', 'C', 'D', 'R', 'I', 'S'];
+
+    /**
      * @inheritDoc
      */
     public function execute()
@@ -19,34 +24,25 @@ class ChallengeNotification extends AbstractAuthentications
         $this->setNotificationEndpointCookies();
 
         $response = [];
-        try {
-            $CRes = $this->getRequest()->getParam('cres');
-            if (!empty($CRes)) {
-                $convertedCRes = json_decode(base64_decode($CRes));
+        $cRes = $this->getRequest()->getParam('cres');
+        if (!empty($cRes)) {
+            $convertedCRes = $this->decodeNotificationPayload($cRes);
+            $transId = $convertedCRes['threeDSServerTransID'] ?? null;
+            $transStatus = $convertedCRes['transStatus'] ?? null;
+
+            if (
+                $this->isValidThreeDSServerTransId($transId)
+                && in_array($transStatus, self::VALID_TRANS_STATUSES, true)
+            ) {
                 $response = [
-                    'threeDSServerTransID' => $convertedCRes->threeDSServerTransID,
-                    'transStatus' => $convertedCRes->transStatus ?? '',
+                    'threeDSServerTransID' => $transId,
+                    'transStatus' => $transStatus,
                 ];
+            } else {
+                $response = $this->getInvalidNotificationResponse();
             }
-        } catch (\Exception $e) {
-            $response = [
-                'error' => true,
-                'message' => $e->getMessage(),
-            ];
         }
-        $responseJson = json_encode($response, JSON_UNESCAPED_SLASHES);
-        $script = <<<EOT
-<!DOCTYPE html>
-<html>
-<body>
-<script>
-    if (window.parent !== window) {
-        window.parent.postMessage({ data: $responseJson, event: 'challengeNotification' }, window.location.origin);
-    }
-</script>
-</body>
-</html>
-EOT;
-        $this->sendResponse($script, 'text/html');
+
+        $this->sendNotificationResponse('challengeNotification', $response);
     }
 }

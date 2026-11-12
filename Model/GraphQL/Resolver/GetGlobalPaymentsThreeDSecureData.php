@@ -9,6 +9,11 @@ use GlobalPayments\PaymentGateway\Model\Ui\ConfigProvider;
 
 /**
  * Resolver for getting Global Payments ThreeDSecure data
+ *
+ * The 3DS anti-carding token is bound to the shopper's cart and is
+ * minted from the storefront checkout session. GraphQL requests have no checkout session, so the
+ * checkEnrollment / initiateAuthentication URLs returned here carry no token and are rejected by
+ * those endpoints. Headless 3DS support is out of scope for now.
  */
 class GetGlobalPaymentsThreeDSecureData implements ResolverInterface
 {

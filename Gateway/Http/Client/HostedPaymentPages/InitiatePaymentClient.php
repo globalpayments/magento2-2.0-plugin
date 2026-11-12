@@ -288,17 +288,18 @@ class InitiatePaymentClient extends AbstractClient
 
             // Build HPP request
             $storeName = $transactionData['STORE_NAME'] ?? 'Magento Store';
-            $orderEntityId = $transactionData['ORDER_ENTITY_ID'];
+            $orderIncrementId = $transactionData['ORDER_INCREMENT_ID'];
             
-            if (empty($orderEntityId)) {
-                $this->debugLog($config, 'HPP Creation Failed - Missing order entity ID');
+            if (empty($orderIncrementId)) {
+                $this->debugLog($config, 'HPP Creation Failed - Missing order increment ID');
                 throw new ClientException(__('Hpp crittcal data missing, cannot generate HPP request.'));
             }
+            $orderReference = 'order_id_' . ltrim((string) $orderIncrementId, '0');
             
             $hppBuilder = HPPBuilder::create()
                 ->withName($storeName)
-                ->withDescription('Order payment for order #' . $transactionData['ORDER_ID'])
-                ->withReference("order_id_" . $orderEntityId)
+                ->withDescription('Order payment for order #' . $orderIncrementId)
+                ->withReference($orderReference)
                 ->withAmount(StringUtils::toNumeric($transactionData['AMOUNT'], $transactionData['CURRENCY']))
                 ->withCurrency($transactionData['CURRENCY'])
                 ->withPayer($payer)
@@ -307,6 +308,8 @@ class InitiatePaymentClient extends AbstractClient
                 ->withAddressMatchIndicator($shippingAddress->streetAddress1 === $billingAddress->streetAddress1)
                 ->withNotifications($returnUrl, $statusUrl, $cancelUrl)
                 ->withTransactionConfig(Channel::CardNotPresent, $billingCountry, $captureMode, $allowedPaymentMethods)
+                ->withOrderReference($orderReference)
+
                 ->withAuthentication(
                     ChallengeRequestIndicator::CHALLENGE_PREFERRED,
                     ExemptStatus::LOW_VALUE,
@@ -358,7 +361,8 @@ class InitiatePaymentClient extends AbstractClient
                     'TXN_ID' => $transactionId,
                     'TXN_TYPE' => $transactionData['TXN_TYPE'],
                     'GATEWAY_PROVIDER' => 'gpApi',
-                    'orderStatus' => 'pending_payment'
+                    'orderStatus' => 'pending_payment',
+                    'ORDER_ID' => (string) $transactionId
                 ];
 
                 return $result;
