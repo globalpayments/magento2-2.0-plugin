@@ -45,6 +45,10 @@ class ValidateMerchant implements ValidateMerchantInterface
             return null;
         }
 
+        if (!$this->isValidApplePayValidationUrl($validationUrl)) {
+            throw new \InvalidArgumentException('Invalid Apple Pay validation URL.');
+        }
+
         $pemCrtPath = $this->dir->getRoot() . '/' . $this->config->getValue('merchant_cert');
         $pemKeyPath = $this->dir->getRoot() . '/' . $this->config->getValue('merchant_key');
 
@@ -61,6 +65,9 @@ class ValidateMerchant implements ValidateMerchantInterface
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($validationPayload));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+        curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+        curl_setopt($ch, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTPS);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
@@ -74,12 +81,62 @@ class ValidateMerchant implements ValidateMerchantInterface
 
         $validationResponse = curl_exec($ch);
 
-        if (false == $validationResponse) {
-            return curl_error($ch);
+        if ($validationResponse === false) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            throw new \RuntimeException('Apple Pay merchant validation failed: ' . $error);
         }
 
         curl_close($ch);
 
         return $validationResponse;
+    }
+
+    /**
+     * Validate that the Apple Pay merchant validation URL is restricted to Apple Pay's own validation domains.
+     *
+     * @param string $validationUrl
+     * @return bool
+     */
+    private function isValidApplePayValidationUrl($validationUrl) : bool
+    {
+        if (!is_string($validationUrl) || trim($validationUrl) === '') {
+            return false;
+        }
+
+        $parsed = parse_url($validationUrl);
+
+        if (
+            $parsed === false ||
+            empty($parsed['scheme']) ||
+            empty($parsed['host'])
+        ) {
+            return false;
+        }
+
+        if (strtolower((string) $parsed['scheme']) !== 'https') {
+            return false;
+        }
+
+        // Apple Pay validation should not contain explicit credentials.
+        if (isset($parsed['user']) || isset($parsed['pass'])) {
+            return false;
+        }
+
+        // If a port is explicitly supplied, only allow HTTPS/443.
+        if (isset($parsed['port']) && $parsed['port'] !== 443) {
+            return false;
+        }
+
+        $host = strtolower((string) $parsed['host']);
+
+        $allowedHosts = [
+            'apple-pay-gateway.apple.com',
+            'cn-apple-pay-gateway.apple.com',
+            'apple-pay-gateway-cert.apple.com',
+            'cn-apple-pay-gateway-cert.apple.com'
+        ];
+
+        return in_array($host, $allowedHosts, true);
     }
 }

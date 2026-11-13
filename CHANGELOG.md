@@ -4,6 +4,10 @@
 
 # Changelog
 
+## v2.12.2 (11/13/26)
+### Bug Fixes:
+- Various security updates
+
 ## v2.12.1 (11/12/26)
 ### Bug Fixes:
 - GPAPI: HPP transaction IDs now match IDs in realcontrol

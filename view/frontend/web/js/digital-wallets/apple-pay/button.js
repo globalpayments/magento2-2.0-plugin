@@ -92,9 +92,19 @@ define(
 
             onApplePayValidateMerchant: function(event, session) {
                 var self = this;
+                var validationUrl = event && event.validationURL ? event.validationURL : null;
+
+                if (!this.isValidApplePayValidationUrl(validationUrl)) {
+                    console.error('Rejected invalid Apple Pay validation URL', validationUrl);
+                    session.abort();
+                    alert($t("We're unable to take your payment through Apple Pay. Please try again or use an alternative payment method."));
+                    self.context.unblockOnError();
+                    return;
+                }
+
                 var serviceUrl = 'rest/V1/globalpayments-applepay/validateMerchant';
                 var payload = {
-                    validationUrl: event.validationURL
+                    validationUrl: validationUrl
                 };
 
                 storage.post(
@@ -107,6 +117,24 @@ define(
                     alert($t("We're unable to take your payment through Apple Pay. Please try again or use an alternative payment method."));
                     self.context.unblockOnError();
                 });
+            },
+
+            isValidApplePayValidationUrl: function(validationUrl) {
+                if (!validationUrl || typeof validationUrl !== 'string') {
+                    return false;
+                }
+
+                try {
+                    var parsed = new URL(validationUrl);
+                    if (parsed.protocol !== 'https:') {
+                        return false;
+                    }
+
+                    var host = parsed.hostname.toLowerCase();
+                    return host === 'apple-pay-gateway.apple.com' || host === 'apple-pay-gateway-cert.apple.com' || host === 'cn-apple-pay-gateway.apple.com' || host === 'cn-apple-pay-gateway-cert.apple.com';
+                } catch (e) {
+                    return false;
+                }
             },
 
             onApplePayPaymentAuthorize: function(event, session) {
