@@ -91,8 +91,9 @@ class InitiatePaymentRequest implements BuilderInterface
                 $requestData['PHONE_COUNTRY_CODE'] = $this->getPhoneCountryCode($billingAddress->getCountryId());
                 
                 // Billing address
-                $requestData['BILLING_ADDRESS_1'] = $billingAddress->getStreetLine1();
-                $requestData['BILLING_ADDRESS_2'] = $billingAddress->getStreetLine2();
+                $requestData['BILLING_ADDRESS_1'] = $billingAddress->getStreetLine(1);
+                $requestData['BILLING_ADDRESS_2'] = $billingAddress->getStreetLine(2);
+                $requestData['BILLING_ADDRESS_3'] = $billingAddress->getStreetLine(3);
                 $requestData['BILLING_CITY'] = $billingAddress->getCity();
                 $requestData['BILLING_STATE'] = $billingAddress->getRegionCode();
                 $requestData['BILLING_POSTCODE'] = $billingAddress->getPostcode();
@@ -105,8 +106,9 @@ class InitiatePaymentRequest implements BuilderInterface
             $shippingAddress = $order->getShippingAddress();
 
             if ($shippingAddress) {
-                $requestData['SHIPPING_ADDRESS_1'] = $shippingAddress->getStreetLine1();
-                $requestData['SHIPPING_ADDRESS_2'] = $shippingAddress->getStreetLine2();
+                $requestData['SHIPPING_ADDRESS_1'] = $shippingAddress->getStreetLine(1);
+                $requestData['SHIPPING_ADDRESS_2'] = $shippingAddress->getStreetLine(2);
+                $requestData['SHIPPING_ADDRESS_3'] = $shippingAddress->getStreetLine(3);
                 $requestData['SHIPPING_CITY'] = $shippingAddress->getCity();
                 $requestData['SHIPPING_STATE'] = $shippingAddress->getRegionCode();
                 $requestData['SHIPPING_POSTCODE'] = $shippingAddress->getPostcode();

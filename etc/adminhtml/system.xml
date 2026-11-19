@@ -278,7 +278,7 @@
                         <backend_model>GlobalPayments\PaymentGateway\Model\Adminhtml\System\Config\Checkboxes</backend_model>
                         <source_model>GlobalPayments\PaymentGateway\Model\Adminhtml\Source\HppWallets</source_model>
                         <config_path>payment/globalpayments_paymentgateway_gpApi/hpp_wallets</config_path>
-                        <comment><![CDATA[Select the wallets and alternative payment methods you want to accept via Hosted payment page]]></comment>
+                        <comment><![CDATA[Select the wallets and alternative payment methods you want to accept via Hosted payment page<br/><strong>Note:</strong> Cashpresso is only offered when the store country is Germany and the order currency is EUR.]]></comment>
                         <depends>
                             <field id="payment_method">hosted</field>
                         </depends>

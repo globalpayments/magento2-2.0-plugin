@@ -4,6 +4,10 @@
 
 # Changelog
 
+## v2.13.0 (11/19/26)
+### Enhancements
+- GPAPI: Added Cashpresso(APM) support via HPP
+
 ## v2.12.2 (11/13/26)
 ### Bug Fixes:
 - Various security updates

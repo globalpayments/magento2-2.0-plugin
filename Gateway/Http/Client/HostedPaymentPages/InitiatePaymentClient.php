@@ -7,6 +7,7 @@ use GlobalPayments\Api\Entities\Address;
 use GlobalPayments\Api\Entities\Enums\Channel;
 use GlobalPayments\Api\Entities\Enums\CaptureMode;
 use GlobalPayments\Api\Entities\Enums\ChallengeRequestIndicator;
+use GlobalPayments\Api\Entities\Enums\CashpressoShippingMethod;
 use GlobalPayments\Api\Entities\Enums\ExemptStatus;
 use GlobalPayments\Api\Entities\Enums\AddressType;
 use GlobalPayments\Api\Entities\Enums\PhoneNumberType;
@@ -19,7 +20,10 @@ use GlobalPayments\Api\Entities\PhoneNumber;
 use GlobalPayments\Api\ServiceConfigs\Gateways\GpApiConfig;
 use GlobalPayments\Api\ServicesContainer;
 use GlobalPayments\Api\Utils\CountryUtils;
+use GlobalPayments\Api\Utils\Logging\Logger;
+use GlobalPayments\Api\Utils\Logging\SampleRequestLogger;
 use GlobalPayments\Api\Utils\StringUtils;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use GlobalPayments\PaymentGateway\Gateway\Http\Client\AbstractClient;
 use GlobalPayments\PaymentGateway\Gateway\Response\VaultDetailsHandler;
 use Magento\Payment\Gateway\Http\ClientException;
@@ -36,6 +40,11 @@ class InitiatePaymentClient extends AbstractClient
      * @var \Magento\Framework\Locale\Resolver
      */
     private $localeResolver;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
 
     /**
      * @var \Magento\Customer\Model\Session
@@ -66,6 +75,7 @@ class InitiatePaymentClient extends AbstractClient
      * @param VaultDetailsHandler $vaultDetailsHandler
      * @param LoggerInterface $loggerInterface PSR-3 logger for debugging
      * @param PaymentTokenManagementInterface $tokenManagement
+     * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
         \GlobalPayments\PaymentGateway\Model\Helper\GatewayConfigHelper $configHelper,
@@ -75,10 +85,12 @@ class InitiatePaymentClient extends AbstractClient
         \Magento\Customer\Model\Session $customerSession,
         VaultDetailsHandler $vaultDetailsHandler,
         LoggerInterface $loggerInterface,
-        PaymentTokenManagementInterface $tokenManagement
+        PaymentTokenManagementInterface $tokenManagement,
+        OrderRepositoryInterface $orderRepository
     ) {
         parent::__construct($configHelper, $logger, $utils);
         $this->localeResolver = $localeResolver;
+        $this->orderRepository = $orderRepository;
         $this->customerSession = $customerSession;
         $this->vaultDetailsHandler = $vaultDetailsHandler;
         $this->loggerInterface = $loggerInterface;
@@ -152,6 +164,11 @@ class InitiatePaymentClient extends AbstractClient
             $hppConfig->environment = ($sandboxMode == 1) ? Environment::TEST : Environment::PRODUCTION;
             $hppConfig->country = $storeCountry;
             $hppConfig->channel = Channel::CardNotPresent;
+            if (!empty($config->getValue('debug'))) {
+                $hppConfig->requestLogger = new SampleRequestLogger(new Logger(
+                    $config->getLoggingDir()
+                ));
+            }
             
             // Set up app_name for account selection if provided
             if (!empty($hppAppName)) {
@@ -189,6 +206,7 @@ class InitiatePaymentClient extends AbstractClient
             $billingAddress = new Address();
             $billingAddress->streetAddress1 = $transactionData['BILLING_ADDRESS_1'] ?? '';
             $billingAddress->streetAddress2 = $transactionData['BILLING_ADDRESS_2'] ?? '';
+            $billingAddress->streetAddress3 = $transactionData['BILLING_ADDRESS_3'] ?? '';
             $billingAddress->city = $transactionData['BILLING_CITY'] ?? '';
 
             $billingState = $transactionData['BILLING_STATE'] ?? '';
@@ -214,6 +232,7 @@ class InitiatePaymentClient extends AbstractClient
             $shippingAddress = new Address();
             $shippingAddress->streetAddress1 = $transactionData['SHIPPING_ADDRESS_1'] ?? $billingAddress->streetAddress1;
             $shippingAddress->streetAddress2 = $transactionData['SHIPPING_ADDRESS_2'] ?? $billingAddress->streetAddress2;
+            $shippingAddress->streetAddress3 = $transactionData['SHIPPING_ADDRESS_3'] ?? $billingAddress->streetAddress3;
             $shippingAddress->city = $transactionData['SHIPPING_CITY'] ?? $billingAddress->city;
 
             $shippingState = $transactionData['SHIPPING_STATE'] ?? '';
@@ -264,6 +283,11 @@ class InitiatePaymentClient extends AbstractClient
             // Get configured wallets and APMs from HPP config
             $enabledAPMs = explode(',', $config->getValue('hpp_wallets'));
 
+            // Cashpresso is only offered for German stores charging in EUR.
+            $isCashpressoAvailable = in_array('cashpresso', $enabledAPMs, true)
+                && strtoupper((string) $storeCountry) === 'DE'
+                && strtoupper((string) $transactionData['CURRENCY']) === 'EUR';
+
             if (!empty($enabledAPMs)) {
                 foreach ($enabledAPMs as $wallet) {
                     if ($wallet === 'apple_pay') {
@@ -280,6 +304,8 @@ class InitiatePaymentClient extends AbstractClient
                         $allowedPaymentMethods[] = HPPAllowedPaymentMethods::BANK_PAYMENT;
                     } else if (defined(HPPAllowedPaymentMethods::class . '::ERATY') && $wallet === 'eraty' ) {
                         $allowedPaymentMethods[] = HPPAllowedPaymentMethods::ERATY;
+                    } elseif ($wallet === 'cashpresso' && $isCashpressoAvailable) {
+                        $allowedPaymentMethods[] = HPPAllowedPaymentMethods::CASHPRESSO;
                     }
                 }
             }
@@ -294,6 +320,51 @@ class InitiatePaymentClient extends AbstractClient
                 $this->debugLog($config, 'HPP Creation Failed - Missing order increment ID');
                 throw new ClientException(__('Hpp crittcal data missing, cannot generate HPP request.'));
             }
+
+            $orderItems = [];
+            if (!empty($transactionData['ORDER_ENTITY_ID'])) {
+                $magentoOrder = $this->orderRepository->get($transactionData['ORDER_ENTITY_ID']);
+                foreach ($magentoOrder->getItems() as $item) {
+                    if (!$item || $item->getParentItemId()) {
+                        continue;
+                    }
+
+                    $itemName = trim((string) $item->getName());
+                    $itemSku = trim((string) $item->getSku());
+                    $itemQty = (float) $item->getQtyOrdered();
+                    $unitPrice = (float) $item->getPrice();
+                    $taxAmount = (float) ($item->getTaxAmount() ?? 0);
+
+                    // Cashpresso quantities are integers; send fractional lines as 1 x row total.
+                    $isWholeQty = abs($itemQty - round($itemQty)) < 0.0001 && $itemQty >= 1;
+                    $lineQty = $isWholeQty ? (int) round($itemQty) : 1;
+                    $lineUnitPrice = $isWholeQty
+                        ? $unitPrice
+                        : (float) ($item->getRowTotal() ?? $unitPrice * $itemQty);
+
+                    $orderItems[] = [
+                        'label' => $itemName !== '' ? $itemName : ($itemSku !== '' ? $itemSku : 'Item'),
+                        'product_code' => $itemSku !== '' ? $itemSku : 'item_' . $item->getId(),
+                        'quantity' => (string) $lineQty,
+                        'unit_amount' => StringUtils::toNumeric((string) $lineUnitPrice, $transactionData['CURRENCY']),
+                        'tax_amount' => StringUtils::toNumeric((string) $taxAmount, $transactionData['CURRENCY']),
+                    ];
+                }
+            }
+
+            // GP API accepts at most 10 order items; Cashpresso cannot be offered without them.
+            if (count($orderItems) > 10) {
+                $this->debugLog($config, 'Order has more than 10 items - order items omitted and Cashpresso disabled');
+                $orderItems = [];
+                if ($isCashpressoAvailable) {
+                    $isCashpressoAvailable = false;
+                    $allowedPaymentMethods = array_values(array_diff(
+                        $allowedPaymentMethods,
+                        [HPPAllowedPaymentMethods::CASHPRESSO]
+                    ));
+                }
+            }
+
             $orderReference = 'order_id_' . ltrim((string) $orderIncrementId, '0');
             
             $hppBuilder = HPPBuilder::create()
@@ -316,6 +387,10 @@ class InitiatePaymentClient extends AbstractClient
                     true
                 );
 
+            if (!empty($orderItems)) {
+                $hppBuilder->withOrderItems($orderItems);
+            }
+
             // Add shipping phone if available
             if (isset($payer->shippingPhone)) {
                 $hppBuilder->withShippingPhone($payer->shippingPhone);
@@ -336,6 +411,16 @@ class InitiatePaymentClient extends AbstractClient
                 $hppBuilder->withCurrencyConversionMode(true);
             } else {
                 $hppBuilder->withCurrencyConversionMode(false);
+            }
+
+            // Add Cashpresso APM configuration when enabled in admin settings.
+            if ($isCashpressoAvailable) {
+                $hppBuilder->withOrderShippingMethod(CashpressoShippingMethod::DELIVERY);
+                $hppBuilder->withOrderShippingDate(date('Y-m-d', strtotime('+30 days')));
+                $hppBuilder->withCashpressoPaymentPlans([
+                    'PAY_IN_3_INSTALLMENTS',
+                    'PAY_30_DAYS'
+                ]);
             }
 
             $hppBuilder->withInstallments($installmentsFundingMode, $maxInstallments, $installmentsMaxValue);

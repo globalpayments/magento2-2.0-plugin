@@ -2,16 +2,28 @@
 
 namespace GlobalPayments\PaymentGateway\Model\Adminhtml\Source;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\OptionSourceInterface;
+use Magento\Store\Model\ScopeInterface;
 
 class HppWallets implements OptionSourceInterface
 {
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    public function __construct(ScopeConfigInterface $scopeConfig)
+    {
+        $this->scopeConfig = $scopeConfig;
+    }
+
     /**
      * @inheritdoc
      */
     public function toOptionArray(): array
     {
-        return [
+        $options = [
             [
                 'value' => 'apple_pay',
                 'label' => 'Apple Pay'
@@ -41,5 +53,23 @@ class HppWallets implements OptionSourceInterface
                 'label' => 'PayU'
             ],
         ];
+
+        $defaultCountry = strtoupper((string) $this->scopeConfig->getValue(
+            'general/country/default',
+            ScopeInterface::SCOPE_STORE
+        ));
+        $baseCurrency = strtoupper((string) $this->scopeConfig->getValue(
+            'currency/options/base',
+            ScopeInterface::SCOPE_STORE
+        ));
+
+        if ($defaultCountry === 'DE' && $baseCurrency === 'EUR') {
+            $options[] = [
+                'value' => 'cashpresso',
+                'label' => 'Cashpresso'
+            ];
+        }
+
+        return $options;
     }
 }
